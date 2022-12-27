@@ -33,7 +33,7 @@ def translate(startstatus,endstatus,routedict,rootidta):
     except botslib.BotsImportError:       #userscript is not there; other errors like syntax errors are not catched
         userscript = scriptname = None
     #select edifiles to translate
-    rows = Transaction.objects.filter(idta__gt=rootidta,status=startstatus,statust='OK',idroute=routedict['idroute'])
+    rows = Transaction.objects.filter(idta__gt=rootidta,status=startstatus,statust=OK,idroute=routedict['idroute'])
     # for rawrow in botslib.query('''SELECT idta,frompartner,topartner,filename,messagetype,testindicator,editype,charset,alt,fromchannel,filesize,frommail,tomail
     #                             FROM ta
     #                             WHERE idta>%(rootidta)s

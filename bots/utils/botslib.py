@@ -99,15 +99,18 @@ class _Transaction(object):
 
     def synall(self):
         '''access of attributes of transaction as ta.fromid, ta.filename etc'''
-        queryset = Transaction.objects.filter(idta=self.idta).first()
+        rows = Transaction.objects.filter(idta=self.idta).values()
        # print('_Transaction synall:')
        # print(queryset.query) 
-        self.__dict__.update(queryset)
+       
         # for row in query('''SELECT *
         #                       FROM ta
         #                       WHERE idta=%(idta)s''',
         #                       {'idta':self.idta}):
         #     self.__dict__.update(dict(row))
+        for row in rows:
+            dictrow=dict(row)
+            self.__dict__.update(dictrow)
 
     def copyta(self,status,**ta_info):
         ''' copy old transaction, return new transaction.
@@ -273,24 +276,25 @@ def updateinfocore(change,where,wherestring,**wheredict):
         where (dict) selects ta's,
         change (dict) sets values;
     '''
-   # wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring #' WHERE idta > %(rootidta)s AND statust=%(statust)s  AND status=%(status)s  AND fromchannel=%(fromchannel)s  AND idroute=%(idroute)s ' 
+    wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring
     #change-dict: discard empty values. Change keys: this is needed because same keys can be in where-dict
-    change2 = dict((key,value) for key,value in change.items() if value)
+    change2 = [(key,value) for key,value in change.items() if value]
     if not change2:
         return
-   # changedict = dict((key,'change_'+key) for key,value in change2)
-   # changestring = ','.join(key+'=%(change_'+key+')s' for key,value in change2) #'editype=%(change_editype)s,messagetype=%(change_messagetype)s,statust=%(change_statust)s' 
+    changestring = ','.join(key+'=%(change_'+key+')s' for key,value in change2)
+    where.update(('change_'+key,value) for key,value in change2)
     
-    #where.update(('change_'+key,value) for key,value in change2)
-    #return changeq('''UPDATE ta SET ''' + changestring + wherestring,where) #UPDATE ta SET editype=%(change_editype)s,messagetype=%(change_messagetype)s,statust=%(change_statust)s  WHERE idta > %(rootidta)s AND statust=%(statust)s  AND status=%(status)s  AND fromchannel=%(fromchannel)s  AND idroute=%(idroute)s 
-    #wheredict2=wheredict.get('wheredict')
-    where2=dict((key,value) for key,value in where.items() if key != 'rootidta')
-    queryset = Transaction.objects.filter(idta__gt=where['rootidta'],**where2)
+
+    #where2=dict((key,value) for key,value in where.items() if key != 'rootidta')
+    #queryset = Transaction.objects.filter(idta__gt=where['rootidta'],**where2)
+    #queryset = Transaction.objects.filter(Q(**where2, _connector=Q.AND))
    # print('updateinfocore filter:')
    # print(queryset.query)
-    queryset.update(**change2)
-    idta = queryset['idta'] # TODO - Correct this! 
-    return idta
+    #queryset.update(**change2)
+
+    #idta = queryset.get('idta')# TODO - Correct this! 
+    #return idta
+    return changeq('''UPDATE ta SET ''' + changestring + wherestring,where)
 
 def updateinfo(change,where):
     ''' update ta's.
@@ -464,7 +468,7 @@ def txtexc():
     else:
         terug = traceback.format_exc(limit=0)
         terug = terug.replace('Traceback (most recent call last):\n','')
-        terug = terug.replace('bots.botslib.','')
+        terug = terug.replace('bots.utils.botslib.','')
         return terug
 
 class ErrorProcess(NewTransaction):
@@ -663,7 +667,7 @@ def set_asked_confirmrules(routedict,rootidta):
     '''
     if not globalcheckconfirmrules('ask-x12-997') and not globalcheckconfirmrules('ask-edifact-CONTRL'):
         return
-    queryset = Transaction.objects.filter(Q(idta__gt=rootidta) & Q(status='FILEOUT') & Q(statust='OK') & (Q(editype='edifact')|Q(editype='x12'))).values('parent','editype','messagetype','frompartner','topartner')
+    queryset = Transaction.objects.filter(Q(idta__gt=rootidta) & Q(status=FILEOUT) & Q(statust=OK) & (Q(editype='edifact')|Q(editype='x12'))).values('parent','editype','messagetype','frompartner','topartner')
     # for row in query('''SELECT parent,editype,messagetype,frompartner,topartner
     #                             FROM ta
     #                             WHERE idta>%(rootidta)s
@@ -805,7 +809,7 @@ def trace_origin(ta,where=None):
 
 def countoutfiles(idchannel,rootidta):
     ''' counts the number of edifiles to be transmitted via outchannel.'''
-    rows = Transaction.objects.filter(idta=rootidta,status='FILEOUT',statust='OK',tochannel='idchannel').aggregate(count=Count('idta')).values('count')
+    rows = Transaction.objects.filter(idta=rootidta,status=FILEOUT,statust=OK,tochannel='idchannel').aggregate(count=Count('idta')).values('count')
     for row in rows:
     # for row in query('''SELECT COUNT(*) as count
     #                     FROM ta
