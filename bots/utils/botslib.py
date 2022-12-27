@@ -228,10 +228,7 @@ def addinfocore_noquery(change,where,**wheredict):
     # print '''SELECT idta FROM ta'''+wherestring + ''' ORDER BY idta'''
     counter = 0 #count the number of dbta changed
     #for row in query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where):
-    queryset = Transaction.objects.filter(idta__gt=where['rootidta'],**wheredict)
-   # print('addinfocore:')
-   # print(queryset.query)
-    rows = queryset.values('idta')
+    rows = Transaction.objects.filter(idta__gt=where['rootidta'],**wheredict).values('idta')
     for row in rows:
         counter += 1
         ta_from = OldTransaction(row['idta'])
