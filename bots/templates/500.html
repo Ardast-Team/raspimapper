@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+
+{% block breadcrumbs %}<div class="breadcrumbs"><a href="/">Home</a> &rsaquo; Server error</div>{% endblock %}
+
+{% block title %}Server error (500){% endblock %}
+
+{% block content %}
+<p>Server Error (500)</p>
+    {% if exc_info %}
+        <pre>
+        {{ exc_info }}
+        </pre>
+    {% endif %}
+{% endblock %}

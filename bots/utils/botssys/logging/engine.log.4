@@ -1,0 +1,83 @@
+20221223 12:38:38 INFO     engine : served at port: "8000".
+20221223 12:38:38 INFO     engine : platform: "Linux-5.10.63-v7l+-armv7l-with-debian-10.11".
+20221223 12:38:38 INFO     engine : machine: "armv7l".
+20221223 12:38:38 INFO     engine : python version: "3.7.3".
+20221223 12:38:38 INFO     engine : django version: "(3, 2, 16, 'final', 0)".
+20221223 12:38:38 INFO     engine : bots version: "3.3.0".
+20221223 12:38:38 INFO     engine : bots installation path: "/home/pi/Documents/raspimapper/bots/utils".
+20221223 12:38:38 INFO     engine : config path: "/home/pi/Documents/raspimapper/raspimapper".
+20221223 12:38:38 INFO     engine : botssys path: "/home/pi/Documents/raspimapper/bots/utils/botssys".
+20221223 12:38:38 INFO     engine : usersys path: "/home/pi/Documents/raspimapper/bots/usersys".
+20221223 12:38:38 INFO     engine : local date/time: "2022-12-23T12:38:38.856796".
+20221223 12:38:38 INFO     engine : DATABASE_ENGINE: "django.db.backends.sqlite3".
+20221223 12:38:38 INFO     engine : DATABASE_NAME: "/home/pi/Documents/raspimapper/db.sqlite3".
+20221223 12:38:38 INFO     engine : DATABASE_USER: "".
+20221223 12:38:38 INFO     engine : DATABASE_HOST: "".
+20221223 12:38:38 INFO     engine : DATABASE_PORT: "".
+20221223 12:38:38 INFO     engine : DATABASE_OPTIONS: "{}".
+20221223 12:38:38 INFO     engine : Connected to database.
+20221223 12:38:38 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/routescripts/botsengine": No module named 'bots.usersys.routescripts.botsengine'.
+20221223 12:38:38 INFO     engine : This run is an acceptance test - as indicated in option "runacceptancetest" in bots.ini.
+20221223 12:38:38 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/routescripts/bots_acceptancetest".
+20221223 12:38:39 CRITICAL engine : !Bots database is locked!
+Bots-engine has ended in an unexpected way during the last run.
+Most likely causes: sudden power-down, system crash, problems with disk I/O, bots-engine terminated by user, etc.
+Bots will do an automatic crash recovery now.
+20221223 12:38:39 DEBUG    engine : Run userscript "pretest" in "/home/pi/Documents/raspimapper/bots/usersys/routescripts/bots_acceptancetest".
+20221223 12:38:39 INFO     engine : Run "crashrecovery".
+20221223 12:38:39 INFO     engine : Run all active routes from database: "['myfirstroute']".
+20221223 12:38:39 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/routescripts/myfirstroute": No module named 'bots.usersys.routescripts.myfirstroute'.
+20221223 12:38:39 INFO     engine : Running route myfirstroute 9999
+20221223 12:38:39 DEBUG    engine : Start communication channel "myfirstroute_in" type file in.
+20221223 12:38:39 DEBUG    engine : Channel "myfirstroute_in" adapted for acceptance test: type "file", testpath "".
+20221223 12:38:39 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/communicationscripts/myfirstroute_in": No module named 'bots.usersys.communicationscripts.myfirstroute_in'.
+20221223 12:38:39 DEBUG    engine : Finished communication channel "myfirstroute_in" type file in.
+20221223 12:40:07 DEBUG    engine : Error in process: Traceback (most recent call last):
+  File "/home/pi/Documents/raspimapper/bots/utils/botslib.py", line 449, in wrapper
+    terug = func(*args,**argv)
+  File "/home/pi/Documents/raspimapper/bots/utils/engine/router.py", line 151, in routepart
+    nr_of_incoming_files_for_channel = botslib.updateinfo(change=change,where=where)
+  File "/home/pi/Documents/raspimapper/bots/utils/botslib.py", line 307, in updateinfo
+    return updateinfocore(change=change,where=where,wherestring=wherestring, wheredict=wheredict)
+  File "/home/pi/Documents/raspimapper/bots/utils/botslib.py", line 288, in updateinfocore
+    queryset = Transaction.objects.filter(idta__gt=where['rootidta'],**where)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1438, in _add_q
+    split_subq=split_subq, check_filterable=check_filterable,
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1309, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1135, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1563, in names_to_path
+    "Choices are: %s" % (name, ", ".join(available)))
+django.core.exceptions.FieldError: Cannot resolve keyword 'rootidta' into field. Choices are: alt, botskey, cc, charset, child, confirmasked, confirmed, confirmidta, confirmtype, contenttype, divtext, editype, envelope, errortext, filename, filesize, fromchannel, frommail, frompartner, idroute, idta, merge, messagetype, nrmessages, numberofresends, parent, reference, retransmit, rsrv1, rsrv2, rsrv3, rsrv4, rsrv5, script, status, statuse, statust, testindicator, tochannel, tomail, topartner, ts
+
+20221223 12:40:07 DEBUG    engine : Finished route myfirstroute 9999
+20221223 12:40:07 ERROR    engine : Error in automatic maintenance.
+Traceback (most recent call last):
+  File "/home/pi/Documents/raspimapper/bots/utils/engine/router.py", line 242, in evaluate
+    return automaticmaintenance.evaluate(self.command,self.get_minta4query())
+  File "/home/pi/Documents/raspimapper/bots/utils/engine/automaticmaintenance.py", line 29, in evaluate
+    make_run_report(rootidtaofrun,resultsofrun,command,totalfilesize)
+  File "/home/pi/Documents/raspimapper/bots/utils/engine/automaticmaintenance.py", line 51, in make_run_report
+    rootta.synall()    #to get the timestamp of this run
+  File "/home/pi/Documents/raspimapper/bots/utils/botslib.py", line 105, in synall
+    self.__dict__.update(queryset)
+TypeError: 'Transaction' object is not iterable
+20221223 12:40:08 INFO     engine : Run "new".
+20221223 12:40:08 INFO     engine : Run active routes from database that are in default run: "['myfirstroute']".
+20221223 12:40:08 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/routescripts/myfirstroute".
+20221223 12:40:08 INFO     engine : Running route myfirstroute 9999
+20221223 12:40:08 DEBUG    engine : Start communication channel "myfirstroute_in" type file in.
+20221223 12:40:08 DEBUG    engine : Channel "myfirstroute_in" adapted for acceptance test: type "file", testpath "".
+20221223 12:40:08 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/communicationscripts/myfirstroute_in".
+20221223 12:40:09 DEBUG    engine : Finished communication channel "myfirstroute_in" type file in.
