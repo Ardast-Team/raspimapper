@@ -147,7 +147,7 @@ class _Transaction(object):
        # print(oldta.query)
 
         newta = Transaction.objects.create( script=oldta[0]['script'],
-                                            status=oldta[0]['status'],
+                                            status=status,
                                             parent=oldta[0]['idta'],
                                             frompartner=oldta[0]['frompartner'],
                                             topartner=oldta[0]['topartner'],
@@ -248,7 +248,8 @@ def addinfocore(change,where,wherestring):
     #print(queryset.query)
     #for row in rows:
     #rows = queryset.values('idta')
-    for row in query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where):
+    rows = query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where)
+    for row in rows:
         counter += 1
         ta_from = OldTransaction(row['idta'])
         ta_from.copyta(**change)     #make new ta from ta_from, using parameters from change
@@ -291,7 +292,8 @@ def updateinfocore(change,where,wherestring,**wheredict):
 
     #idta = queryset.get('idta')# TODO - Correct this! 
     #return idta
-    return changeq('''UPDATE ta SET ''' + changestring + wherestring,where)
+    terug = changeq('''UPDATE ta SET ''' + changestring + wherestring,where)
+    return terug
 
 def updateinfo(change,where):
     ''' update ta's.
