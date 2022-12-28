@@ -228,7 +228,8 @@ def addinfocore_noquery(change,where,**wheredict):
     # print '''SELECT idta FROM ta'''+wherestring + ''' ORDER BY idta'''
     counter = 0 #count the number of dbta changed
     #for row in query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where):
-    rows = Transaction.objects.filter(idta__gt=where['rootidta'],**wheredict).values('idta')
+    where2=wheredict.get('wheredict')
+    rows = Transaction.objects.filter(idta__gt=where['rootidta'],**where2).values('idta')
     for row in rows:
         counter += 1
         ta_from = OldTransaction(row['idta'])
@@ -239,7 +240,7 @@ def addinfocore_noquery(change,where,**wheredict):
 def addinfocore(change,where,wherestring):
     ''' core function for add/changes information in db-ta's.
     '''
-    wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring
+    #wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring
     # print '''SELECT idta FROM ta'''+wherestring + ''' ORDER BY idta'''
     counter = 0 #count the number of dbta changed
     
@@ -248,8 +249,8 @@ def addinfocore(change,where,wherestring):
     #print(queryset.query)
     #for row in rows:
     #rows = queryset.values('idta')
-    rows = query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where)
-    for row in rows:
+    #rows = query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where)
+    for row in query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where):
         counter += 1
         ta_from = OldTransaction(row['idta'])
         ta_from.copyta(**change)     #make new ta from ta_from, using parameters from change
@@ -808,8 +809,7 @@ def trace_origin(ta,where=None):
 
 def countoutfiles(idchannel,rootidta):
     ''' counts the number of edifiles to be transmitted via outchannel.'''
-    rows = Transaction.objects.filter(idta=rootidta,status=FILEOUT,statust=OK,tochannel='idchannel').aggregate(count=Count('idta')).values('count')
-    for row in rows:
+    rows = Transaction.objects.filter(idta__gt=rootidta,status=FILEOUT,statust=OK,tochannel=idchannel).aggregate(count=Count('idta'))
     # for row in query('''SELECT COUNT(*) as count
     #                     FROM ta
     #                     WHERE idta>%(rootidta)s
@@ -818,28 +818,28 @@ def countoutfiles(idchannel,rootidta):
     #                     AND tochannel=%(tochannel)s
     #                     ''',
     #                     {'status':FILEOUT,'statust':OK,'tochannel':idchannel,'rootidta':rootidta}):
-        return row['count']
+    count=rows['count']
+    return count
 
 def lookup_translation(frommessagetype,fromeditype,alt,frompartner,topartner):
     ''' lookup the translation: frommessagetype,fromeditype,alt,frompartner,topartner -> mappingscript, tomessagetype, toeditype. '''
-    to_partner_id_qs1 = Partnergroup.objects.filter(from_partner_id=frompartner).values('to_partner_id')
-    to_partner_id_qs2 = Partnergroup.objects.filter(from_partner_id=topartner).values('to_partner_id')
+
     rows = Translate.objects.filter(Q(frommessagetype=frommessagetype) & Q(fromeditype=fromeditype) & Q(active=True) & \
             (Q(alt='')|Q(alt=alt)) & \
-            (Q(frompartner_id__isnull=True) | Q(frompartner_id=frompartner) | Q(frompartner_id__in = to_partner_id_qs1)) & \
-            (Q(topartner_id__isnull=True) | Q(topartner_id=topartner) | Q(topartner_id__in = to_partner_id_qs2))
+            (Q(frompartner_id__isnull=True) | Q(frompartner_id=frompartner)) & \
+            (Q(topartner_id__isnull=True) | Q(topartner_id=topartner))
             ).annotate(
                 cust_frompartner_id=Case(
-                    When(frompartner_id__is_null=True,then=Value('1')),
-                    When(frompartner_id__is_null=False,then=Value('0')),
+                    When(frompartner_id__isnull=True,then=Value('1')),
+                    When(frompartner_id__isnull=False,then=Value('0')),
                     output_field=IntegerField()
                     ),
                 cust_topartner_id=Case(
-                    When(topartner_id__is_null=True,then=Value('1')),
-                    When(topartner_id__is_null=False,then=Value('0')),
+                    When(topartner_id__isnull=True,then=Value('1')),
+                    When(topartner_id__isnull=False,then=Value('0')),
                     output_field=IntegerField()
                     )
-                ).order_by('-alt','cust_frompartner_id','cust_topartner_id')
+                ).order_by('-alt','cust_frompartner_id','cust_topartner_id').values('tscript','tomessagetype','toeditype')
     # for row2 in query('''SELECT tscript,tomessagetype,toeditype
     #                         FROM translate
     #                         WHERE frommessagetype = %(frommessagetype)s

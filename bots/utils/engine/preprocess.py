@@ -4,9 +4,10 @@ import re
 import zipfile
 import string
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.botsconfig import *
+from bots.models import *
 
 @botslib.log_session
 def preprocess(routedict,function,status=FILEIN,rootidta=None,**argv):
@@ -21,16 +22,18 @@ def preprocess(routedict,function,status=FILEIN,rootidta=None,**argv):
     if rootidta is None:
         rootidta = botsglobal.currentrun.get_minta4query()
     nr_files = 0
-    for row in botslib.query('''SELECT idta,filename
-                                FROM ta
-                                WHERE idta>%(rootidta)s
-                                AND status=%(status)s
-                                AND statust=%(statust)s
-                                AND idroute=%(idroute)s
-                                AND fromchannel=%(fromchannel)s
-                                ORDER BY idta
-                                ''',
-                                {'status':status,'statust':OK,'idroute':routedict['idroute'],'fromchannel':routedict['fromchannel'],'rootidta':rootidta}):
+    rows = Transaction.objects.filter(idta__gt=rootidta,status=status,statust=OK,idroute=routedict['idroute'],fromchannel=routedict['fromchannel']).values('idta','filename')
+    # for row in botslib.query('''SELECT idta,filename
+    #                             FROM ta
+    #                             WHERE idta>%(rootidta)s
+    #                             AND status=%(status)s
+    #                             AND statust=%(statust)s
+    #                             AND idroute=%(idroute)s
+    #                             AND fromchannel=%(fromchannel)s
+    #                             ORDER BY idta
+    #                             ''',
+    #                             {'status':status,'statust':OK,'idroute':routedict['idroute'],'fromchannel':routedict['fromchannel'],'rootidta':rootidta}):
+    for row in rows:
         try:
             botsglobal.logger.debug('Start preprocessing "%(name)s" for file "%(filename)s".',
                                     {'name':function.__name__,'filename':row['filename']})
