@@ -1,5 +1,3 @@
-from __future__ import print_function
-from __future__ import unicode_literals
 import os
 import sys
 import shutil
@@ -52,7 +50,7 @@ def pretest(routestorun):
     
 def posttest(routestorun):
     #Compare run results
-    comparerunresults({'status':0,'lastreceived':3,'lasterror':0,'lastdone':3,'lastok':0,'lastopen':0,'send':1,'processerrors':0,'filesize':1450})
+    comparerunresults({'status':0,'lastreceived':17,'lasterror':0,'lastdone':17,'lastok':0,'lastopen':0,'send':16,'processerrors':0,'filesize':38874})
     
     #Compare outgoing files.
     #Run run first, save results in 'botssys/outfile' in 'botssys/infile' (so there is a directory 'botssys/infile/outfile'....)

@@ -6,6 +6,7 @@ from django.db import models
 #from django.core.exceptions import ValidationError
 from bots.utils import botsglobal
 from datetime import datetime
+from django.utils.safestring import mark_safe
 ''' Declare database tabels.
     Django is not always perfect in generating db - but improving ;-)).
     The generated database can be manipulated SQL. see bots/sql/*.
@@ -162,25 +163,25 @@ def gettochannels():
  
 #         return '<a href="/bots/srcfiler/?src=%s" target="_blank">%s</a>'%(urllib_quote(script.encode("utf-8")),linktext)
 #     else:
-#         return '<img src="/media/admin/img/icon-no.gif"></img> %s'%linktext
+#         return '<img src="/static/admin/img/icon-no.svg"></img> %s'%linktext
 
 def script_link1(script,linktext):
     ''' if script exists return a plain text name as link; else return "no" icon, plain text name
         used in translate (all scripts should exist, missing script is an error).
     '''
     if os.path.exists(script):
-        return '<a href="/bots/srcfiler/?src=%s" target="_blank">%s</a>'%(urllib_quote(script.encode("utf-8")),linktext)
+        return mark_safe('<a href="/bots/srcfiler/?src=%s" target="_blank">%s</a>'%(urllib_quote(script.encode("utf-8")),linktext))
     else:
-        return '<img src="/media/admin/img/icon-no.gif"></img> %s'%linktext
+        return mark_safe('<img src="/static/admin/img/icon-no.svg" alt="False"> %s'%linktext)
 
 def script_link2(script):
     ''' if script exists return "yes" icon + view link; else return "no" icon
         used in routes, channels (scripts are optional)
     '''
     if os.path.exists(script):
-        return '<a class="nowrap" href="/bots/srcfiler/?src=%s" target="_blank"><img src="/media/admin/img/icon-yes.gif"></img> view</a>'%urllib_quote(script.encode("utf-8"))
+        return mark_safe('<a class="nowrap" href="/bots/srcfiler/?src=%s" target="_blank"><img src="/static/admin/img/icon-yes.svg"  alt="True"> view</a>'%urllib_quote(script.encode("utf-8")))
     else:
-        return '<img src="/media/admin/img/icon-no.gif"></img>'
+        return mark_safe('<img src="/static/admin/img/icon-no.svg" alt="False">')
 
 
 # class MultipleEmailField(models.models.CharField):
@@ -280,7 +281,7 @@ class Channel(models.Model):
 
     def communicationscript(self):
         return script_link2(os.path.join(botsglobal.ini.get('directories','usersysabs'),'communicationscripts', self.idchannel + '.py'))
-    communicationscript.allow_tags = True
+    #communicationscript.allow_tags = True
     communicationscript.short_description = 'User script'
 
     class Meta:
@@ -397,7 +398,7 @@ class Translate(models.Model):
 
     def tscript_link(self):
         return script_link1(os.path.join(botsglobal.ini.get('directories','usersysabs'),'mappings', self.fromeditype, self.tscript + '.py'),self.tscript)
-    tscript_link.allow_tags = True
+    #tscript_link.allow_tags = True
     tscript_link.short_description = 'Mapping Script'
 
     def frommessagetype_link(self):
@@ -405,7 +406,7 @@ class Translate(models.Model):
             return self.frommessagetype
         else:
             return script_link1(os.path.join(botsglobal.ini.get('directories','usersysabs'),'grammars', self.fromeditype, self.frommessagetype + '.py'),self.frommessagetype)
-    frommessagetype_link.allow_tags = True
+    #frommessagetype_link.allow_tags = True
     frommessagetype_link.short_description = 'Frommessagetype'
 
     def tomessagetype_link(self):
@@ -413,7 +414,7 @@ class Translate(models.Model):
             return self.tomessagetype
         else:
             return script_link1(os.path.join(botsglobal.ini.get('directories','usersysabs'),'grammars', self.toeditype, self.tomessagetype + '.py'),self.tomessagetype)
-    tomessagetype_link.allow_tags = True
+    #tomessagetype_link.allow_tags = True
     tomessagetype_link.short_description = 'Tomessagetype'
 
     class Meta:
@@ -451,12 +452,12 @@ class Routes(models.Model):
 
     def routescript(self):
         return script_link2(os.path.join(botsglobal.ini.get('directories','usersysabs'),'routescripts', self.idroute + '.py'))
-    routescript.allow_tags = True
+    #routescript.allow_tags = True
     routescript.short_description = 'Script'
 
     def indefaultrun(obj):
         return not obj.notindefaultrun
-    indefaultrun.boolean = True
+    #indefaultrun.boolean = True
     indefaultrun.short_description = 'Default run'
 
     class Meta:
@@ -468,14 +469,14 @@ class Routes(models.Model):
         return str(self.idroute) + ' ' + str(self.seq)
     def translt(self):
         if self.translateind == 0:
-            return '<img alt="%s" src="/media/admin/img/icon-no.gif"></img>'%(self.get_translateind_display())
+            return mark_safe('<img alt="%s" src="/static/admin/img/icon-no.svg"></img>'%(self.get_translateind_display()))
         elif self.translateind == 1:
-            return '<img alt="%s" src="/media/admin/img/icon-yes.gif"></img>'%(self.get_translateind_display())
+            return mark_safe('<img alt="%s" src="/static/admin/img/icon-yes.svg"></img>'%(self.get_translateind_display()))
         elif self.translateind == 2:
-            return '<img alt="%s" src="/media/images/icon-pass.gif"></img>'%(self.get_translateind_display())
+            return mark_safe('<img alt="%s" src="/static/images/icon-pass.gif"></img>'%(self.get_translateind_display()))
         elif self.translateind == 3:
-            return '<img alt="%s" src="/media/images/icon-pass_parse.gif"></img>'%(self.get_translateind_display())
-    translt.allow_tags = True
+            return mark_safe('<img alt="%s" src="/static/images/icon-pass_parse.gif"></img>'%(self.get_translateind_display()))
+    #translt.allow_tags = True
     translt.admin_order_field = 'translateind'
 
 #***********************************************************************************
