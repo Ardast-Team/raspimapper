@@ -1,5 +1,5 @@
 from bots.utils.botsconfig import *
-from envelope import recorddefs,structure,nextmessage,nextmessage2
+from .envelope import recorddefs,structure,nextmessage,nextmessage2
 
 syntax = { 
         'envelope'   :  'edifact',	#for outgoing edifact-messages: this is the envelope to use in merge()
