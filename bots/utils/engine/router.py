@@ -2,14 +2,14 @@ import sys
 from django.db.models import F
 from bots.models import Routes
 #bots-modules
-from . import automaticmaintenance
-from .. import botslib
-from .. import botsglobal
-from . import communication
-from . import envelope
-from . import preprocess
-from . import transform
-from ..botsconfig import *
+from bots.utils.engine import automaticmaintenance
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.engine import communication
+from bots.utils.engine import envelope
+from bots.utils.engine import preprocess
+from bots.utils.engine import transform
+from bots.utils.botsconfig import *
 
 @botslib.log_session
 def rundispatcher(command,routestorun):

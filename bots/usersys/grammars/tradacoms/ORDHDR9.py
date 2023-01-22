@@ -1,6 +1,6 @@
 from bots.utils.botsconfig import *
-from records_9 import recorddefs
-from tradacomssyntax import syntax
+from .records_9 import recorddefs
+from .tradacomssyntax import syntax
 
 structure = [
 {ID:'MHD',MIN:1,MAX:1,LEVEL:[

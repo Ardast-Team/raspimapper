@@ -5,13 +5,13 @@ import codecs
 from xml.etree import ElementTree as ET
 import json as simplejson
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from . import outmessage
-from . import message
-from .. import node
-from . import grammar
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.engine import outmessage
+from bots.utils.engine import message
+from bots.utils import node
+from bots.utils.engine import grammar
+from bots.utils.botsconfig import *
 ''' Reading/lexing/parsing/splitting an edifile.'''
 
 def parse_edi_file(**ta_info):
@@ -901,7 +901,7 @@ class excel(csv):
         # Read excel first sheet into a 2-d array
         book       = self.xlrd.open_workbook(infilename)
         sheet      = book.sheet_by_index(0)
-        #~ formatter  = lambda(t,v): self.format_excelval(book,t,v,False)  # python3
+        formatter  = lambda t,v : self.format_excelval(book,t,v,False)  # python3
         xlsdata = []
         for row in range(sheet.nrows):
             (types, values) = (sheet.row_types(row), sheet.row_values(row))
@@ -1116,7 +1116,7 @@ class edifact(var):
                 messagetype = nodeunh.queries['messagetype']
                 #no CONTRL for CONTRL or APERAK message; check if CONTRL should be send via confirmrules
                 if messagetype[:6] in ['CONTRL','APERAK'] or not botslib.checkconfirmrules(confirmtype,idroute=self.ta_info['idroute'],idchannel=self.ta_info['fromchannel'],
-                                                                                                frompartner=sender,topartner=receiver,messagetype=messagetype):
+                                                                                                frompartner=self.ta_info['frompartner'],topartner=self.ta_info['topartner'],messagetype=messagetype):
                     messages_not_confirm.append(nodeunh)
                 else:
                     nr_message_to_confirm += 1
@@ -1126,7 +1126,7 @@ class edifact(var):
             for message_not_confirm in messages_not_confirm:
                 UNB.children.remove(message_not_confirm)
             #check if there is a user mappingscript
-            tscript,toeditype,tomessagetype = botslib.lookup_translation(fromeditype=editype,frommessagetype='CONTRL',frompartner=receiver,topartner=sender,alt='')
+            tscript,toeditype,tomessagetype = botslib.lookup_translation(fromeditype=editype,frommessagetype='CONTRL',frompartner=self.ta_info['frompartner'],topartner=self.ta_info['topartner'],alt='')
             if not tscript:
                 tomessagetype = 'CONTRL22UNEAN002'  #default messagetype for CONTRL
                 translationscript = None
@@ -1135,6 +1135,7 @@ class edifact(var):
             #generate CONTRL-message. One received interchange->one CONTRL-message
             reference = str(botslib.unique('messagecounter'))
             ta_confirmation = ta_fromfile.copyta(status=TRANSLATED)
+            inn = ta_confirmation # TO-DO (gzama)
             filename = str(ta_confirmation.idta)
             out = outmessage.outmessage_init(editype=editype,messagetype=tomessagetype,filename=filename,reference=reference,statust=OK)    #make outmessage object
             out.ta_info['frompartner'] = inn.ta_info['topartner']   #reverse!
@@ -1172,7 +1173,7 @@ class edifact(var):
             #write tomessage (result of translation)
             out.writeall()
             botsglobal.logger.debug('Send edifact confirmation (CONTRL) route "%(route)s" fromchannel "%(fromchannel)s" frompartner "%(frompartner)s" topartner "%(topartner)s".',
-                                    {'route':self.ta_info['idroute'],'fromchannel':self.ta_info['fromchannel'],'frompartner':receiver,'topartner':sender})
+                                    {'route':self.ta_info['idroute'],'fromchannel':self.ta_info['fromchannel'],'frompartner':self.ta_info['frompartner'],'topartner':self.ta_info['topartner']})
             self.ta_info.update(confirmtype=confirmtype,confirmed=True,confirmasked = True,confirmidta=ta_confirmation.idta)  #this info is used in transform.py to update the ta.....ugly...
             ta_confirmation.update(**out.ta_info)    #update ta for confirmation
 
@@ -1341,8 +1342,8 @@ class x12(var):
             if GS.get({'BOTSID':'GS','GS01':None}) == 'FA': #do not generate 997 for 997
                 continue
             
-            sender = nodegs._queries.get('frompartner') 
-            receiver = nodegs._queries.get('topartner')
+            sender = GS._queries.get('frompartner') 
+            receiver = GS._queries.get('topartner')
             #there is: messagetype/messageversion received; messagetype/messageversion send as ack (997)
             #always send back same messageversion.
             confirm_GS = False
@@ -1364,9 +1365,9 @@ class x12(var):
                 translationscript = None
                 
             #generate 997 (one per GS-GE)
-            reference = unicode(botslib.unique('messagecounter')).zfill(4)    #20120411: use zfill as messagescounter can be <1000, ST02 field is min 4 positions
+            reference = str(botslib.unique('messagecounter')).zfill(4)    #20120411: use zfill as messagescounter can be <1000, ST02 field is min 4 positions
             ta_confirmation = ta_fromfile.copyta(status=TRANSLATED)
-            filename = unicode(ta_confirmation.idta)
+            filename = str(ta_confirmation.idta)
             out = outmessage.outmessage_init(editype=editype,messagetype=tomessagetype,filename=filename,reference=reference,statust=OK)    #make outmessage object
             out.ta_info['frompartner'] = receiver   #reversed!
             out.ta_info['topartner'] = sender       #reversed!

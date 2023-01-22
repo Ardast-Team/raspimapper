@@ -9,8 +9,8 @@ import subprocess
 from django.contrib import messages
 
 #Bots-modules
-from .. import botsinit
-from .. import botsglobal
+from bots.utils import botsinit
+from bots.utils import botsglobal
 
 JOBQUEUEMESSAGE2TXT = {
     0: 'OK, job is added to queue',

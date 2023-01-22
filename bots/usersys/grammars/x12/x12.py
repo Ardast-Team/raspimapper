@@ -1,5 +1,5 @@
 from bots.utils.botsconfig import *
-from envelope import recorddefs,structure,nextmessage
+from .envelope import recorddefs,structure,nextmessage
 
 
 syntax = { 

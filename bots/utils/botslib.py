@@ -464,7 +464,8 @@ def txtexc():
         Errortext should be valid unicode.
     '''
     if botsglobal.ini and botsglobal.ini.getboolean('settings','debug',False):
-        return traceback.format_exc(limit=None)
+        returnmsg = traceback.format_exc(limit=None,chain=True)
+        return returnmsg
     else:
         terug = traceback.format_exc(limit=0)
         terug = terug.replace('Traceback (most recent call last):\n','')
@@ -997,10 +998,13 @@ class BotsError(Exception):
             return self.msg             #errors in self.msg; non supported format codes. Don't think this happen...
     def __str__(self):
         try:
-            return self.msg%(self.xxx)
+            excstr = self.msg%(self.xxx)
+            return excstr
+            #return self.msg
         except:
             print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX13')
-            return self.msg.encode('utf-8','ignore')            #errors in self.msg; non supported format codes. Don't think this happen...
+            excstr = self.msg
+            return excstr          #errors in self.msg; non supported format codes. Don't think this happen...
 
 class CodeConversionError(BotsError):
     pass

@@ -6,12 +6,12 @@ import unicodedata
 import pickle
 import json as simplejson
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from . import inmessage
-from . import outmessage
-from . import grammar
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.engine import inmessage
+from bots.utils.engine import outmessage
+from bots.utils.engine import grammar
+from bots.utils.botsconfig import *
 from bots.models import *
 ''' module contains functions to be called from user scripts. '''
 

@@ -48,3 +48,4 @@ Import
 change:
 bots.botsconfig -> bots.utils.botsconfig
 bots.botslib -> bots.utils.botslib 
+bots.botsglobal -> bots.utils.botsglobal

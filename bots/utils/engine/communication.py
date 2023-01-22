@@ -24,9 +24,9 @@ if os.name == 'nt':
 elif os.name == 'posix':
     import fcntl
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.botsconfig import *
 
 @botslib.log_session
 def run(idchannel,command,idroute,rootidta=None):

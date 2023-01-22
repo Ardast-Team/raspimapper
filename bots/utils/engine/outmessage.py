@@ -7,12 +7,12 @@ from xml.etree import ElementInclude as ETI
 import json as simplejson
 from collections import OrderedDict
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from . import message
-from . import grammar
-from .. import node
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.engine import message
+from bots.utils.engine import grammar
+from bots.utils import node
+from bots.utils.botsconfig import *
 
 def outmessage_init(**ta_info):
     ''' dispatch function class Outmessage or subclass

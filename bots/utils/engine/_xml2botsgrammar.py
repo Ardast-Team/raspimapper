@@ -21,13 +21,13 @@ except ImportError:
 
 from collections import OrderedDict
 
-from . import botslib
-from . import botsinit
-from . import botsglobal
-from . import inmessage
-from . import outmessage
-from . import node
-from ..botsconfig import ID, LEVEL, MAX, MIN
+from bots.utils import botslib
+from bots.utils import botsinit
+from bots.utils import botsglobal
+from bots.utils.engine import inmessage
+from bots.utils.engine import outmessage
+from bots.utils import node
+from bots.utils.botsconfig import ID, LEVEL, MAX, MIN
 
 
 # classes used in inmessage for xml2botsgrammar.

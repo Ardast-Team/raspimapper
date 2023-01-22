@@ -11,7 +11,6 @@ def main(inn,out):
     out.put({'BOTSID':'ST'},{'BOTSID':'BIG','BIG07':'DR'})      #credit or debit
     
     out.put({'BOTSID':'ST'},{'BOTSID':'DTM','DTM01':'999','DTM02':transform.datemask(inn.get({'BOTSID':'message','deldtm':None}),'CCYY-MM-DD HH:mm','CCYYMMDD')})
-    out.put({'BOTSID':'ST'},{'BOTSID':'REF','REF01':'VR','REF02':inn.get({'BOTSID':'message','VendorID':None})})
     
     out.put({'BOTSID':'ST'},{'BOTSID':'ITD','ITD03':inn.get({'BOTSID':'message','termsdiscountpercent':None})})
     out.put({'BOTSID':'ST'},{'BOTSID':'ITD','ITD05':inn.get({'BOTSID':'message','termsdiscountdaysdue':None})})

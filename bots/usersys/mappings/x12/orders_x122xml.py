@@ -1,5 +1,5 @@
 #mapping-script
-from x12lib import get_art_num          #import x12 specifc helper function
+from .x12lib import get_art_num          #import x12 specifc helper function
 import bots.utils.engine.transform as transform      #import div bots helper functions
 
 def main(inn,out):

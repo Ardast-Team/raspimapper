@@ -10,11 +10,11 @@ import atexit
 import glob
 import logging
 #Bots-modules
-from .. import botsinit
-from .. import botslib
-from . import grammar
-from .. import botsglobal
-from ..botsconfig import *
+from bots.utils import botsinit
+from bots.utils import botslib
+from bots.utils.engine import grammar
+from bots.utils import botsglobal
+from bots.utils.botsconfig import *
 
 
 def startmulti(grammardir, editype):

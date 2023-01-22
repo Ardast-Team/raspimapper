@@ -1,15 +1,15 @@
 from bots.utils.botsconfig import *
 
 syntax = { 
-        'indented': True,
+        'indented':True,
         }
 
-structure=    [
+structure = [
     {ID:'message',MIN:1,MAX:1,
     QUERIES:{
         'frompartner':  {'BOTSID':'message','sender':None},
         'topartner':    {'BOTSID':'message','receiver':None},
-        'testindicator':{'BOTSID':'message','test':None},
+        'testindicator':{'BOTSID':'message','testindicator':None},
         },
     LEVEL:[
         {ID:'partys',MIN:0,MAX:1,LEVEL:[
@@ -40,22 +40,19 @@ recorddefs = {
           ],
     'party':[
             ['BOTSID','M',255,'A'],
-            ['qual', 'C', 17, 'AN'],            #party type: BY=buyer, DO=delivery place, SU=Supplier, IV=invoice address
-            ['gln', 'C', 13, 'AN'],             #GLN number identifying the party
+            ['qual', 'C', 3, 'AN'],
+            ['gln', 'C', 13, 'AN'],
+            ['DUNS', 'C', 13, 'AN'],
             ['internalID', 'C', 17, 'AN'],
             ['externalID', 'C', 17, 'AN'],
             ['name1', 'C', 70, 'AN'],
             ['name2', 'C', 70, 'AN'],
             ['address1', 'C', 70, 'AN'],
             ['address2', 'C', 70, 'AN'],
-            ['address3', 'C', 70, 'AN'],
             ['city', 'C', 70, 'AN'],
-            ['state', 'C', 35, 'AN'],
             ['pcode', 'C', 17, 'AN'],
+            ['state', 'C', 35, 'AN'],
             ['country', 'C', 3, 'AN'],
-            ['vatnum', 'C', 17, 'AN'],          #vat  number
-            ['iban', 'C', 17, 'AN'],
-            ['bic', 'C', 17, 'AN'],
           ],
     'lines':[
             ['BOTSID','M',255,'A'],

@@ -1,6 +1,6 @@
 from bots.utils.botsconfig import *
-from enveloperecords import recorddefs
-from tradacomssyntax import syntax
+from .enveloperecords import recorddefs
+from .tradacomssyntax import syntax
 
 nextmessage = ({'BOTSID':'STX'},)
 

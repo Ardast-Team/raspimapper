@@ -6,9 +6,9 @@ import atexit
 import logging
 import warnings
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from .. import botsinit
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils import botsinit
 
 import glob
 import shutil
@@ -18,11 +18,11 @@ try:
 except ImportError:
     from xml.etree import ElementTree as ET
 #bots-modules
-import inmessage
-import outmessage
-import transform
-import envelope
-from botsconfig import *
+import bots.utils.engine.inmessage as inmessage
+import bots.utils.engine.outmessage as outmessage
+import bots.utils.engine.transform as transform
+import bots.utils.engine.envelope as envelope
+from bots.utils.botsconfig import *
 
 ''' Start bots-engine2: do not use database for logging and configuration. (so: no GUI).
     Parameters are hard-coded for now (inpath, infilename, outpath, outfilename, editype, messagetype)

@@ -1,8 +1,8 @@
 from __future__ import print_function
 import sys
 #bots-modules
-from .. import botslib
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils.botsconfig import *
 ERROR_IN_GRAMMAR = 'BOTS_error_1$%3@7#!%+_)_+[{]}'  #used in this module to indicate part of grammar is already read and/or has errors
                                                     #no record should be called like this ;-))
 

@@ -1,11 +1,11 @@
 from __future__ import print_function
 import sys
 #bots-modules
-from .. import botslib
-from .. import node
-from .. import botsglobal
-from . import grammar
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import node
+from bots.utils import botsglobal
+from bots.utils.engine import grammar
+from bots.utils.botsconfig import *
 
 
 class Message(object):
@@ -40,7 +40,8 @@ class Message(object):
         if self.errorfatal:     #for fatal errors: (try to) get information like partners for edi file
             self.try_to_retrieve_info()
         if self.errorlist:
-            raise botslib.MessageError(''.join(self.errorlist))
+            excmsg = ''.join(self.errorlist)
+            raise botslib.MessageError(excmsg)
 
     def try_to_retrieve_info(self):
         ''' when edi-file is not correct, (try to) get info about eg partnerID's in message
