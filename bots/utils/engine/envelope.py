@@ -155,7 +155,8 @@ def envelope(ta_info,ta_list):
                 classtocall = globals()[ta_info['editype']]
             except KeyError:
                 raise botslib.OutMessageError('Not found envelope "%(envelope)s" for editype "%(editype)s".',ta_info)
-    info_from_mapping = simplejson.loads(ta_info.get('rsrv5'))
+    rsrv5 = ta_info.get('rsrv5')
+    info_from_mapping = simplejson.loads(rsrv5)
     envelope_content = info_from_mapping['envelope_content']
     syntax = info_from_mapping['syntax']
     env = classtocall(ta_info,ta_list,userscript,scriptname,envelope_content,syntax)
