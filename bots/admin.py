@@ -30,7 +30,6 @@ from django.urls import reverse
 # admin.site.register(models.Persist)
 
 
-
 # -*- coding: utf-8 -*-
 
 ''' Bots configuration for django's admin site.'''

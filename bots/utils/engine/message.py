@@ -1,5 +1,6 @@
 from __future__ import print_function
 import sys
+import os
 #bots-modules
 from bots.utils import botslib
 from bots.utils import node
@@ -7,6 +8,8 @@ from bots.utils import botsglobal
 from bots.utils.engine import grammar
 from bots.utils.botsconfig import *
 
+from ediview.models import Record,EdiMessage
+from grammarview.models import GrammarRecord,EdiGrammar
 
 class Message(object):
     ''' abstract class; represents a edi message.
@@ -325,14 +328,25 @@ class Message(object):
 
     def _logmessagecontent(self,node_instance):
         botsglobal.logger.debug('Record "%(BOTSID)s":',node_instance.record)
+        edimessage = EdiMessage.objects.get_or_create(name = self.ta_info['filename'])
+        record_ancestor_qs = Record.objects.filter(edimessage = edimessage[0],value='##########')
+        if record_ancestor_qs.exists():
+            record_ancestor=record_ancestor_qs.latest('id')
+            record_parent = Record.objects.create(name = node_instance.record['BOTSID'], value = '##########' , edimessage = edimessage[0],tn_parent=record_ancestor)
+        else:
+            record_parent = Record.objects.create(name = node_instance.record['BOTSID'], value = '##########' , edimessage = edimessage[0])
+        for record_child in node_instance.record:
+            if record_child != 'BOTSID':
+                Record.objects.create(name = record_child, value = node_instance.record[record_child], edimessage = edimessage[0], tn_parent=record_parent)
         self._logfieldcontent(node_instance.record)    #handle fields of this record
         for child in node_instance.children:
             self._logmessagecontent(child)
 
+
     @staticmethod
     def _logfieldcontent(noderecord):
         for key,value in noderecord.items():
-            if key not in ['BOTSID','BOTSIDnr']:
+            if key not in ['BOTSID','BOTSIDnr','BOTSIDpr']:
                 botsglobal.logger.debug('    "%(key)s" : "%(value)s"',{'key':key,'value':value})
 
     #***************************************************************************

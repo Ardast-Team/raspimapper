@@ -23,8 +23,10 @@ admin.site.index_title = 'My Admin Panel'
 
 urlpatterns = [
    #path('admin/', admin.site.urls),
+    path('', include('bots.urls')),
     path('bots/', include('bots.urls')),
-    path('playground', include('playground.urls')),
+    path('playground/', include('playground.urls')),
+    path('grammarview/', include('grammarview.urls')),
     #path('__debug__/', include(debug_toolbar.urls)),
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico')))
 ]

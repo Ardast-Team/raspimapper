@@ -1,5 +1,6 @@
 from __future__ import print_function
 import sys
+import os
 import time
 import codecs
 from xml.etree import ElementTree as ET
@@ -12,6 +13,9 @@ from bots.utils.engine import message
 from bots.utils import node
 from bots.utils.engine import grammar
 from bots.utils.botsconfig import *
+
+from ediview.models import EdiMessage
+from grammarview.models import EdiGrammar, GrammarRecord
 ''' Reading/lexing/parsing/splitting an edifile.'''
 
 def parse_edi_file(**ta_info):
@@ -61,6 +65,8 @@ class Inmessage(message.Message):
         ''' read grammar for a message/envelope.
         '''
         self.defmessage = grammar.grammarread(self.ta_info['editype'],self.ta_info['messagetype'],typeofgrammarfile)
+        edigrammar = EdiGrammar.objects.get_or_create(name = '%(root)s/%(filename)s'%{'root': os.path.split(os.path.split(self.defmessage.grammarname)[0])[-1],'filename':os.path.split(self.defmessage.grammarname)[-1]}) # add syntax
+        self.defmessage.insert_grammarrecord_BD(self.defmessage.structure,edigrammar[0])
         botslib.updateunlessset(self.ta_info,self.defmessage.syntax)
 
 
@@ -270,6 +276,8 @@ class Inmessage(message.Message):
                 #read grammar
                 try:
                     defmessage = grammar.grammarread(self.__class__.__name__,messagetype,typeofgrammarfile='grammars')
+                    edigrammar = EdiGrammar.objects.get_or_create(name = '%(root)s/%(filename)s'%{'root': os.path.split(os.path.split(defmessage.grammarname)[0])[-1],'filename':os.path.split(defmessage.grammarname)[-1]}) # add syntax
+                    defmessage.insert_grammarrecord_BD(defmessage.structure,edigrammar[0])
                 except botslib.BotsImportError:
                     #could not find grammar via normal method. try if there is a user exit to find grammar.
                     raisenovalidmapping_error = True
@@ -278,6 +286,8 @@ class Inmessage(message.Message):
                         if messagetype2:
                             try:
                                 defmessage = grammar.grammarread(self.__class__.__name__,messagetype2,typeofgrammarfile='grammars')
+                                edigrammar = EdiGrammar.objects.get_or_create(name = '%(root)s/%(filename)s'%{'root': os.path.split(os.path.split(defmessage.grammarname)[0])[-1],'filename':os.path.split(defmessage.grammarname)[-1]}) # add syntax
+                                defmessage.insert_grammarrecord_BD(defmessage.structure,edigrammar[0])
                                 raisenovalidmapping_error = False
                             except botslib.BotsImportError:
                                 pass
@@ -320,6 +330,7 @@ class Inmessage(message.Message):
         ''' read content of edi file to memory.
         '''
         botsglobal.logger.debug('Read edi file "%(filename)s".',self.ta_info)
+
         self.rawinput = botslib.readdata(filename=self.ta_info['filename'],charset=self.ta_info['charset'],errors=self.ta_info['checkcharsetin'])
 
     def _sniff(self):

@@ -57,7 +57,7 @@ urlpatterns = [
     # url(r'^srcfiler.*', login_required(views.srcfiler)),
     path('logfiler/', login_required(views.logfiler)),
     # url(r'^logfiler.*', login_required(views.logfiler)),
-
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     #only staff
     #url(r'^botsadmin/$', login_required(views.home)),  #do not show django admin root page
     #url(r'^botsadmin/$', login_required(views.home)),  #do not show django admin root page

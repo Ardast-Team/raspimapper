@@ -33,14 +33,19 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.admindocs',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'mptt',
+    'treenode',
     #'debug_toolbar',
     'playground',
     'bots',
+    'ediview',
+    'grammarview',
 ]
 
 MIDDLEWARE = [
