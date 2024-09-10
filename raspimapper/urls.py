@@ -22,7 +22,9 @@ admin.site.site_header = 'Mapper Admin'
 admin.site.index_title = 'My Admin Panel'
 
 urlpatterns = [
-   #path('admin/', admin.site.urls),
+    
+    path('', RedirectView.as_view(url='bots/home/')),
+    path('admin/', RedirectView.as_view(url='../bots/admin/')),
     path('bots/', include('bots.urls')),
     path('playground', include('playground.urls')),
     path('__debug__/', include(debug_toolbar.urls)),

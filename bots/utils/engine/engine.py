@@ -167,6 +167,7 @@ def start():
                 botsglobal.logger.info('Run routes from command line: "%(routes)s".',{'routes':str(use_routestorun)})
             elif command == 'new':  #fetch all active routes from database unless 'not in default run' or not active.
                 use_routestorun = []
+                # TODO : gzamatro - Change below to adapt to newest Django specs
                 for row in botslib.query('''SELECT DISTINCT idroute
                                             FROM routes
                                             WHERE active=%(active)s

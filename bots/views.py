@@ -124,9 +124,9 @@ def incoming(request,*kw,**kwargs):
                 if request.user.is_staff or request.user.is_superuser:
                     idta = viewlib.safe_int(request.POST['delete'])
                     #delete from filereport
-                    models.filereport.objects.filter(idta=idta).delete()
+                    models.Filereport.objects.filter(idta=idta).delete()
                     #get ta_object
-                    ta_object = models.ta.objects.get(idta=idta)
+                    ta_object = models.Transaction.objects.get(idta=idta)
                     #delete as much as possible in ta table
                     viewlib.delete_from_ta(ta_object)
                 else:
@@ -135,7 +135,7 @@ def incoming(request,*kw,**kwargs):
                     messages.add_message(request, messages.INFO, notification)
             elif 'retransmit' in request.POST:        #from ViewIncoming form using star rereceive
                 idta = request.POST['retransmit']
-                filereport = models.filereport.objects.get(idta=viewlib.safe_int(idta))
+                filereport = models.Filereport.objects.get(idta=viewlib.safe_int(idta))
                 if filereport.fromchannel:   #for resend files fromchannel has no value. (do not rereceive resend items)
                     filereport.retransmit = not filereport.retransmit
                     filereport.save()
@@ -186,7 +186,7 @@ def outgoing(request,*kw,**kwargs):
                 form = forms.SelectOutgoing(formin.cleaned_data)
                 return django.shortcuts.render(request, form.template, {'form': form})
             elif 'retransmit' in request.POST:  #from ViewOutgoing form using star resend
-                ta_object = models.ta.objects.get(idta=viewlib.safe_int(request.POST['retransmit']))
+                ta_object = models.Transaction.objects.get(idta=viewlib.safe_int(request.POST['retransmit']))
                 if ta_object.statust != RESEND:     #can only resend last file
                     ta_object.retransmit = not ta_object.retransmit
                     ta_object.save()
@@ -199,7 +199,7 @@ def outgoing(request,*kw,**kwargs):
                         outgoingfile.retransmit = not outgoingfile.retransmit
                         outgoingfile.save()
             elif 'noautomaticretry' in request.POST:        #from ViewOutgoing form using star 'no automaticretry'
-                ta_object = models.ta.objects.get(idta=viewlib.safe_int(request.POST['noautomaticretry']))
+                ta_object = models.Transaction.objects.get(idta=viewlib.safe_int(request.POST['noautomaticretry']))
                 if ta_object.statust == ERROR:
                     ta_object.statust = NO_RETRY
                     ta_object.save()
@@ -237,7 +237,7 @@ def document(request,*kw,**kwargs):
                 return django.shortcuts.render(request, form.template, {'form': form})
             elif 'retransmit' in request.POST:        #coming from ViewDocument, no reportidta
                 idta = request.POST['retransmit']
-                filereport = models.filereport.objects.get(idta=viewlib.safe_int(idta))
+                filereport = models.Filereport.objects.get(idta=viewlib.safe_int(idta))
                 filereport.retransmit = not filereport.retransmit
                 filereport.save()
             else:                                    #coming from ViewDocument, next page etc
@@ -296,7 +296,7 @@ def detail(request,*kw,**kwargs):
     '''
     if request.method == 'GET':
         if 'inidta' in request.GET: #from incoming screen
-            rootta = models.ta.objects.get(idta=viewlib.safe_int(request.GET['inidta']))
+            rootta = models.Transaction.objects.get(idta=viewlib.safe_int(request.GET['inidta']))
         else:                       #from outgoing screen: trace back to EXTERNIN first
             rootta = viewlib.django_trace_origin(viewlib.safe_int(request.GET['outidta']),{'status':EXTERNIN})[0]
         viewlib.gettrace(rootta)
@@ -323,7 +323,7 @@ def confirm(request,*kw,**kwargs):
             request.POST = viewlib.changepostparameters(request.POST,soort='confirm2out')
             return outgoing(request)
         elif 'confirm' in request.POST:        #coming ViewConfirm, using star 'Manual confirm'
-            ta_object = models.ta.objects.get(idta=viewlib.safe_int(request.POST['confirm']))
+            ta_object = models.Transaction.objects.get(idta=viewlib.safe_int(request.POST['confirm']))
             if ta_object.confirmed == False and ta_object.confirmtype.startswith('ask'):
                 ta_object.confirmed = True
                 ta_object.confirmidta = '-1'   # to indicate a manual confirmation
@@ -359,7 +359,7 @@ def filer(request,*kw,**kwargs):
             if idta == 0: #for the 'starred' file names (eg multiple output)
                 raise Exception('to be caught')
 
-            currentta = list(models.ta.objects.filter(idta=idta))[0]
+            currentta = list(models.Transaction.objects.filter(idta=idta))[0]
             if request.GET['action'] == 'downl':
                 response = django.http.HttpResponse(content_type=currentta.contenttype)
                 if currentta.contenttype == 'text/html':
@@ -372,21 +372,21 @@ def filer(request,*kw,**kwargs):
                 return response
             elif request.GET['action'] == 'previous':
                 if currentta.parent:    #has a explicit parent
-                    talijst = list(models.ta.objects.filter(idta=currentta.parent))
+                    talijst = list(models.Transaction.objects.filter(idta=currentta.parent))
                 else:                   #get list of ta's referring to this idta as child
-                    talijst = list(models.ta.objects.filter(idta__range=(currentta.script,currentta.idta),child=currentta.idta))
+                    talijst = list(models.Transaction.objects.filter(idta__range=(currentta.script,currentta.idta),child=currentta.idta))
             elif request.GET['action'] == 'this':
                 if currentta.status == EXTERNIN:        #EXTERNIN can not be displayed, so go to first FILEIN
-                    talijst = list(models.ta.objects.filter(parent=currentta.idta))
+                    talijst = list(models.Transaction.objects.filter(parent=currentta.idta))
                 elif currentta.status == EXTERNOUT:     #EXTERNOUT can not be displayed, so go to last FILEOUT
-                    talijst = list(models.ta.objects.filter(idta=currentta.parent))
+                    talijst = list(models.Transaction.objects.filter(idta=currentta.parent))
                 else:
                     talijst = [currentta]
             elif request.GET['action'] == 'next':
                 if currentta.child:     #has a explicit child
-                    talijst = list(models.ta.objects.filter(idta=currentta.child))
+                    talijst = list(models.Transaction.objects.filter(idta=currentta.child))
                 else:
-                    talijst = list(models.ta.objects.filter(parent=currentta.idta))
+                    talijst = list(models.Transaction.objects.filter(parent=currentta.idta))
             for ta_object in talijst:
                 #determine if can display file
                 if ta_object.filename and ta_object.filename.isdigit():
@@ -610,18 +610,18 @@ def delete(request,*kw,**kwargs):
                     from django.db.models import Min
                     list_file = []  #list of files for deletion in data-directory
                     report_idta_lowest = 0
-                    for acc_report in models.report.objects.filter(acceptance=1): #for each acceptance report. is not very efficient.
+                    for acc_report in models.Report.objects.filter(acceptance=1): #for each acceptance report. is not very efficient.
                         if not report_idta_lowest:
                             report_idta_lowest = acc_report.idta
-                        max_report_idta = models.report.objects.filter(idta__gt=acc_report.idta).aggregate(Min('idta'))['idta__min'] #select 'next' report...
+                        max_report_idta = models.Report.objects.filter(idta__gt=acc_report.idta).aggregate(Min('idta'))['idta__min'] #select 'next' report...
                         if not max_report_idta: #if report is report of last run, there is no next report
                             max_report_idta = sys.maxsize
                         #we have a idta-range now: from (and including) acc_report.idta till (and excluding) max_report_idta
-                        list_file += models.ta.objects.filter(idta__gte=acc_report.idta,idta__lt=max_report_idta).exclude(status=1).values_list('filename', flat=True).distinct()
-                        models.ta.objects.filter(idta__gte=acc_report.idta,idta__lt=max_report_idta).delete()   #delete ta in range
-                        models.filereport.objects.filter(idta__gte=acc_report.idta,idta__lt=max_report_idta).delete()   #delete filereports in range
+                        list_file += models.Transaction.objects.filter(idta__gte=acc_report.idta,idta__lt=max_report_idta).exclude(status=1).values_list('filename', flat=True).distinct()
+                        models.Transaction.objects.filter(idta__gte=acc_report.idta,idta__lt=max_report_idta).delete()   #delete ta in range
+                        models.Filereport.objects.filter(idta__gte=acc_report.idta,idta__lt=max_report_idta).delete()   #delete filereports in range
                     if report_idta_lowest:
-                        models.report.objects.filter(idta__gte=report_idta_lowest,acceptance=1).delete()     #delete all acceptance reports
+                        models.Report.objects.filter(idta__gte=report_idta_lowest,acceptance=1).delete()     #delete all acceptance reports
                         for filename in list_file:      #delete all files in data directory geenrated during acceptance testing
                             if filename.isdigit():
                                 botslib.deldata(filename)
@@ -629,12 +629,12 @@ def delete(request,*kw,**kwargs):
                     messages.add_message(request, messages.INFO, notification)
                     botsglobal.logger.info(notification)
                 if form.cleaned_data['delconfiguration']:
-                    models.confirmrule.objects.all().delete()
-                    models.routes.objects.all().delete()
-                    models.channel.objects.all().delete()
-                    models.chanpar.objects.all().delete()
-                    models.translate.objects.all().delete()
-                    models.partner.objects.all().delete()
+                    models.ConfirmRule.objects.all().delete()
+                    models.Routes.objects.all().delete()
+                    models.Channel.objects.all().delete()
+                    models.ChannelPartnerMails.objects.all().delete()
+                    models.Translate.objects.all().delete()
+                    models.Partner.objects.all().delete()
                     notification = 'Database configuration is deleted.'
                     messages.add_message(request, messages.INFO, notification)
                     botsglobal.logger.info(notification)

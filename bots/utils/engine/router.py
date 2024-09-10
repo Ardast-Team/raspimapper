@@ -314,6 +314,7 @@ class automaticretrycommunication(new):
             #this is the first time automaticretrycommunication is run.
             #do not do anything this run, in order to avoid sending older files.
             return False    #no run
+        # TODO: gzamataro - convert query to Django Default filter
         for row in botslib.query('''SELECT MIN(idta) AS min_idta
                                     FROM filereport
                                     WHERE idta > %(idta_lastretry)s
@@ -323,6 +324,7 @@ class automaticretrycommunication(new):
         if not startidta:
             return False    #no run
         do_retransmit = False
+        # TODO: gzamataro - convert query to Django Default filter
         for row in botslib.query('''SELECT idta,parent,numberofresends
                                     FROM ta
                                     WHERE idta > %(startidta)s
@@ -349,6 +351,7 @@ class resend(new):
             This could be improved by maintaining separate list of resends (a queue).
         '''
         do_retransmit = False
+        # TODO: gzamataro - convert query to Django Default filter
         for row in botslib.query('''SELECT idta,parent,numberofresends
                                     FROM ta
                                     WHERE retransmit = %(retransmit)s
@@ -393,12 +396,14 @@ class rereceive(new):
         ''' prepare the files indicated by user to be rereceived.
         '''
         do_retransmit = False
+        # TODO: gzamataro - convert query to Django Default filter
         for row in botslib.query('''SELECT idta
                                     FROM filereport
                                     WHERE retransmit = %(retransmit)s ''',
                                     {'retransmit':1}):
             do_retransmit = True        #True is at least one file needs to be received
             #reset the 'rereceive' indication in db.filereport
+            # TODO: gzamataro - convert query to Django Default filter
             botslib.changeq('''UPDATE filereport
                               SET retransmit = %(retransmit)s
                               WHERE idta = %(idta)s ''',
@@ -413,6 +418,7 @@ class rereceive(new):
             #and as ta.EXTERNIN and ta.FILEIN are already there (re-injected), these are picked up and processed.
             ta_org_EXTERNIN = botslib.OldTransaction(row['idta'])
             ta_new_EXTERNIN = ta_org_EXTERNIN.copyta(status=EXTERNIN,statust=DONE,parent=0)
+            # TODO: gzamataro - convert query to Django Default filter
             for row2 in botslib.query('''SELECT idta
                                         FROM ta
                                         WHERE parent = %(parent)s ''',

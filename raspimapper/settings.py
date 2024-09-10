@@ -144,7 +144,7 @@ INTERNAL_IPS = [
 ###############
 #BOTS SETTINGS
 ###############
-APPEND_SLASH=False
+APPEND_SLASH=True
 
 LOGIN_REDIRECT_URL = '../home/'
 LOGOUT_REDIRECT_URL= '../login/'

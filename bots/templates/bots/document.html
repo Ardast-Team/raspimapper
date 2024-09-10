@@ -46,10 +46,10 @@
                     </div>
                 </td>
                 <td>{{row.get_status_display}}</td>
-                <td><a href="/filer/?action=this&amp;idta={{row.idta}}" class="botslink" target="_blank" >{{row.botskey}}</a></td>
+                <td><a href="/bots/filer/?action=this&amp;idta={{row.idta}}" class="botslink" target="_blank" >{{row.botskey}}</a></td>
                 <td>{{row.reference}}</td>
                 <td class="nowrap">{{row.ts|date:"Y-m-d H:i:s"}}</td>
-                <td class="nowrap"><a href="/filer/?action=this&amp;idta={{row.idta}}" target="_blank" class="botslink" title="{{row.infilename}}" >{{row.filename|shortpath}}</a></td>
+                <td class="nowrap"><a href="/bots/filer/?action=this&amp;idta={{row.idta}}" target="_blank" class="botslink" title="{{row.infilename}}" >{{row.filename|shortpath}}</a></td>
                 <td class="nowrap">
                     {% if row.confirmtype %}
                         {{row.confirmtype}}
@@ -59,7 +59,7 @@
                 </td>
                 <td class="nowrap">
                     {% if row.confirmidta > 0 %}
-                        <a href="/filer/?action=this&amp;idta={{row.confirmidta}}" target="_blank" class="botslink">{{row.confirmidta}}</a>
+                        <a href="/bots/filer/?action=this&amp;idta={{row.confirmidta}}" target="_blank" class="botslink">{{row.confirmidta}}</a>
                     {% else %}
                         {% if row.confirmidta %}
                             Manual confirm

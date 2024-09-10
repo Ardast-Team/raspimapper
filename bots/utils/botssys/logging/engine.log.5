@@ -1,30 +1,768 @@
-20221223 12:34:01 INFO     engine : served at port: "8000".
-20221223 12:34:01 INFO     engine : platform: "Linux-5.10.63-v7l+-armv7l-with-debian-10.11".
-20221223 12:34:01 INFO     engine : machine: "armv7l".
-20221223 12:34:01 INFO     engine : python version: "3.7.3".
-20221223 12:34:01 INFO     engine : django version: "(3, 2, 16, 'final', 0)".
-20221223 12:34:01 INFO     engine : bots version: "3.3.0".
-20221223 12:34:01 INFO     engine : bots installation path: "/home/pi/Documents/raspimapper/bots/utils".
-20221223 12:34:01 INFO     engine : config path: "/home/pi/Documents/raspimapper/raspimapper".
-20221223 12:34:01 INFO     engine : botssys path: "/home/pi/Documents/raspimapper/bots/utils/botssys".
-20221223 12:34:01 INFO     engine : usersys path: "/home/pi/Documents/raspimapper/bots/usersys".
-20221223 12:34:01 INFO     engine : local date/time: "2022-12-23T12:34:01.268125".
-20221223 12:34:01 INFO     engine : DATABASE_ENGINE: "django.db.backends.sqlite3".
-20221223 12:34:01 INFO     engine : DATABASE_NAME: "/home/pi/Documents/raspimapper/db.sqlite3".
-20221223 12:34:01 INFO     engine : DATABASE_USER: "".
-20221223 12:34:01 INFO     engine : DATABASE_HOST: "".
-20221223 12:34:01 INFO     engine : DATABASE_PORT: "".
-20221223 12:34:01 INFO     engine : DATABASE_OPTIONS: "{}".
-20221223 12:34:01 INFO     engine : Connected to database.
-20221223 12:34:01 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/routescripts/botsengine": No module named 'bots.usersys.routescripts.botsengine'.
-20221223 12:34:01 INFO     engine : This run is an acceptance test - as indicated in option "runacceptancetest" in bots.ini.
-20221223 12:34:01 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/routescripts/bots_acceptancetest".
-20221223 12:34:01 DEBUG    engine : Run userscript "pretest" in "/home/pi/Documents/raspimapper/bots/usersys/routescripts/bots_acceptancetest".
-20221223 12:34:01 INFO     engine : Run "new".
-20221223 12:34:01 INFO     engine : Run active routes from database that are in default run: "['myfirstroute']".
-20221223 12:34:01 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/routescripts/myfirstroute": No module named 'bots.usersys.routescripts.myfirstroute'.
-20221223 12:34:01 INFO     engine : Running route myfirstroute 9999
-20221223 12:34:01 DEBUG    engine : Start communication channel "myfirstroute_in" type file in.
-20221223 12:34:01 DEBUG    engine : Channel "myfirstroute_in" adapted for acceptance test: type "file", testpath "".
-20221223 12:34:01 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/communicationscripts/myfirstroute_in": No module named 'bots.usersys.communicationscripts.myfirstroute_in'.
-20221223 12:34:13 DEBUG    engine : Finished communication channel "myfirstroute_in" type file in.
+20240910 20:46:43 INFO     engine : served at port: "8000".
+20240910 20:46:43 INFO     engine : platform: "Linux-5.10.63-v7l+-armv7l-with-debian-10.11".
+20240910 20:46:43 INFO     engine : machine: "armv7l".
+20240910 20:46:43 INFO     engine : python version: "3.7.3".
+20240910 20:46:43 INFO     engine : django version: "(3, 2, 16, 'final', 0)".
+20240910 20:46:43 INFO     engine : bots version: "3.3.0".
+20240910 20:46:43 INFO     engine : bots installation path: "/home/pi/Documents/raspimapper/bots/utils".
+20240910 20:46:43 INFO     engine : config path: "/home/pi/Documents/raspimapper/raspimapper".
+20240910 20:46:43 INFO     engine : botssys path: "/home/pi/Documents/raspimapper/bots/utils/botssys".
+20240910 20:46:43 INFO     engine : usersys path: "/home/pi/Documents/raspimapper/bots/usersys".
+20240910 20:46:43 INFO     engine : local date/time: "2024-09-10T20:46:43.433837".
+20240910 20:46:43 INFO     engine : DATABASE_ENGINE: "django.db.backends.sqlite3".
+20240910 20:46:43 INFO     engine : DATABASE_NAME: "/home/pi/Documents/raspimapper/db.sqlite3".
+20240910 20:46:43 INFO     engine : DATABASE_USER: "".
+20240910 20:46:43 INFO     engine : DATABASE_HOST: "".
+20240910 20:46:43 INFO     engine : DATABASE_PORT: "".
+20240910 20:46:43 INFO     engine : DATABASE_OPTIONS: "{}".
+20240910 20:46:43 INFO     engine : Connected to database.
+20240910 20:46:43 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/routescripts/botsengine": No module named 'bots.usersys.routescripts.botsengine'.
+20240910 20:46:43 INFO     engine : This run is an acceptance test - as indicated in option "runacceptancetest" in bots.ini.
+20240910 20:46:43 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/routescripts/bots_acceptancetest".
+20240910 20:46:43 DEBUG    engine : Run userscript "pretest" in "/home/pi/Documents/raspimapper/bots/usersys/routescripts/bots_acceptancetest".
+20240910 20:46:43 INFO     engine : Run "new".
+20240910 20:46:43 INFO     engine : Run active routes from database that are in default run: "['myfirstroute']".
+20240910 20:46:43 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/routescripts/myfirstroute": No module named 'bots.usersys.routescripts.myfirstroute'.
+20240910 20:46:43 INFO     engine : Running route myfirstroute 9999
+20240910 20:46:43 DEBUG    engine : Start communication channel "myfirstroute_in" type file in.
+20240910 20:46:43 DEBUG    engine : Channel "myfirstroute_in" adapted for acceptance test: type "file", testpath "".
+20240910 20:46:43 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/communicationscripts/myfirstroute_in": No module named 'bots.usersys.communicationscripts.myfirstroute_in'.
+20240910 20:46:44 DEBUG    engine : Finished communication channel "myfirstroute_in" type file in.
+20240910 20:46:44 DEBUG    engine : Start preprocessing "mailbag" for file "1140".
+20240910 20:46:44 DEBUG    engine :         File written: "1146".
+20240910 20:46:44 DEBUG    engine :         File written: "1147".
+20240910 20:46:44 DEBUG    engine : OK preprocessing "mailbag" for file "1140".
+20240910 20:46:44 DEBUG    engine : Start preprocessing "mailbag" for file "1142".
+20240910 20:46:45 DEBUG    engine :         File written: "1148".
+20240910 20:46:45 DEBUG    engine : OK preprocessing "mailbag" for file "1142".
+20240910 20:46:45 DEBUG    engine : Start preprocessing "mailbag" for file "1144".
+20240910 20:46:45 DEBUG    engine :         File written: "1149".
+20240910 20:46:45 DEBUG    engine : OK preprocessing "mailbag" for file "1144".
+20240910 20:46:45 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/mappings/translation": No module named 'bots.usersys.mappings.translation'.
+20240910 20:46:45 DEBUG    engine : Start translating file "1146" editype "edifact" messagetype "edifact".
+20240910 20:46:45 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:45 DEBUG    engine : Read edifact file "1146".
+20240910 20:46:45 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/charsets/unoa".
+20240910 20:46:45 DEBUG    engine.map : "ORDERS" for get({'BOTSID': 'UNH', 'S009.0065': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "D" for get({'BOTSID': 'UNH', 'S009.0052': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "96A" for get({'BOTSID': 'UNH', 'S009.0054': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "UN" for get({'BOTSID': 'UNH', 'S009.0051': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "EAN008" for get({'BOTSID': 'UNH', 'S009.0057': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/ORDERSD96AUNEAN008".
+20240910 20:46:45 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:45 DEBUG    engine.map : "ORDERS" for get({'BOTSID': 'UNH', 'S009.0065': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "D" for get({'BOTSID': 'UNH', 'S009.0052': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "96A" for get({'BOTSID': 'UNH', 'S009.0054': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "UN" for get({'BOTSID': 'UNH', 'S009.0051': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "EAN008" for get({'BOTSID': 'UNH', 'S009.0057': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/ORDERSD96AUNEAN008".
+20240910 20:46:45 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:45 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'},) returns "{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000004-1', 'BOTSIDnr': '1'}".
+20240910 20:46:45 DEBUG    engine.map : Start parsing edifact envelopes
+20240910 20:46:45 DEBUG    engine.map : "T0000000004-1" for get({'BOTSID': 'UNB', '0020': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "T0000000004-1" for get({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNZ', '0020': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "2" for get({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNZ', '0036': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000004-1', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:45 DEBUG    engine.map : "T0000000004-1" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "T0000000004-1" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0062': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "9" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0074': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000004-2', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:45 DEBUG    engine.map : "T0000000004-2" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "T0000000004-2" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0062': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "9" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0074': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : Parsing edifact envelopes is OK
+20240910 20:46:45 DEBUG    engine.map : "T0000000004-1" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "T0000000004-2" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "8712345678906" for get({'BOTSID': 'UNB', 'S002.0004': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNB', 'S003.0010': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "None" for get({'BOTSID': 'UNB', '0035': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine : Record "UNB":
+20240910 20:46:45 DEBUG    engine :     "S001.0001" : "UNOA"
+20240910 20:46:45 DEBUG    engine :     "S001.0002" : "3"
+20240910 20:46:45 DEBUG    engine :     "S002.0004" : "8712345678906"
+20240910 20:46:45 DEBUG    engine :     "S002.0007" : "14"
+20240910 20:46:45 DEBUG    engine :     "S003.0010" : "PARTNER2"
+20240910 20:46:45 DEBUG    engine :     "S003.0007" : "14"
+20240910 20:46:45 DEBUG    engine :     "S004.0017" : "050824"
+20240910 20:46:45 DEBUG    engine :     "S004.0019" : "1727"
+20240910 20:46:45 DEBUG    engine :     "0020" : "T0000000004-1"
+20240910 20:46:45 DEBUG    engine : Record "UNH":
+20240910 20:46:45 DEBUG    engine :     "0062" : "T0000000004-1"
+20240910 20:46:45 DEBUG    engine :     "S009.0065" : "ORDERS"
+20240910 20:46:45 DEBUG    engine :     "S009.0052" : "D"
+20240910 20:46:45 DEBUG    engine :     "S009.0054" : "96A"
+20240910 20:46:45 DEBUG    engine :     "S009.0051" : "UN"
+20240910 20:46:45 DEBUG    engine :     "S009.0057" : "EAN008"
+20240910 20:46:45 DEBUG    engine : Record "BGM":
+20240910 20:46:45 DEBUG    engine :     "C002.1001" : "50E"
+20240910 20:46:45 DEBUG    engine :     "1004" : "ORDT0000000004-1"
+20240910 20:46:45 DEBUG    engine :     "1225" : "9"
+20240910 20:46:45 DEBUG    engine :     "4343" : "NA"
+20240910 20:46:45 DEBUG    engine : Record "DTM":
+20240910 20:46:45 DEBUG    engine :     "C507.2005" : "137"
+20240910 20:46:45 DEBUG    engine :     "C507.2380" : "20050819"
+20240910 20:46:45 DEBUG    engine :     "C507.2379" : "102"
+20240910 20:46:45 DEBUG    engine : Record "NAD":
+20240910 20:46:45 DEBUG    engine :     "3035" : "SU"
+20240910 20:46:45 DEBUG    engine :     "C082.3039" : "PARTNER2"
+20240910 20:46:45 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:45 DEBUG    engine : Record "NAD":
+20240910 20:46:45 DEBUG    engine :     "3035" : "BY"
+20240910 20:46:45 DEBUG    engine :     "C082.3039" : "PARTNER1"
+20240910 20:46:45 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:45 DEBUG    engine : Record "LIN":
+20240910 20:46:45 DEBUG    engine :     "1082" : "1"
+20240910 20:46:45 DEBUG    engine :     "C212.7140" : "2000100873151"
+20240910 20:46:45 DEBUG    engine :     "C212.7143" : "EN"
+20240910 20:46:45 DEBUG    engine : Record "QTY":
+20240910 20:46:45 DEBUG    engine :     "C186.6063" : "21"
+20240910 20:46:45 DEBUG    engine :     "C186.6060" : "1"
+20240910 20:46:45 DEBUG    engine : Record "UNS":
+20240910 20:46:45 DEBUG    engine :     "0081" : "S"
+20240910 20:46:45 DEBUG    engine : Record "UNT":
+20240910 20:46:45 DEBUG    engine :     "0074" : "9"
+20240910 20:46:45 DEBUG    engine :     "0062" : "T0000000004-1"
+20240910 20:46:45 DEBUG    engine : Record "UNH":
+20240910 20:46:45 DEBUG    engine :     "0062" : "T0000000004-2"
+20240910 20:46:45 DEBUG    engine :     "S009.0065" : "ORDERS"
+20240910 20:46:45 DEBUG    engine :     "S009.0052" : "D"
+20240910 20:46:45 DEBUG    engine :     "S009.0054" : "96A"
+20240910 20:46:45 DEBUG    engine :     "S009.0051" : "UN"
+20240910 20:46:45 DEBUG    engine :     "S009.0057" : "EAN008"
+20240910 20:46:45 DEBUG    engine : Record "BGM":
+20240910 20:46:45 DEBUG    engine :     "C002.1001" : "50E"
+20240910 20:46:45 DEBUG    engine :     "1004" : "ORDT0000000004-2"
+20240910 20:46:45 DEBUG    engine :     "1225" : "9"
+20240910 20:46:45 DEBUG    engine :     "4343" : "NA"
+20240910 20:46:45 DEBUG    engine : Record "DTM":
+20240910 20:46:45 DEBUG    engine :     "C507.2005" : "137"
+20240910 20:46:45 DEBUG    engine :     "C507.2380" : "20050819"
+20240910 20:46:45 DEBUG    engine :     "C507.2379" : "102"
+20240910 20:46:45 DEBUG    engine : Record "NAD":
+20240910 20:46:45 DEBUG    engine :     "3035" : "SU"
+20240910 20:46:45 DEBUG    engine :     "C082.3039" : "PARTNER2"
+20240910 20:46:45 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:45 DEBUG    engine : Record "NAD":
+20240910 20:46:45 DEBUG    engine :     "3035" : "BY"
+20240910 20:46:45 DEBUG    engine :     "C082.3039" : "PARTNER1"
+20240910 20:46:45 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:45 DEBUG    engine : Record "LIN":
+20240910 20:46:45 DEBUG    engine :     "1082" : "1"
+20240910 20:46:45 DEBUG    engine :     "C212.7140" : "2000100873151"
+20240910 20:46:45 DEBUG    engine :     "C212.7143" : "EN"
+20240910 20:46:45 DEBUG    engine : Record "QTY":
+20240910 20:46:45 DEBUG    engine :     "C186.6063" : "21"
+20240910 20:46:45 DEBUG    engine :     "C186.6060" : "1"
+20240910 20:46:45 DEBUG    engine : Record "UNS":
+20240910 20:46:45 DEBUG    engine :     "0081" : "S"
+20240910 20:46:45 DEBUG    engine : Record "UNT":
+20240910 20:46:45 DEBUG    engine :     "0074" : "9"
+20240910 20:46:45 DEBUG    engine :     "0062" : "T0000000004-2"
+20240910 20:46:45 DEBUG    engine : Record "UNZ":
+20240910 20:46:45 DEBUG    engine :     "0036" : "2"
+20240910 20:46:45 DEBUG    engine :     "0020" : "T0000000004-1"
+20240910 20:46:45 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000004-1', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:45 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000004-2', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:45 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "[{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000004-1', 'BOTSIDnr': '1'}, <bots.utils.node.Node object at 0xb1db7930>]".
+20240910 20:46:45 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" translates messagetype "ORDERSD96AUNEAN008" to messagetype "ordersfixed".
+20240910 20:46:45 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:45 DEBUG    engine : Run userscript "main" in "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SENDER': '8712345678906', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'RECEIVER': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'MESSAGETYPE': 'ORDERSD96AUNEAN008', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "ORDT0000000004-1" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', '1004': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERNUMBER': 'ORDT0000000004-1', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "50E" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', 'C002.1001': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERTYPE': '50E', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "20050819" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '137', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERDATE': '20050819', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '2', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERY_DATE': None},).
+20240910 20:46:45 DEBUG    engine.map : "PARTNER1" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'BY', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'BUYER_ID': 'PARTNER1', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'SU', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SUPPLIER_ID': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'DP', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERYPLACE_ID': None},).
+20240910 20:46:45 DEBUG    engine.map : getloop ({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'LIN', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'LIN', '1082': '1', 'C212.7140': '2000100873151', 'C212.7143': 'EN', 'BOTSIDnr': '1'}".
+20240910 20:46:45 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', '1082': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'LINENUMBER': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "2000100873151" for get({'BOTSID': 'LIN', 'C212.7140': None, 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'ARTICLE_GTIN': '2000100873151', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine.map : "None" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'IMD', 'C273.7008#1': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "None" in put ({'BOTSID': 'LIN', 'DESCRIPTION': None},).
+20240910 20:46:45 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'QTY', 'C186.6063': '21', 'C186.6060': None, 'BOTSIDnr': '1'})
+20240910 20:46:45 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'QUANTITY': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:45 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" finished.
+20240910 20:46:45 DEBUG    engine : Start writing output file editype "fixed" messagetype "ordersfixed".
+20240910 20:46:45 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/fixed/ordersfixed".
+20240910 20:46:45 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/8712345678906": No module named 'bots.usersys.partners.fixed.8712345678906'.
+20240910 20:46:45 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/PARTNER2": No module named 'bots.usersys.partners.fixed.PARTNER2'.
+20240910 20:46:45 DEBUG    engine : Record "HEA":
+20240910 20:46:45 DEBUG    engine :     "SENDER" : "8712345678906"
+20240910 20:46:45 DEBUG    engine :     "RECEIVER" : "PARTNER2     "
+20240910 20:46:45 DEBUG    engine :     "MESSAGETYPE" : "ORDERSD96AUNEAN008  "
+20240910 20:46:45 DEBUG    engine :     "ORDERNUMBER" : "ORDT0000000004-1 "
+20240910 20:46:45 DEBUG    engine :     "ORDERTYPE" : "50E"
+20240910 20:46:45 DEBUG    engine :     "ORDERDATE" : "20050819    "
+20240910 20:46:45 DEBUG    engine :     "BUYER_ID" : "PARTNER1     "
+20240910 20:46:45 DEBUG    engine :     "SUPPLIER_ID" : "PARTNER2     "
+20240910 20:46:45 DEBUG    engine : Record "LIN":
+20240910 20:46:45 DEBUG    engine :     "LINENUMBER" : "000001"
+20240910 20:46:45 DEBUG    engine :     "ARTICLE_GTIN" : "2000100873151 "
+20240910 20:46:45 DEBUG    engine :     "QUANTITY" : "000000000001.000"
+20240910 20:46:45 DEBUG    engine : Start writing to file "1153".
+20240910 20:46:45 DEBUG    engine : End writing to file "1153".
+20240910 20:46:45 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "[{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000004-1', 'BOTSIDnr': '1'}, <bots.utils.node.Node object at 0xb1dea5a0>]".
+20240910 20:46:46 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" translates messagetype "ORDERSD96AUNEAN008" to messagetype "ordersfixed".
+20240910 20:46:46 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:46 DEBUG    engine : Run userscript "main" in "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SENDER': '8712345678906', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'RECEIVER': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'MESSAGETYPE': 'ORDERSD96AUNEAN008', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "ORDT0000000004-2" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', '1004': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERNUMBER': 'ORDT0000000004-2', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "50E" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', 'C002.1001': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERTYPE': '50E', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "20050819" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '137', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERDATE': '20050819', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '2', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERY_DATE': None},).
+20240910 20:46:46 DEBUG    engine.map : "PARTNER1" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'BY', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'BUYER_ID': 'PARTNER1', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'SU', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SUPPLIER_ID': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'DP', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERYPLACE_ID': None},).
+20240910 20:46:46 DEBUG    engine.map : getloop ({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'LIN', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'LIN', '1082': '1', 'C212.7140': '2000100873151', 'C212.7143': 'EN', 'BOTSIDnr': '1'}".
+20240910 20:46:46 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', '1082': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'LINENUMBER': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "2000100873151" for get({'BOTSID': 'LIN', 'C212.7140': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'ARTICLE_GTIN': '2000100873151', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "None" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'IMD', 'C273.7008#1': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "None" in put ({'BOTSID': 'LIN', 'DESCRIPTION': None},).
+20240910 20:46:46 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'QTY', 'C186.6063': '21', 'C186.6060': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'QUANTITY': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" finished.
+20240910 20:46:46 DEBUG    engine : Start writing output file editype "fixed" messagetype "ordersfixed".
+20240910 20:46:46 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/fixed/ordersfixed".
+20240910 20:46:46 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/8712345678906".
+20240910 20:46:46 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/PARTNER2".
+20240910 20:46:46 DEBUG    engine : Record "HEA":
+20240910 20:46:46 DEBUG    engine :     "SENDER" : "8712345678906"
+20240910 20:46:46 DEBUG    engine :     "RECEIVER" : "PARTNER2     "
+20240910 20:46:46 DEBUG    engine :     "MESSAGETYPE" : "ORDERSD96AUNEAN008  "
+20240910 20:46:46 DEBUG    engine :     "ORDERNUMBER" : "ORDT0000000004-2 "
+20240910 20:46:46 DEBUG    engine :     "ORDERTYPE" : "50E"
+20240910 20:46:46 DEBUG    engine :     "ORDERDATE" : "20050819    "
+20240910 20:46:46 DEBUG    engine :     "BUYER_ID" : "PARTNER1     "
+20240910 20:46:46 DEBUG    engine :     "SUPPLIER_ID" : "PARTNER2     "
+20240910 20:46:46 DEBUG    engine : Record "LIN":
+20240910 20:46:46 DEBUG    engine :     "LINENUMBER" : "000001"
+20240910 20:46:46 DEBUG    engine :     "ARTICLE_GTIN" : "2000100873151 "
+20240910 20:46:46 DEBUG    engine :     "QUANTITY" : "000000000001.000"
+20240910 20:46:46 DEBUG    engine : Start writing to file "1155".
+20240910 20:46:46 DEBUG    engine : End writing to file "1155".
+20240910 20:46:46 DEBUG    engine : Translated input file "1146".
+20240910 20:46:46 DEBUG    engine : Start translating file "1147" editype "edifact" messagetype "edifact".
+20240910 20:46:46 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:46 DEBUG    engine : Read edifact file "1147".
+20240910 20:46:46 DEBUG    engine.map : "ORDERS" for get({'BOTSID': 'UNH', 'S009.0065': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "D" for get({'BOTSID': 'UNH', 'S009.0052': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "96A" for get({'BOTSID': 'UNH', 'S009.0054': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "UN" for get({'BOTSID': 'UNH', 'S009.0051': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "EAN008" for get({'BOTSID': 'UNH', 'S009.0057': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/ORDERSD96AUNEAN008".
+20240910 20:46:46 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:46 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'},) returns "{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000004-2', 'BOTSIDnr': '1'}".
+20240910 20:46:46 DEBUG    engine.map : Start parsing edifact envelopes
+20240910 20:46:46 DEBUG    engine.map : "T0000000004-2" for get({'BOTSID': 'UNB', '0020': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "T0000000004-2" for get({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNZ', '0020': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "1" for get({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNZ', '0036': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000004-3', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:46 DEBUG    engine.map : "T0000000004-3" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "T0000000004-3" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0062': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "15" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0074': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : Parsing edifact envelopes is OK
+20240910 20:46:46 DEBUG    engine.map : "T0000000004-3" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "8712345678906" for get({'BOTSID': 'UNB', 'S002.0004': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNB', 'S003.0010': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "None" for get({'BOTSID': 'UNB', '0035': None, 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine : Record "UNB":
+20240910 20:46:46 DEBUG    engine :     "S001.0001" : "UNOA"
+20240910 20:46:46 DEBUG    engine :     "S001.0002" : "3"
+20240910 20:46:46 DEBUG    engine :     "S002.0004" : "8712345678906"
+20240910 20:46:46 DEBUG    engine :     "S002.0007" : "14"
+20240910 20:46:46 DEBUG    engine :     "S003.0010" : "PARTNER2"
+20240910 20:46:46 DEBUG    engine :     "S003.0007" : "14"
+20240910 20:46:46 DEBUG    engine :     "S004.0017" : "050824"
+20240910 20:46:46 DEBUG    engine :     "S004.0019" : "1727"
+20240910 20:46:46 DEBUG    engine :     "0020" : "T0000000004-2"
+20240910 20:46:46 DEBUG    engine : Record "UNH":
+20240910 20:46:46 DEBUG    engine :     "0062" : "T0000000004-3"
+20240910 20:46:46 DEBUG    engine :     "S009.0065" : "ORDERS"
+20240910 20:46:46 DEBUG    engine :     "S009.0052" : "D"
+20240910 20:46:46 DEBUG    engine :     "S009.0054" : "96A"
+20240910 20:46:46 DEBUG    engine :     "S009.0051" : "UN"
+20240910 20:46:46 DEBUG    engine :     "S009.0057" : "EAN008"
+20240910 20:46:46 DEBUG    engine : Record "BGM":
+20240910 20:46:46 DEBUG    engine :     "C002.1001" : "50E"
+20240910 20:46:46 DEBUG    engine :     "1004" : "ORDT0000000004-3"
+20240910 20:46:46 DEBUG    engine :     "1225" : "9"
+20240910 20:46:46 DEBUG    engine :     "4343" : "NA"
+20240910 20:46:46 DEBUG    engine : Record "DTM":
+20240910 20:46:46 DEBUG    engine :     "C507.2005" : "137"
+20240910 20:46:46 DEBUG    engine :     "C507.2380" : "20050819"
+20240910 20:46:46 DEBUG    engine :     "C507.2379" : "102"
+20240910 20:46:46 DEBUG    engine : Record "NAD":
+20240910 20:46:46 DEBUG    engine :     "3035" : "SU"
+20240910 20:46:46 DEBUG    engine :     "C082.3039" : "PARTNER2"
+20240910 20:46:46 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:46 DEBUG    engine : Record "NAD":
+20240910 20:46:46 DEBUG    engine :     "3035" : "BY"
+20240910 20:46:46 DEBUG    engine :     "C082.3039" : "PARTNER1"
+20240910 20:46:46 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:46 DEBUG    engine : Record "LIN":
+20240910 20:46:46 DEBUG    engine :     "1082" : "1"
+20240910 20:46:46 DEBUG    engine :     "C212.7140" : "2000100873151"
+20240910 20:46:46 DEBUG    engine :     "C212.7143" : "EN"
+20240910 20:46:46 DEBUG    engine : Record "QTY":
+20240910 20:46:46 DEBUG    engine :     "C186.6063" : "21"
+20240910 20:46:46 DEBUG    engine :     "C186.6060" : "10"
+20240910 20:46:46 DEBUG    engine : Record "LIN":
+20240910 20:46:46 DEBUG    engine :     "1082" : "2"
+20240910 20:46:46 DEBUG    engine :     "C212.7140" : "2000100873168"
+20240910 20:46:46 DEBUG    engine :     "C212.7143" : "EN"
+20240910 20:46:46 DEBUG    engine : Record "QTY":
+20240910 20:46:46 DEBUG    engine :     "C186.6063" : "21"
+20240910 20:46:46 DEBUG    engine :     "C186.6060" : "100"
+20240910 20:46:46 DEBUG    engine : Record "LIN":
+20240910 20:46:46 DEBUG    engine :     "1082" : "3"
+20240910 20:46:46 DEBUG    engine :     "C212.7140" : "2000100873175"
+20240910 20:46:46 DEBUG    engine :     "C212.7143" : "EN"
+20240910 20:46:46 DEBUG    engine : Record "QTY":
+20240910 20:46:46 DEBUG    engine :     "C186.6063" : "21"
+20240910 20:46:46 DEBUG    engine :     "C186.6060" : "1000"
+20240910 20:46:46 DEBUG    engine : Record "LIN":
+20240910 20:46:46 DEBUG    engine :     "1082" : "4"
+20240910 20:46:46 DEBUG    engine :     "C212.7140" : "2000100873182"
+20240910 20:46:46 DEBUG    engine :     "C212.7143" : "EN"
+20240910 20:46:46 DEBUG    engine : Record "QTY":
+20240910 20:46:46 DEBUG    engine :     "C186.6063" : "21"
+20240910 20:46:46 DEBUG    engine :     "C186.6060" : "10000"
+20240910 20:46:46 DEBUG    engine : Record "UNS":
+20240910 20:46:46 DEBUG    engine :     "0081" : "S"
+20240910 20:46:46 DEBUG    engine : Record "UNT":
+20240910 20:46:46 DEBUG    engine :     "0074" : "15"
+20240910 20:46:46 DEBUG    engine :     "0062" : "T0000000004-3"
+20240910 20:46:46 DEBUG    engine : Record "UNZ":
+20240910 20:46:46 DEBUG    engine :     "0036" : "1"
+20240910 20:46:46 DEBUG    engine :     "0020" : "T0000000004-2"
+20240910 20:46:46 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000004-3', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:46 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "[{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000004-2', 'BOTSIDnr': '1'}, <bots.utils.node.Node object at 0xb1dea360>]".
+20240910 20:46:46 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" translates messagetype "ORDERSD96AUNEAN008" to messagetype "ordersfixed".
+20240910 20:46:46 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:46 DEBUG    engine : Run userscript "main" in "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SENDER': '8712345678906', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'RECEIVER': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'MESSAGETYPE': 'ORDERSD96AUNEAN008', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "ORDT0000000004-3" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', '1004': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERNUMBER': 'ORDT0000000004-3', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "50E" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', 'C002.1001': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERTYPE': '50E', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "20050819" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '137', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERDATE': '20050819', 'BOTSIDnr': '1'},)
+20240910 20:46:46 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '2', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERY_DATE': None},).
+20240910 20:46:46 DEBUG    engine.map : "PARTNER1" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'BY', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:46 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'BUYER_ID': 'PARTNER1', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'SU', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SUPPLIER_ID': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'DP', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERYPLACE_ID': None},).
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'LIN', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'LIN', '1082': '1', 'C212.7140': '2000100873151', 'C212.7143': 'EN', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', '1082': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'LINENUMBER': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "2000100873151" for get({'BOTSID': 'LIN', 'C212.7140': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'ARTICLE_GTIN': '2000100873151', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'IMD', 'C273.7008#1': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "None" in put ({'BOTSID': 'LIN', 'DESCRIPTION': None},).
+20240910 20:46:47 DEBUG    engine.map : "10" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'QTY', 'C186.6063': '21', 'C186.6060': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'QUANTITY': '10', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'LIN', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'LIN', '1082': '2', 'C212.7140': '2000100873168', 'C212.7143': 'EN', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : "2" for get({'BOTSID': 'LIN', '1082': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'LINENUMBER': '2', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "2000100873168" for get({'BOTSID': 'LIN', 'C212.7140': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'ARTICLE_GTIN': '2000100873168', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'IMD', 'C273.7008#1': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "None" in put ({'BOTSID': 'LIN', 'DESCRIPTION': None},).
+20240910 20:46:47 DEBUG    engine.map : "100" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'QTY', 'C186.6063': '21', 'C186.6060': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'QUANTITY': '100', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'LIN', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'LIN', '1082': '3', 'C212.7140': '2000100873175', 'C212.7143': 'EN', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : "3" for get({'BOTSID': 'LIN', '1082': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'LINENUMBER': '3', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "2000100873175" for get({'BOTSID': 'LIN', 'C212.7140': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'ARTICLE_GTIN': '2000100873175', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'IMD', 'C273.7008#1': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "None" in put ({'BOTSID': 'LIN', 'DESCRIPTION': None},).
+20240910 20:46:47 DEBUG    engine.map : "1000" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'QTY', 'C186.6063': '21', 'C186.6060': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'QUANTITY': '1000', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'LIN', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'LIN', '1082': '4', 'C212.7140': '2000100873182', 'C212.7143': 'EN', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : "4" for get({'BOTSID': 'LIN', '1082': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'LINENUMBER': '4', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "2000100873182" for get({'BOTSID': 'LIN', 'C212.7140': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'ARTICLE_GTIN': '2000100873182', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'IMD', 'C273.7008#1': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "None" in put ({'BOTSID': 'LIN', 'DESCRIPTION': None},).
+20240910 20:46:47 DEBUG    engine.map : "10000" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'QTY', 'C186.6063': '21', 'C186.6060': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'QUANTITY': '10000', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" finished.
+20240910 20:46:47 DEBUG    engine : Start writing output file editype "fixed" messagetype "ordersfixed".
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/fixed/ordersfixed".
+20240910 20:46:47 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/8712345678906".
+20240910 20:46:47 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/PARTNER2".
+20240910 20:46:47 DEBUG    engine : Record "HEA":
+20240910 20:46:47 DEBUG    engine :     "SENDER" : "8712345678906"
+20240910 20:46:47 DEBUG    engine :     "RECEIVER" : "PARTNER2     "
+20240910 20:46:47 DEBUG    engine :     "MESSAGETYPE" : "ORDERSD96AUNEAN008  "
+20240910 20:46:47 DEBUG    engine :     "ORDERNUMBER" : "ORDT0000000004-3 "
+20240910 20:46:47 DEBUG    engine :     "ORDERTYPE" : "50E"
+20240910 20:46:47 DEBUG    engine :     "ORDERDATE" : "20050819    "
+20240910 20:46:47 DEBUG    engine :     "BUYER_ID" : "PARTNER1     "
+20240910 20:46:47 DEBUG    engine :     "SUPPLIER_ID" : "PARTNER2     "
+20240910 20:46:47 DEBUG    engine : Record "LIN":
+20240910 20:46:47 DEBUG    engine :     "LINENUMBER" : "000001"
+20240910 20:46:47 DEBUG    engine :     "ARTICLE_GTIN" : "2000100873151 "
+20240910 20:46:47 DEBUG    engine :     "QUANTITY" : "000000000010.000"
+20240910 20:46:47 DEBUG    engine : Record "LIN":
+20240910 20:46:47 DEBUG    engine :     "LINENUMBER" : "000002"
+20240910 20:46:47 DEBUG    engine :     "ARTICLE_GTIN" : "2000100873168 "
+20240910 20:46:47 DEBUG    engine :     "QUANTITY" : "000000000100.000"
+20240910 20:46:47 DEBUG    engine : Record "LIN":
+20240910 20:46:47 DEBUG    engine :     "LINENUMBER" : "000003"
+20240910 20:46:47 DEBUG    engine :     "ARTICLE_GTIN" : "2000100873175 "
+20240910 20:46:47 DEBUG    engine :     "QUANTITY" : "000000001000.000"
+20240910 20:46:47 DEBUG    engine : Record "LIN":
+20240910 20:46:47 DEBUG    engine :     "LINENUMBER" : "000004"
+20240910 20:46:47 DEBUG    engine :     "ARTICLE_GTIN" : "2000100873182 "
+20240910 20:46:47 DEBUG    engine :     "QUANTITY" : "000000010000.000"
+20240910 20:46:47 DEBUG    engine : Start writing to file "1158".
+20240910 20:46:47 DEBUG    engine : End writing to file "1158".
+20240910 20:46:47 DEBUG    engine : Translated input file "1147".
+20240910 20:46:47 DEBUG    engine : Start translating file "1148" editype "edifact" messagetype "edifact".
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:47 DEBUG    engine : Read edifact file "1148".
+20240910 20:46:47 DEBUG    engine.map : "ORDERS" for get({'BOTSID': 'UNH', 'S009.0065': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "D" for get({'BOTSID': 'UNH', 'S009.0052': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "96A" for get({'BOTSID': 'UNH', 'S009.0054': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "UN" for get({'BOTSID': 'UNH', 'S009.0051': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "EAN008" for get({'BOTSID': 'UNH', 'S009.0057': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/ORDERSD96AUNEAN008".
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'},) returns "{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000015', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : Start parsing edifact envelopes
+20240910 20:46:47 DEBUG    engine.map : "T0000000015" for get({'BOTSID': 'UNB', '0020': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "T0000000015" for get({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNZ', '0020': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "1" for get({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNZ', '0036': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000015', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : "T0000000015" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "T0000000015" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0062': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "9" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0074': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : Parsing edifact envelopes is OK
+20240910 20:46:47 DEBUG    engine.map : "T0000000015" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "8712345678906" for get({'BOTSID': 'UNB', 'S002.0004': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNB', 'S003.0010': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'UNB', '0035': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine : Record "UNB":
+20240910 20:46:47 DEBUG    engine :     "S001.0001" : "UNOA"
+20240910 20:46:47 DEBUG    engine :     "S001.0002" : "3"
+20240910 20:46:47 DEBUG    engine :     "S002.0004" : "8712345678906"
+20240910 20:46:47 DEBUG    engine :     "S002.0007" : "14"
+20240910 20:46:47 DEBUG    engine :     "S003.0010" : "PARTNER2"
+20240910 20:46:47 DEBUG    engine :     "S003.0007" : "14"
+20240910 20:46:47 DEBUG    engine :     "S004.0017" : "050824"
+20240910 20:46:47 DEBUG    engine :     "S004.0019" : "1727"
+20240910 20:46:47 DEBUG    engine :     "0020" : "T0000000015"
+20240910 20:46:47 DEBUG    engine : Record "UNH":
+20240910 20:46:47 DEBUG    engine :     "0062" : "T0000000015"
+20240910 20:46:47 DEBUG    engine :     "S009.0065" : "ORDERS"
+20240910 20:46:47 DEBUG    engine :     "S009.0052" : "D"
+20240910 20:46:47 DEBUG    engine :     "S009.0054" : "96A"
+20240910 20:46:47 DEBUG    engine :     "S009.0051" : "UN"
+20240910 20:46:47 DEBUG    engine :     "S009.0057" : "EAN008"
+20240910 20:46:47 DEBUG    engine : Record "BGM":
+20240910 20:46:47 DEBUG    engine :     "C002.1001" : "50E"
+20240910 20:46:47 DEBUG    engine :     "1004" : "ORDT0000000015"
+20240910 20:46:47 DEBUG    engine :     "1225" : "9"
+20240910 20:46:47 DEBUG    engine :     "4343" : "AB"
+20240910 20:46:47 DEBUG    engine : Record "DTM":
+20240910 20:46:47 DEBUG    engine :     "C507.2005" : "137"
+20240910 20:46:47 DEBUG    engine :     "C507.2380" : "20050819"
+20240910 20:46:47 DEBUG    engine :     "C507.2379" : "102"
+20240910 20:46:47 DEBUG    engine : Record "NAD":
+20240910 20:46:47 DEBUG    engine :     "3035" : "SU"
+20240910 20:46:47 DEBUG    engine :     "C082.3039" : "PARTNER2"
+20240910 20:46:47 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:47 DEBUG    engine : Record "NAD":
+20240910 20:46:47 DEBUG    engine :     "3035" : "BY"
+20240910 20:46:47 DEBUG    engine :     "C082.3039" : "PARTNER1"
+20240910 20:46:47 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:47 DEBUG    engine : Record "LIN":
+20240910 20:46:47 DEBUG    engine :     "1082" : "1"
+20240910 20:46:47 DEBUG    engine :     "C212.7140" : "2000100873151"
+20240910 20:46:47 DEBUG    engine :     "C212.7143" : "EN"
+20240910 20:46:47 DEBUG    engine : Record "QTY":
+20240910 20:46:47 DEBUG    engine :     "C186.6063" : "21"
+20240910 20:46:47 DEBUG    engine :     "C186.6060" : "1"
+20240910 20:46:47 DEBUG    engine : Record "UNS":
+20240910 20:46:47 DEBUG    engine :     "0081" : "S"
+20240910 20:46:47 DEBUG    engine : Record "UNT":
+20240910 20:46:47 DEBUG    engine :     "0074" : "9"
+20240910 20:46:47 DEBUG    engine :     "0062" : "T0000000015"
+20240910 20:46:47 DEBUG    engine : Record "UNZ":
+20240910 20:46:47 DEBUG    engine :     "0036" : "1"
+20240910 20:46:47 DEBUG    engine :     "0020" : "T0000000015"
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000015', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "[{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000015', 'BOTSIDnr': '1'}, <bots.utils.node.Node object at 0xb1db7990>]".
+20240910 20:46:47 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" translates messagetype "ORDERSD96AUNEAN008" to messagetype "ordersfixed".
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:47 DEBUG    engine : Run userscript "main" in "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SENDER': '8712345678906', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'RECEIVER': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'MESSAGETYPE': 'ORDERSD96AUNEAN008', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "ORDT0000000015" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', '1004': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERNUMBER': 'ORDT0000000015', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "50E" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', 'C002.1001': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERTYPE': '50E', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "20050819" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '137', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERDATE': '20050819', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '2', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERY_DATE': None},).
+20240910 20:46:47 DEBUG    engine.map : "PARTNER1" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'BY', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'BUYER_ID': 'PARTNER1', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'SU', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SUPPLIER_ID': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'DP', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERYPLACE_ID': None},).
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'LIN', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'LIN', '1082': '1', 'C212.7140': '2000100873151', 'C212.7143': 'EN', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', '1082': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'LINENUMBER': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "2000100873151" for get({'BOTSID': 'LIN', 'C212.7140': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'ARTICLE_GTIN': '2000100873151', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'IMD', 'C273.7008#1': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "None" in put ({'BOTSID': 'LIN', 'DESCRIPTION': None},).
+20240910 20:46:47 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'QTY', 'C186.6063': '21', 'C186.6060': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'QUANTITY': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" finished.
+20240910 20:46:47 DEBUG    engine : Start writing output file editype "fixed" messagetype "ordersfixed".
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/fixed/ordersfixed".
+20240910 20:46:47 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/8712345678906".
+20240910 20:46:47 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/PARTNER2".
+20240910 20:46:47 DEBUG    engine : Record "HEA":
+20240910 20:46:47 DEBUG    engine :     "SENDER" : "8712345678906"
+20240910 20:46:47 DEBUG    engine :     "RECEIVER" : "PARTNER2     "
+20240910 20:46:47 DEBUG    engine :     "MESSAGETYPE" : "ORDERSD96AUNEAN008  "
+20240910 20:46:47 DEBUG    engine :     "ORDERNUMBER" : "ORDT0000000015   "
+20240910 20:46:47 DEBUG    engine :     "ORDERTYPE" : "50E"
+20240910 20:46:47 DEBUG    engine :     "ORDERDATE" : "20050819    "
+20240910 20:46:47 DEBUG    engine :     "BUYER_ID" : "PARTNER1     "
+20240910 20:46:47 DEBUG    engine :     "SUPPLIER_ID" : "PARTNER2     "
+20240910 20:46:47 DEBUG    engine : Record "LIN":
+20240910 20:46:47 DEBUG    engine :     "LINENUMBER" : "000001"
+20240910 20:46:47 DEBUG    engine :     "ARTICLE_GTIN" : "2000100873151 "
+20240910 20:46:47 DEBUG    engine :     "QUANTITY" : "000000000001.000"
+20240910 20:46:47 DEBUG    engine : Start writing to file "1161".
+20240910 20:46:47 DEBUG    engine : End writing to file "1161".
+20240910 20:46:47 DEBUG    engine : Translated input file "1148".
+20240910 20:46:47 DEBUG    engine : Start translating file "1149" editype "edifact" messagetype "edifact".
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:47 DEBUG    engine : Read edifact file "1149".
+20240910 20:46:47 DEBUG    engine.map : "ORDERS" for get({'BOTSID': 'UNH', 'S009.0065': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "D" for get({'BOTSID': 'UNH', 'S009.0052': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "96A" for get({'BOTSID': 'UNH', 'S009.0054': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "UN" for get({'BOTSID': 'UNH', 'S009.0051': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "EAN008" for get({'BOTSID': 'UNH', 'S009.0057': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/ORDERSD96AUNEAN008".
+20240910 20:46:47 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/edifact/edifact".
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'},) returns "{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000001', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : Start parsing edifact envelopes
+20240910 20:46:47 DEBUG    engine.map : "T0000000001" for get({'BOTSID': 'UNB', '0020': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "T0000000001" for get({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNZ', '0020': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "1" for get({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNZ', '0036': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000001', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : "T0000000001" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "T0000000001" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0062': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : "9" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'UNT', '0074': None, 'BOTSIDnr': '1'})
+20240910 20:46:47 DEBUG    engine.map : Parsing edifact envelopes is OK
+20240910 20:46:47 DEBUG    engine.map : "T0000000001" for get({'BOTSID': 'UNH', '0062': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "8712345678906" for get({'BOTSID': 'UNB', 'S002.0004': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNB', 'S003.0010': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine.map : "None" for get({'BOTSID': 'UNB', '0035': None, 'BOTSIDnr': '1'},)
+20240910 20:46:47 DEBUG    engine : Record "UNB":
+20240910 20:46:47 DEBUG    engine :     "S001.0001" : "UNOA"
+20240910 20:46:47 DEBUG    engine :     "S001.0002" : "3"
+20240910 20:46:47 DEBUG    engine :     "S002.0004" : "8712345678906"
+20240910 20:46:47 DEBUG    engine :     "S002.0007" : "14"
+20240910 20:46:47 DEBUG    engine :     "S003.0010" : "PARTNER2"
+20240910 20:46:47 DEBUG    engine :     "S003.0007" : "14"
+20240910 20:46:47 DEBUG    engine :     "S004.0017" : "050824"
+20240910 20:46:47 DEBUG    engine :     "S004.0019" : "1727"
+20240910 20:46:47 DEBUG    engine :     "0020" : "T0000000001"
+20240910 20:46:47 DEBUG    engine : Record "UNH":
+20240910 20:46:47 DEBUG    engine :     "0062" : "T0000000001"
+20240910 20:46:47 DEBUG    engine :     "S009.0065" : "ORDERS"
+20240910 20:46:47 DEBUG    engine :     "S009.0052" : "D"
+20240910 20:46:47 DEBUG    engine :     "S009.0054" : "96A"
+20240910 20:46:47 DEBUG    engine :     "S009.0051" : "UN"
+20240910 20:46:47 DEBUG    engine :     "S009.0057" : "EAN008"
+20240910 20:46:47 DEBUG    engine : Record "BGM":
+20240910 20:46:47 DEBUG    engine :     "C002.1001" : "50E"
+20240910 20:46:47 DEBUG    engine :     "1004" : "ORDT0000000001"
+20240910 20:46:47 DEBUG    engine :     "1225" : "9"
+20240910 20:46:47 DEBUG    engine :     "4343" : "NA"
+20240910 20:46:47 DEBUG    engine : Record "DTM":
+20240910 20:46:47 DEBUG    engine :     "C507.2005" : "137"
+20240910 20:46:47 DEBUG    engine :     "C507.2380" : "20050819"
+20240910 20:46:47 DEBUG    engine :     "C507.2379" : "102"
+20240910 20:46:47 DEBUG    engine : Record "NAD":
+20240910 20:46:47 DEBUG    engine :     "3035" : "SU"
+20240910 20:46:47 DEBUG    engine :     "C082.3039" : "PARTNER2"
+20240910 20:46:47 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:47 DEBUG    engine : Record "NAD":
+20240910 20:46:47 DEBUG    engine :     "3035" : "BY"
+20240910 20:46:47 DEBUG    engine :     "C082.3039" : "PARTNER1"
+20240910 20:46:47 DEBUG    engine :     "C082.3055" : "9"
+20240910 20:46:47 DEBUG    engine : Record "LIN":
+20240910 20:46:47 DEBUG    engine :     "1082" : "1"
+20240910 20:46:47 DEBUG    engine :     "C212.7140" : "2000100873151"
+20240910 20:46:47 DEBUG    engine :     "C212.7143" : "EN"
+20240910 20:46:47 DEBUG    engine : Record "QTY":
+20240910 20:46:47 DEBUG    engine :     "C186.6063" : "21"
+20240910 20:46:47 DEBUG    engine :     "C186.6060" : "1"
+20240910 20:46:47 DEBUG    engine : Record "UNS":
+20240910 20:46:47 DEBUG    engine :     "0081" : "S"
+20240910 20:46:47 DEBUG    engine : Record "UNT":
+20240910 20:46:47 DEBUG    engine :     "0074" : "9"
+20240910 20:46:47 DEBUG    engine :     "0062" : "T0000000001"
+20240910 20:46:47 DEBUG    engine : Record "UNZ":
+20240910 20:46:47 DEBUG    engine :     "0036" : "1"
+20240910 20:46:47 DEBUG    engine :     "0020" : "T0000000001"
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'UNH', '0062': 'T0000000001', 'S009.0065': 'ORDERS', 'S009.0052': 'D', 'S009.0054': '96A', 'S009.0051': 'UN', 'S009.0057': 'EAN008', 'BOTSIDnr': '1'}".
+20240910 20:46:47 DEBUG    engine.map : getloop ({'BOTSID': 'UNB', 'BOTSIDnr': '1'}, {'BOTSID': 'UNH', 'BOTSIDnr': '1'}) returns "[{'BOTSID': 'UNB', 'S001.0001': 'UNOA', 'S001.0002': '3', 'S002.0004': '8712345678906', 'S002.0007': '14', 'S003.0010': 'PARTNER2', 'S003.0007': '14', 'S004.0017': '050824', 'S004.0019': '1727', '0020': 'T0000000001', 'BOTSIDnr': '1'}, <bots.utils.node.Node object at 0xb1d40f00>]".
+20240910 20:46:48 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" translates messagetype "ORDERSD96AUNEAN008" to messagetype "ordersfixed".
+20240910 20:46:48 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:48 DEBUG    engine : Run userscript "main" in "/home/pi/Documents/raspimapper/bots/usersys/mappings/edifact/myfirstscriptordersedi2fixed".
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SENDER': '8712345678906', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'RECEIVER': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'MESSAGETYPE': 'ORDERSD96AUNEAN008', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "ORDT0000000001" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', '1004': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERNUMBER': 'ORDT0000000001', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "50E" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'BGM', 'C002.1001': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERTYPE': '50E', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "20050819" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '137', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'ORDERDATE': '20050819', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'DTM', 'C507.2005': '2', 'C507.2380': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERY_DATE': None},).
+20240910 20:46:48 DEBUG    engine.map : "PARTNER1" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'BY', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'BUYER_ID': 'PARTNER1', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "PARTNER2" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'SU', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'HEA', 'SUPPLIER_ID': 'PARTNER2', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "None" for get({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'NAD', '3035': 'DP', 'C082.3039': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "None" in put ({'BOTSID': 'HEA', 'DELIVERYPLACE_ID': None},).
+20240910 20:46:48 DEBUG    engine.map : getloop ({'BOTSID': 'UNH', 'BOTSIDnr': '1'}, {'BOTSID': 'LIN', 'BOTSIDnr': '1'}) returns "{'BOTSID': 'LIN', '1082': '1', 'C212.7140': '2000100873151', 'C212.7143': 'EN', 'BOTSIDnr': '1'}".
+20240910 20:46:48 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', '1082': None, 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'LINENUMBER': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "2000100873151" for get({'BOTSID': 'LIN', 'C212.7140': None, 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'ARTICLE_GTIN': '2000100873151', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine.map : "None" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'IMD', 'C273.7008#1': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "None" in put ({'BOTSID': 'LIN', 'DESCRIPTION': None},).
+20240910 20:46:48 DEBUG    engine.map : "1" for get({'BOTSID': 'LIN', 'BOTSIDnr': '1'}, {'BOTSID': 'QTY', 'C186.6063': '21', 'C186.6060': None, 'BOTSIDnr': '1'})
+20240910 20:46:48 DEBUG    engine.map : "True" for put ({'BOTSID': 'LIN', 'QUANTITY': '1', 'BOTSIDnr': '1'},)
+20240910 20:46:48 DEBUG    engine : Mappingscript "myfirstscriptordersedi2fixed" finished.
+20240910 20:46:48 DEBUG    engine : Start writing output file editype "fixed" messagetype "ordersfixed".
+20240910 20:46:48 DEBUG    engine : Imported "/home/pi/Documents/raspimapper/bots/usersys/grammars/fixed/ordersfixed".
+20240910 20:46:48 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/8712345678906".
+20240910 20:46:48 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/partners/fixed/PARTNER2".
+20240910 20:46:48 DEBUG    engine : Record "HEA":
+20240910 20:46:48 DEBUG    engine :     "SENDER" : "8712345678906"
+20240910 20:46:48 DEBUG    engine :     "RECEIVER" : "PARTNER2     "
+20240910 20:46:48 DEBUG    engine :     "MESSAGETYPE" : "ORDERSD96AUNEAN008  "
+20240910 20:46:48 DEBUG    engine :     "ORDERNUMBER" : "ORDT0000000001   "
+20240910 20:46:48 DEBUG    engine :     "ORDERTYPE" : "50E"
+20240910 20:46:48 DEBUG    engine :     "ORDERDATE" : "20050819    "
+20240910 20:46:48 DEBUG    engine :     "BUYER_ID" : "PARTNER1     "
+20240910 20:46:48 DEBUG    engine :     "SUPPLIER_ID" : "PARTNER2     "
+20240910 20:46:48 DEBUG    engine : Record "LIN":
+20240910 20:46:48 DEBUG    engine :     "LINENUMBER" : "000001"
+20240910 20:46:48 DEBUG    engine :     "ARTICLE_GTIN" : "2000100873151 "
+20240910 20:46:48 DEBUG    engine :     "QUANTITY" : "000000000001.000"
+20240910 20:46:48 DEBUG    engine : Start writing to file "1164".
+20240910 20:46:48 DEBUG    engine : End writing to file "1164".
+20240910 20:46:48 DEBUG    engine : Translated input file "1149".
+20240910 20:46:48 DEBUG    engine : Merge and envelope: editype: fixed, messagetype: ordersfixed, 5 messages
+20240910 20:47:11 DEBUG    engine : Start communication channel "myfirstroute_out" type file out.
+20240910 20:47:11 DEBUG    engine : Channel "myfirstroute_out" adapted for acceptance test: type "file", testpath "".
+20240910 20:47:11 DEBUG    engine : No import of module "/home/pi/Documents/raspimapper/bots/usersys/communicationscripts/myfirstroute_out": No module named 'bots.usersys.communicationscripts.myfirstroute_out'.
+20240910 20:47:11 DEBUG    engine : Error in process: Traceback (most recent call last):
+  File "/home/pi/Documents/raspimapper/bots/utils/botslib.py", line 466, in wrapper
+    terug = func(*args,**argv)
+  File "/home/pi/Documents/raspimapper/bots/utils/engine/communication.py", line 843, in outcommunicate
+    tochannel=self.channeldict['idchannel']).order_by('idta').values('idta',
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1438, in _add_q
+    split_subq=split_subq, check_filterable=check_filterable,
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1309, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1135, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1563, in names_to_path
+    "Choices are: %s" % (name, ", ".join(available)))
+django.core.exceptions.FieldError: Cannot resolve keyword 'idta' into field. Choices are: apop, archivepath, askmdn, certfile, channelpartnermails, charset, confirmrule, desc, filename, ftpaccount, ftpactive, ftpbinary, host, idchannel, inorout, keyfile, lockname, mdnchannel, parameters, partner, path, port, remove, rfromchannel, rsrv1, rsrv2, rsrv3, rtochannel, secret, sendmdn, starttls, syslock, testpath, type, username
+
+20240910 20:47:11 DEBUG    engine : Finished communication channel "myfirstroute_out" type file out.
+20240910 20:47:25 DEBUG    engine : Error in process: Traceback (most recent call last):
+  File "/home/pi/Documents/raspimapper/bots/utils/botslib.py", line 466, in wrapper
+    terug = func(*args,**argv)
+  File "/home/pi/Documents/raspimapper/bots/utils/engine/router.py", line 234, in routepart
+    botslib.addinfo(change={'status':EXTERNOUT,'statust':ERROR},where={'status':FILEOUT,'statust':OK,'tochannel':routedict['tochannel'],'rootidta':rootidta})
+  File "/home/pi/Documents/raspimapper/bots/utils/botslib.py", line 272, in addinfo
+    return addinfocore_noquery(change=change,where=where,wheredict=wheredict)
+  File "/home/pi/Documents/raspimapper/bots/utils/botslib.py", line 228, in addinfocore_noquery
+    queryset = Transaction.objects.filter(idta__gt=where['rootidta'],**wheredict)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 941, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 961, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/query.py", line 968, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1416, in add_q
+    clause, _ = self._add_q(q_object, self.used_aliases)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1438, in _add_q
+    split_subq=split_subq, check_filterable=check_filterable,
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1309, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg)
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1135, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+  File "/home/pi/Documents/raspimapper/venv/lib/python3.7/site-packages/django/db/models/sql/query.py", line 1563, in names_to_path
+    "Choices are: %s" % (name, ", ".join(available)))
+django.core.exceptions.FieldError: Cannot resolve keyword 'wheredict' into field. Choices are: alt, botskey, cc, charset, child, confirmasked, confirmed, confirmidta, confirmtype, contenttype, divtext, editype, envelope, errortext, filename, filesize, fromchannel, frommail, frompartner, idroute, idta, merge, messagetype, nrmessages, numberofresends, parent, reference, retransmit, rsrv1, rsrv2, rsrv3, rsrv4, rsrv5, script, status, statuse, statust, testindicator, tochannel, tomail, topartner, ts
+
+20240910 20:47:25 DEBUG    engine : Finished route myfirstroute 9999
+20240910 20:47:25 INFO     engine : Bots Report; type: new, time: 2024-09-10 20:46:43
+    3 files received/processed in run.
+    3 files got stuck,
+    2 errors in processes.
+    0 files send in run.
+
+20240910 20:47:25 DEBUG    engine : Run userscript "posttest" in "/home/pi/Documents/raspimapper/bots/usersys/routescripts/bots_acceptancetest".

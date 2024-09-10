@@ -28,16 +28,22 @@ from .. import botslib
 from .. import botsglobal
 from ..botsconfig import *
 
+from bots.models import Channel, Transaction
+
 @botslib.log_session
 def run(idchannel,command,idroute,rootidta=None):
     '''run a communication session (dispatcher for communication functions).'''
     if rootidta is None:
         rootidta = botsglobal.currentrun.get_minta4query()
     #~ print('in communication 1')
-    for row in botslib.query('''SELECT *
-                                FROM channel
-                                WHERE idchannel=%(idchannel)s''',
-                                {'idchannel':idchannel}):
+    rows = Channel.objects.filter(idchannel=idchannel).values()
+    
+    #for row in botslib.query('''SELECT *
+    #                            FROM channel
+    #                            WHERE idchannel=%(idchannel)s''',
+    #                            {'idchannel':idchannel}):
+    
+    for row in rows :
         channeldict = dict(row)   #convert to real dictionary ()
         botsglobal.logger.debug('Start communication channel "%(idchannel)s" type %(type)s %(inorout)s.',channeldict)
         #for acceptance testing bots has an option to turn of external communication in channels
@@ -250,16 +256,31 @@ class _comsession(object):
             from status FILEOUT to FILEOUT
         '''
         #select files with right statust, status and channel.
-        for row in botslib.query('''SELECT idta,filename,frompartner,topartner,charset,contenttype,editype,frommail,tomail,cc
-                                    FROM ta
-                                    WHERE idta>%(rootidta)s
-                                    AND status=%(status)s
-                                    AND statust=%(statust)s
-                                    AND tochannel=%(idchannel)s
-                                    ORDER BY idta
-                                    ''',
-                                    {'idchannel':self.channeldict['idchannel'],'status':FILEOUT,
-                                    'statust':OK,'idroute':self.idroute,'rootidta':self.rootidta}):
+        rows = Transaction.objects.filter(idta__gt=self.rootidta,
+                                          status=FILEOUT,
+                                          statust=OK,
+                                          tochannel=self.channeldict['idchannel']).order_by('idta').values('idta',
+                                                                                                           'filename',
+                                                                                                           'frompartner',
+                                                                                                           'topartner',
+                                                                                                           'charset',
+                                                                                                           'contenttype',
+                                                                                                           'editype'
+                                                                                                           'frommail',
+                                                                                                           'tomail',
+                                                                                                           'cc')
+
+        #for row in botslib.query('''SELECT idta,filename,frompartner,topartner,charset,contenttype,editype,frommail,tomail,cc
+        #                            FROM ta
+        #                            WHERE idta>%(rootidta)s
+        #                            AND status=%(status)s
+        #                            AND statust=%(statust)s
+        #                            AND tochannel=%(idchannel)s
+        #                            ORDER BY idta
+        #                            ''',
+        #                            {'idchannel':self.channeldict['idchannel'],'status':FILEOUT,
+        #                            'statust':OK,'idroute':self.idroute,'rootidta':self.rootidta}):
+        for row in rows :
             try:
                 ta_from = botslib.OldTransaction(row['idta'])
                 ta_to = ta_from.copyta(status=FILEOUT)
@@ -806,16 +827,23 @@ class file(_comsession):
         else:
             mode = 'ab'
         #select the db-ta's for this channel
-        for row in botslib.query('''SELECT idta,filename,numberofresends
-                                       FROM ta
-                                      WHERE idta>%(rootidta)s
-                                        AND status=%(status)s
-                                        AND statust=%(statust)s
-                                        AND tochannel=%(tochannel)s
-                                        ORDER BY idta
-                                        ''',
-                                    {'tochannel':self.channeldict['idchannel'],'rootidta':self.rootidta,
-                                    'status':FILEOUT,'statust':OK}):
+        #for row in botslib.query('''SELECT idta,filename,numberofresends
+        #                               FROM ta
+        #                              WHERE idta>%(rootidta)s
+        #                                AND status=%(status)s
+        #                                AND statust=%(statust)s
+        #                                AND tochannel=%(tochannel)s
+        #                                ORDER BY idta
+        #                                ''',
+        #                            {'tochannel':self.channeldict['idchannel'],'rootidta':self.rootidta,
+        #                            'status':FILEOUT,'statust':OK}):
+        rows = Transaction.objects.filter(idta__gt=self.rootidta,
+                                      status=FILEOUT,
+                                      statust=OK,
+                                      tochannel=self.channeldict['idchannel']).order_by('idta').values('idta',
+                                                                                      'filename',
+                                                                                      'numberofresends')
+        for row in rows :
             try:    #for each db-ta:
                 ta_from = botslib.OldTransaction(row['idta'])
                 ta_to =   ta_from.copyta(status=EXTERNOUT)

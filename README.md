@@ -1,4 +1,5 @@
 This is a django mapper using the default Django recommendations
+IMPORTANT: This version is Functioning! 10/09/2024
 
 
 python3 -m venv venv
@@ -10,7 +11,9 @@ cd ..
 django-admin startproject mapper
 cd mapper
 
-
+# TO START:
+source venv/bin/activate
+python manage.py runserver
 
 
 

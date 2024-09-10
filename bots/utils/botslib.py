@@ -100,9 +100,9 @@ class _Transaction(object):
     def synall(self):
         '''access of attributes of transaction as ta.fromid, ta.filename etc'''
         queryset = Transaction.objects.filter(idta=self.idta).first()
-       # print('_Transaction synall:')
-       # print(queryset.query) 
-        self.__dict__.update(queryset)
+        # print('_Transaction synall:')
+        # print(queryset.query) 
+        self.__dict__.update(queryset.__dict__)
         # for row in query('''SELECT *
         #                       FROM ta
         #                       WHERE idta=%(idta)s''',
@@ -144,7 +144,7 @@ class _Transaction(object):
        # print(oldta.query)
 
         newta = Transaction.objects.create( script=oldta[0]['script'],
-                                            status=oldta[0]['status'],
+                                            status=status,
                                             parent=oldta[0]['idta'],
                                             frompartner=oldta[0]['frompartner'],
                                             topartner=oldta[0]['topartner'],
@@ -218,17 +218,16 @@ class NewProcess(NewTransaction):
 #**********************************************************/**
 #*************************Database***********************/**
 #**********************************************************/**
-def addinfocore_noquery(change,where,**wheredict):
+def addinfocore_noquery(change,where,wheredict):
     ''' core function for add/changes information in db-ta's.
     '''
     # wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring
     # print '''SELECT idta FROM ta'''+wherestring + ''' ORDER BY idta'''
     counter = 0 #count the number of dbta changed
     #for row in query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where):
-    queryset = Transaction.objects.filter(idta__gt=where['rootidta'],**wheredict)
+    rows = Transaction.objects.filter(idta__gt=where['rootidta'],**wheredict).values('idta')
    # print('addinfocore:')
    # print(queryset.query)
-    rows = queryset.values('idta')
     for row in rows:
         counter += 1
         ta_from = OldTransaction(row['idta'])
@@ -239,7 +238,7 @@ def addinfocore_noquery(change,where,**wheredict):
 def addinfocore(change,where,wherestring):
     ''' core function for add/changes information in db-ta's.
     '''
-    wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring
+    # wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring
     # print '''SELECT idta FROM ta'''+wherestring + ''' ORDER BY idta'''
     counter = 0 #count the number of dbta changed
     
@@ -248,7 +247,10 @@ def addinfocore(change,where,wherestring):
     #print(queryset.query)
     #for row in rows:
     #rows = queryset.values('idta')
+    
+    # TODO: gzamataro - at the moment it's not possible to delete this query
     for row in query('''SELECT idta FROM ta WHERE idta > %(rootidta)s AND '''+wherestring + ''' ORDER BY idta''',where):
+    #for row in query('''SELECT idta FROM ta '''+wherestring + ''' ORDER BY idta''',{'rootidta':where['rootidta']}):
         counter += 1
         ta_from = OldTransaction(row['idta'])
         ta_from.copyta(**change)     #make new ta from ta_from, using parameters from change
@@ -273,24 +275,38 @@ def updateinfocore(change,where,wherestring,**wheredict):
         where (dict) selects ta's,
         change (dict) sets values;
     '''
-   # wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring #' WHERE idta > %(rootidta)s AND statust=%(statust)s  AND status=%(status)s  AND fromchannel=%(fromchannel)s  AND idroute=%(idroute)s ' 
+    # wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring #' WHERE idta > %(rootidta)s AND statust=%(statust)s  AND status=%(status)s  AND fromchannel=%(fromchannel)s  AND idroute=%(idroute)s ' 
     #change-dict: discard empty values. Change keys: this is needed because same keys can be in where-dict
     change2 = dict((key,value) for key,value in change.items() if value)
     if not change2:
         return
-   # changedict = dict((key,'change_'+key) for key,value in change2)
-   # changestring = ','.join(key+'=%(change_'+key+')s' for key,value in change2) #'editype=%(change_editype)s,messagetype=%(change_messagetype)s,statust=%(change_statust)s' 
+    #changedict = dict((key,'change_'+key) for key,value in change2.items())
+    #changestring = ','.join(key+'=%(change_'+key+')s' for key,value in change2.items()) #'editype=%(change_editype)s,messagetype=%(change_messagetype)s,statust=%(change_statust)s' 
     
-    #where.update(('change_'+key,value) for key,value in change2)
+    #where.update(('change_'+key,value) for key,value in change2.items())
     #return changeq('''UPDATE ta SET ''' + changestring + wherestring,where) #UPDATE ta SET editype=%(change_editype)s,messagetype=%(change_messagetype)s,statust=%(change_statust)s  WHERE idta > %(rootidta)s AND statust=%(statust)s  AND status=%(status)s  AND fromchannel=%(fromchannel)s  AND idroute=%(idroute)s 
+    
+    ##NEW APPROACH GZAMATARO:
     #wheredict2=wheredict.get('wheredict')
     where2=dict((key,value) for key,value in where.items() if key != 'rootidta')
     queryset = Transaction.objects.filter(idta__gt=where['rootidta'],**where2)
-   # print('updateinfocore filter:')
-   # print(queryset.query)
-    queryset.update(**change2)
-    idta = queryset['idta'] # TODO - Correct this! 
-    return idta
+
+    #print('updateinfocore filter:')
+    #print(queryset.query)
+    number_of_updated_ta = queryset.update(**change2) #it returns the number of objects updated
+    return number_of_updated_ta
+ 
+    #if number_of_updated_ta>0 :
+    #    queryset_list=queryset.values()
+    #    idta = queryset_list[0]['idta']
+    #    return idta
+    
+    #idta = 0
+    #rows = Transaction.objects.filter(idta__gt=where['rootidta'],**where2).order_by('idta')
+    #for row in rows :
+    #    row.update(**change2)
+    #    idta = row['idta']   
+    #return idta
 
 def updateinfo(change,where):
     ''' update ta's.
@@ -303,7 +319,8 @@ def updateinfo(change,where):
     change.setdefault('statust', OK)
     wheredict = dict((key,value) for key,value in where.items() if key != 'rootidta')
     wherestring = ' AND '.join(key+'=%('+key+')s ' for key in where if key != 'rootidta')   #wherestring for copy & done
-    return updateinfocore(change=change,where=where,wherestring=wherestring, wheredict=wheredict)
+    number_of_updated_ta = updateinfocore(change=change,where=where,wherestring=wherestring, wheredict=wheredict)
+    return number_of_updated_ta
 
 def changestatustinfo(change,where):
     return updateinfo({'statust':change},where)
@@ -805,60 +822,56 @@ def trace_origin(ta,where=None):
 
 def countoutfiles(idchannel,rootidta):
     ''' counts the number of edifiles to be transmitted via outchannel.'''
-    rows = Transaction.objects.filter(idta=rootidta,status='FILEOUT',statust='OK',tochannel='idchannel').aggregate(count=Count('idta')).values('count')
-    for row in rows:
-    # for row in query('''SELECT COUNT(*) as count
-    #                     FROM ta
-    #                     WHERE idta>%(rootidta)s
-    #                     AND status=%(status)s
-    #                     AND statust=%(statust)s
-    #                     AND tochannel=%(tochannel)s
-    #                     ''',
-    #                     {'status':FILEOUT,'statust':OK,'tochannel':idchannel,'rootidta':rootidta}):
-        return row['count']
+    Counter = Transaction.objects.filter(idta__gt=rootidta,status=FILEOUT,statust=OK,tochannel=idchannel).aggregate(count=Count('idta'))
+    return Counter['count']
 
 def lookup_translation(frommessagetype,fromeditype,alt,frompartner,topartner):
     ''' lookup the translation: frommessagetype,fromeditype,alt,frompartner,topartner -> mappingscript, tomessagetype, toeditype. '''
-    to_partner_id_qs1 = Partnergroup.objects.filter(from_partner_id=frompartner).values('to_partner_id')
-    to_partner_id_qs2 = Partnergroup.objects.filter(from_partner_id=topartner).values('to_partner_id')
-    rows = Translate.objects.filter(Q(frommessagetype=frommessagetype) & Q(fromeditype=fromeditype) & Q(active=True) & \
-            (Q(alt='')|Q(alt=alt)) & \
-            (Q(frompartner_id__isnull=True) | Q(frompartner_id=frompartner) | Q(frompartner_id__in = to_partner_id_qs1)) & \
-            (Q(topartner_id__isnull=True) | Q(topartner_id=topartner) | Q(topartner_id__in = to_partner_id_qs2))
-            ).annotate(
-                cust_frompartner_id=Case(
-                    When(frompartner_id__is_null=True,then=Value('1')),
-                    When(frompartner_id__is_null=False,then=Value('0')),
-                    output_field=IntegerField()
-                    ),
-                cust_topartner_id=Case(
-                    When(topartner_id__is_null=True,then=Value('1')),
-                    When(topartner_id__is_null=False,then=Value('0')),
-                    output_field=IntegerField()
-                    )
-                ).order_by('-alt','cust_frompartner_id','cust_topartner_id')
-    # for row2 in query('''SELECT tscript,tomessagetype,toeditype
-    #                         FROM translate
-    #                         WHERE frommessagetype = %(frommessagetype)s
-    #                         AND fromeditype = %(fromeditype)s
-    #                         AND active=%(booll)s
-    #                         AND (alt='' OR alt=%(alt)s)
-    #                         AND (frompartner_id IS NULL OR frompartner_id=%(frompartner)s OR frompartner_id in (SELECT to_partner_id
-    #                                                                                                                 FROM partnergroup
-    #                                                                                                                 WHERE from_partner_id=%(frompartner)s ))
-    #                         AND (topartner_id IS NULL OR topartner_id=%(topartner)s OR topartner_id in (SELECT to_partner_id
-    #                                                                                                         FROM partnergroup
-    #                                                                                                         WHERE from_partner_id=%(topartner)s ))
-    #                         ORDER BY alt DESC,
-    #                                  CASE WHEN frompartner_id IS NULL THEN 1 ELSE 0 END, frompartner_id ,
-    #                                  CASE WHEN topartner_id IS NULL THEN 1 ELSE 0 END, topartner_id ''',
-    #                         {'frommessagetype':frommessagetype,
-    #                          'fromeditype':fromeditype,
-    #                          'alt':alt,
-    #                          'frompartner':frompartner,
-    #                          'topartner':topartner,
-    #                         'booll':True}):
-    for row2 in rows:
+    #to_partner_id_qs1 = Partnergroup.objects.filter(from_partner_id=frompartner).values('to_partner_id') # TODO . fix this!
+    #to_partner_id_qs2 = Partnergroup.objects.filter(from_partner_id=topartner).values('to_partner_id')
+    
+    #TODO : gzamataro - de momento no es posible hacerlo con los filtros de Django
+    #to_partner_id_qs1 = Partnergroup.objects.filter(partner=frompartner).values('ttopartner')
+    #to_partner_id_qs2 = Partnergroup.objects.filter(partner=topartner).values('ttopartner')
+    #rows = Translate.objects.filter(Q(frommessagetype=frommessagetype) & Q(fromeditype=fromeditype) & Q(active=True) & \
+    #        (Q(alt='')|Q(alt=alt)) & \
+    #        (Q(frompartner_id__isnull=True) | Q(frompartner_id=frompartner) | Q(frompartner_id__in = to_partner_id_qs1)) & \
+    #        (Q(topartner_id__isnull=True) | Q(topartner_id=topartner) | Q(topartner_id__in = to_partner_id_qs2))
+    #        ).annotate(
+    #            cust_frompartner_id=Case(
+    #                When(frompartner_id__is_null=True,then=Value('1')),
+    #                When(frompartner_id__is_null=False,then=Value('0')),
+    #                output_field=IntegerField()
+    #                ),
+    #            cust_topartner_id=Case(
+    #                When(topartner_id__is_null=True,then=Value('1')),
+    #                When(topartner_id__is_null=False,then=Value('0')),
+    #                output_field=IntegerField()
+    #                )
+    #            ).order_by('-alt','cust_frompartner_id','cust_topartner_id')
+    
+    for row2 in query('''SELECT tscript,tomessagetype,toeditype
+                            FROM translate
+                            WHERE frommessagetype = %(frommessagetype)s
+                             AND fromeditype = %(fromeditype)s
+                             AND active=%(booll)s
+                             AND (alt='' OR alt=%(alt)s)
+                             AND (frompartner_id IS NULL OR frompartner_id=%(frompartner)s OR frompartner_id in (SELECT to_partner_id
+                                                                                                                     FROM partnergroup
+                                                                                                                     WHERE from_partner_id=%(frompartner)s ))
+                             AND (topartner_id IS NULL OR topartner_id=%(topartner)s OR topartner_id in (SELECT to_partner_id
+                                                                                                             FROM partnergroup
+                                                                                                             WHERE from_partner_id=%(topartner)s ))
+                             ORDER BY alt DESC,
+                                      CASE WHEN frompartner_id IS NULL THEN 1 ELSE 0 END, frompartner_id ,
+                                      CASE WHEN topartner_id IS NULL THEN 1 ELSE 0 END, topartner_id ''',
+                             {'frommessagetype':frommessagetype,
+                              'fromeditype':fromeditype,
+                              'alt':alt,
+                              'frompartner':frompartner,
+                              'topartner':topartner,
+                             'booll':True}):
+    #for row2 in rows:
         return row2['tscript'],row2['toeditype'],row2['tomessagetype']
         #translation is found; only the first one is used - this is what the ORDER BY in the query takes care of
     else:       #no translation found in translate table
