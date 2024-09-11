@@ -52,7 +52,7 @@ def pretest(routestorun):
     
 def posttest(routestorun):
     #Compare run results
-    comparerunresults({'status':0,'lastreceived':4,'lasterror':0,'lastdone':4,'lastok':0,'lastopen':0,'send':4,'processerrors':0,'filesize':1096})
+    comparerunresults({'status':0,'lastreceived':5,'lasterror':0,'lastdone':5,'lastok':0,'lastopen':0,'send':4,'processerrors':0,'filesize':26806})
     
     #Compare outgoing files.
     #Run run first, save results in 'botssys/outfile' in 'botssys/infile' (so there is a directory 'botssys/infile/outfile'....)

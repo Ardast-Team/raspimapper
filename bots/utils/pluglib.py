@@ -5,6 +5,7 @@ import zipimport
 import codecs
 import django
 from django.apps import apps
+import django.apps
 from django.core.exceptions import FieldDoesNotExist
 from django.db.transaction import atomic as commit_on_success
 from django.core import serializers
@@ -193,7 +194,7 @@ def read_index2database(orgpluglist):
         botsglobal.logger.info('    Start write to database for: "%(plug)s".',{'plug':plug})
         #correction for reading partnergroups
         if plug['plugintype'] == 'partner' and plug['isgroup']:
-            plug['plugintype'] = 'partnergroep'
+            plug['plugintype'] = 'partnergroup'
         #remember the plugintype
         plugintype = plug['plugintype']
 
@@ -202,7 +203,10 @@ def read_index2database(orgpluglist):
         #delete fields not in model for compatibility; note that 'plugintype' is also removed.
         for key in list(plug.keys()):
             try:
-                table._meta.get_field(key)
+                if key == 'group':
+                    continue
+                else:
+                    table._meta.get_field(key)
             except FieldDoesNotExist:
                 del plug[key]
 
@@ -267,8 +271,11 @@ def read_index2database(orgpluglist):
             dbobject = table(**sleutel)         #create db-object
             if plugintype == 'partner':        #for partners, first the partner needs to be saved before groups can be made
                 dbobject.save()
-        for key,value in plug.items():      #update object with attributes from plugin
-            setattr(dbobject,key,value)
+        for key,value in plug.items():     #update object with attributes from plugin
+            if key == 'group':
+                continue
+            else:
+                setattr(dbobject,key,value)
         dbobject.save()                     #and save the updated object.
         botsglobal.logger.info('        Write to database is OK.')
 
@@ -331,7 +338,7 @@ def database2plug(db_table):
     plugs = serializers.serialize('python', db_table.objects.all())
     if plugs:
         app,tablename = plugs[0]['model'].split('.',1)
-        table = django.db.models.get_model(app,tablename)
+        table = django.apps.apps.get_model(app,tablename)
         pk = table._meta.pk.name
         #adapt plugs
         for plug in plugs:

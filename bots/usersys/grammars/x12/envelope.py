@@ -1,14 +1,44 @@
 from bots.utils.botsconfig import *
+import bots.utils.botslib as botslib
+
+def get_frompartner(thisnode):
+    ''' get ediDI and qualifier from ISA
+    '''
+    qual = thisnode.get({'BOTSID':'ISA','ISA05':None})
+    ediID = thisnode.get({'BOTSID':'ISA','ISA06':None})
+    return lookup_ediID(ediID,qual)
+
+def get_topartner(thisnode):
+    ''' get ediDI and qualifier from ISA
+        note: most of the time, topartner is you, so this would not be needed.
+    '''
+    qual = thisnode.get({'BOTSID':'ISA','ISA07':None})
+    ediID = thisnode.get({'BOTSID':'ISA','ISA08':None})
+    return lookup_ediID(ediID,qual)
+
+def lookup_ediID(ediID,qual):
+    #if caching, first do a lookup in the cache. 
+    for row in botslib.query(u'''SELECT leftcode
+                                FROM ccode
+                                WHERE ccodeid_id = %(ccodeid)s
+                                AND rightcode = %(rightcode)s 
+                                AND attr1 = %(attr1)s ''',
+                                {'ccodeid':'x12_partner','rightcode':ediID.strip(),'attr1':qual}):
+        partnerID = row['leftcode']
+        break
+    else:   #if not found: return ediID. Most of the time partnerID is the same as ediID anyway
+        partnerID = ediID
+    #if caching: put in cache
+    return partnerID
 
 
 nextmessage = ({'BOTSID':'ISA'},{'BOTSID':'GS'},{'BOTSID':'ST'})
 
-
 structure = [
     {ID:'ISA',MIN:0,MAX:99999,    
         QUERIES:{
-            'frompartner':  {'BOTSID':'ISA','ISA06':None},
-            'topartner':    {'BOTSID':'ISA','ISA08':None},
+            'frompartner':  get_frompartner,        #use function to do the query
+            'topartner':    get_topartner,          #use function to do the query
             'testindicator':{'BOTSID':'ISA','ISA15':None},
             },
         LEVEL:
@@ -49,7 +79,7 @@ recorddefs =    {
         ['ISA08','M',(15,15),'AN'],
         ['ISA09','M',(6,6),'DT'],
         ['ISA10','M',(4,4),'TM'],
-        ['ISA11','M',(1,1),'AN'],
+        ['ISA11','C',(1,1),'AN'],
         ['ISA12','M',(5,5),'AN'],
         ['ISA13','M',(9,9),'N'],
         ['ISA14','M',(1,1),'AN'],

@@ -2,7 +2,6 @@ from bots.utils.botsconfig import *
 from records004010 import recorddefs
 
 syntax = { 
-        'version'    :  '00401',    #version of ISA to send
         'functionalgroup'    :  'SH',
         }
 
