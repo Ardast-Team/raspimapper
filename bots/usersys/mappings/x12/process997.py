@@ -1,6 +1,6 @@
 #mapping-script
 import bots.utils.botslib as botslib
-#~ import bots.transform as transform
+#~ import bots.utils.engine.transform as transform
 from bots.utils.botsconfig import *
 
 def main(inn,out):

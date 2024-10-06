@@ -4,7 +4,11 @@ IMPORTANT: This version is Functioning! 10/09/2024
 
 python3 -m venv venv
 source venv/bin/activate
+
 pip install pip --upgrade
+or
+python.exe -m pip install --user --upgrade pip
+
 pip install django
 
 cd ..
@@ -13,6 +17,8 @@ cd mapper
 
 # TO START:
 source venv/bin/activate
+python manage.py migrate
+python manage.py createsuperuser
 python manage.py runserver
 
 

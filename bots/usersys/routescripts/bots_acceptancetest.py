@@ -32,6 +32,15 @@ def comparedicts(result_expect,result_run):
     else:
         print 'OK - got same run results.\n\n'
 
+def comparerunresults2(result_expect):
+    ''' result_expect is a dict that contains the expected results of a run.
+        These expected results are compared with the actual results. 
+        Usage eg:
+        CompareRunResults({'status':0,'lastreceived':6,'lasterror':0,'lastdone':6,'lastok':0,'lastopen':0,'send':4,'processerrors':0,'filesize':6638})
+    '''
+    result_run = getreportlastrun2()
+    comparedicts(result_expect,result_run)
+    
 def comparerunresults(result_expect):
     ''' result_expect is a dict that contains the expected results of a run.
         These expected results are compared with the actual results. 
@@ -52,7 +61,7 @@ def pretest(routestorun):
     
 def posttest(routestorun):
     #Compare run results
-    comparerunresults({'status':0,'lastreceived':5,'lasterror':0,'lastdone':5,'lastok':0,'lastopen':0,'send':4,'processerrors':0,'filesize':26806})
+    comparerunresults({'status':0,'lastreceived':6,'lasterror':0,'lastdone':6,'lastok':0,'lastopen':0,'send':6,'processerrors':0,'filesize':51582})
     
     #Compare outgoing files.
     #Run run first, save results in 'botssys/outfile' in 'botssys/infile' (so there is a directory 'botssys/infile/outfile'....)
