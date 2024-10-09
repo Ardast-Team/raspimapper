@@ -49,7 +49,14 @@ $(document).ready(function() {
                     console.log("Structure object:", data.grammar_structure);
                     var convertedData = convertToJstreeFormat(data.grammar_structure);
                     console.log("Converted data:", convertedData);
-                    $('#grammar-view').html('<h3>Imported Grammar: ' + file_path + '</h3><div id="grammar-tree-view"></div>');
+                    // Function to extract the filename and its parent folder
+
+
+                    // Example usage
+                    const relativepath = extractFilenameAndParentFolder(file_path);
+                    console.log(relativepath); // Output: { relativepath: 'edifact\DESADVD96AUNEAN005.py'}
+                    
+                    $('#grammar-view').html('<h4>Imported Grammar: ' + relativepath + '</h4><div id="grammar-tree-view"></div>');
                     $('#grammar-tree-view').jstree({
                         'core': {
                             'data': convertedData,
@@ -107,6 +114,14 @@ $(document).ready(function() {
         });
     }
 
+    function extractFilenameAndParentFolder(path) {
+        const segments = path.split('\\'); // Split the path by backslashes
+        const filename = segments.pop(); // Get the last segment (filename)
+        const parentFolder = segments.pop(); // Get the second last segment (parent folder)
+        
+        return parentFolder+"\\"+filename;
+    }
+
     function convertToJstreeFormat(data, parentKey = 'root') {
         let result = [];
          if (typeof data === 'object' && data !== null) {
@@ -150,92 +165,120 @@ $(document).ready(function() {
     }
 
     function editNode(node) {
-        let form = $('<form>').append(
-            $('<label>').text('Type:'),
-            $('<select>').attr({name: 'type'}).append(
-                $('<option>').attr('value', 'field').text('Field'),
-                $('<option>').attr('value', 'record').text('Record')
-            ),
-            $('<br>'),
-            $('<label>').text('ID:'),
-            $('<input>').attr({type: 'text', name: 'ID', value: node.data.ID}),
-            $('<br>'),
-            $('<label>').text('MAX:'),
-            $('<input>').attr({type: 'text', name: 'MAX', value: node.data.MAX}),
-            $('<br>'),
-            $('<label>').text('MIN:'),
-            $('<input>').attr({type: 'text', name: 'MIN', value: node.data.MIN})
-        );
+        // Create modal HTML
+        let modalHtml = `
+        <div class="modal fade" id="editNodeModal" tabindex="-1" aria-labelledby="editNodeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editNodeModalLabel">Edit Node</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editNodeForm">
+                            <div class="mb-3">
+                                <label for="nodeType" class="form-label">Type:</label>
+                                <select class="form-select" id="nodeType" name="type">
+                                    <option value="field">Field</option>
+                                    <option value="record">Record</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nodeId" class="form-label">ID:</label>
+                                <input type="text" class="form-control" id="nodeId" name="ID" value="${node.data.ID}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="nodeMax" class="form-label">MAX:</label>
+                                <input type="text" class="form-control" id="nodeMax" name="MAX" value="${node.data.MAX}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="nodeMin" class="form-label">MIN:</label>
+                                <input type="text" class="form-control" id="nodeMin" name="MIN" value="${node.data.MIN}">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="saveNodeBtn">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
 
-        // Set the initial value of the type dropdown
-        form.find('select[name="type"]').val(node.type);
+        // Append modal to body
+        $('body').append(modalHtml);
+
+        // Set initial values
+        $('#nodeType').val(node.type);
 
         // Add other attributes dynamically
         for (let key in node.data) {
             if (!['ID', 'MAX', 'MIN', 'LEVEL'].includes(key)) {
-                form.append(
-                    $('<br>'),
-                    $('<label>').text(key + ':'),
-                    $('<input>').attr({type: 'text', name: key, value: node.data[key]})
-                );
+                $('#editNodeForm').append(`
+                    <div class="mb-3">
+                        <label for="node${key}" class="form-label">${key}:</label>
+                        <input type="text" class="form-control" id="node${key}" name="${key}" value="${node.data[key]}">
+                    </div>
+                `);
             }
         }
 
         if (node.type === 'record' && node.data.LEVEL !== undefined) {
-            form.append(
-                $('<br>'),
-                $('<label>').text('LEVEL:'),
-                $('<input>').attr({type: 'text', name: 'LEVEL', value: JSON.stringify(node.data.LEVEL)})
-            );
+            $('#editNodeForm').append(`
+                <div class="mb-3">
+                    <label for="nodeLevel" class="form-label">LEVEL:</label>
+                    <input type="text" class="form-control" id="nodeLevel" name="LEVEL" value='${JSON.stringify(node.data.LEVEL)}'>
+                </div>
+            `);
         }
 
-        let dialog = $('<div>').append(form).dialog({
-            title: 'Edit Node',
-            modal: true,
-            width: 350,
-            buttons: {
-                "Save": function() {
-                    let formData = form.serializeArray();
-                    let updatedData = {...node.data};
-                    let newType = '';
-                    formData.forEach(item => {
-                        if (item.name === 'type') {
-                            newType = item.value;
-                        } else if (item.name === 'LEVEL') {
-                            try {
-                                updatedData[item.name] = JSON.parse(item.value);
-                            } catch (e) {
-                                console.error("Invalid JSON for LEVEL:", e);
-                                updatedData[item.name] = item.value;
-                            }
-                        } else {
-                            updatedData[item.name] = item.value;
-                        }
-                    });
-                    let tree = $('#grammar-tree-view').jstree(true);
-                    node.data = updatedData;
-                    node.type = newType;
-                    node.text = formatNodeText({data: updatedData, type: newType});
-                    tree.set_type(node, newType);
-                    tree.rename_node(node, node.text);
-                    
-                    // Update the icon based on the new type
-                    if (newType === 'record') {
-                        tree.set_icon(node, 'jstree-folder');
-                    } else {
-                        tree.set_icon(node, 'jstree-file');
+        // Show modal
+        let modal = new bootstrap.Modal(document.getElementById('editNodeModal'));
+        modal.show();
+
+        // Handle save button click
+        $('#saveNodeBtn').click(function() {
+            let formData = $('#editNodeForm').serializeArray();
+            let updatedData = {...node.data};
+            let newType = '';
+            formData.forEach(item => {
+                if (item.name === 'type') {
+                    newType = item.value;
+                } else if (item.name === 'LEVEL') {
+                    try {
+                        updatedData[item.name] = JSON.parse(item.value);
+                    } catch (e) {
+                        console.error("Invalid JSON for LEVEL:", e);
+                        updatedData[item.name] = item.value;
                     }
-                    
-                    tree.redraw_node(node.id);
-                    dialog.dialog('close');
-                },
-                "Cancel": function() {
-                    dialog.dialog('close');
+                } else {
+                    updatedData[item.name] = item.value;
                 }
-            },
-            close: function() {
-                $(this).dialog('destroy').remove();
+            });
+
+            let tree = $('#grammar-tree-view').jstree(true);
+            node.data = updatedData;
+            node.type = newType;
+            node.text = formatNodeText({data: updatedData, type: newType});
+            tree.set_type(node, newType);
+            tree.rename_node(node, node.text);
+            
+            // Update the icon based on the new type
+            if (newType === 'record') {
+                tree.set_icon(node, 'jstree-folder');
+            } else {
+                tree.set_icon(node, 'jstree-file');
             }
+            
+            tree.redraw_node(node.id);
+            modal.hide();
+            $('#editNodeModal').remove();
+        });
+
+        // Remove modal from DOM when hidden
+        $('#editNodeModal').on('hidden.bs.modal', function () {
+            $(this).remove();
         });
     }
 
