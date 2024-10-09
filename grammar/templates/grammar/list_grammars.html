@@ -1,0 +1,23 @@
+{% extends "grammar/base.html" %}
+{% load static %}
+
+{% block title %}Grammar Files{% endblock %}
+
+{% block content %}
+<h2>Grammar Files</h2>
+<div id="grammar-tree"></div>
+<div id="grammar-view"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/jstree.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.11/themes/default/style.min.css" />
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script>
+    var treeData = {{ grammar_tree|safe }};
+    console.log("Tree data loaded:", treeData);
+</script>
+<script src="{% static 'js/grammar_list.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "grammar/base.html" %}
+{% load static %}
+
+{% block title %}Grammar Tree View{% endblock %}
+
+{% block content %}
+<h2>Grammar Tree View</h2>
+<div id="tree-container">
+    <!-- We'll populate this with JavaScript later -->
+</div>
+<button onclick="createNode()">Add Node</button>
+<button onclick="importFile()">Import File</button>
+<button onclick="exportGrammar()">Export Grammar</button>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/grammar_tree.js' %}"></script>
+{% endblock %}

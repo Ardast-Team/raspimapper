@@ -28,5 +28,6 @@ urlpatterns = [
     path('bots/', include('bots.urls')),
     path('playground', include('playground.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico')))
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
+    path('grammar/', include('grammar.urls')),
 ]

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Grammar Tree{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/grammar_styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Grammar Tree Application</h1>
+        <!-- Add navigation if needed -->
+    </header>
+    
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    
+    <footer>
+        <button id="save-grammar">Save Grammar</button>
+    </footer>
+    
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>
