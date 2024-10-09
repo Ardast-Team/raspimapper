@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import os
 import ast
+import shutil
 from django.conf import settings
 
 def tree_view(request):
@@ -128,37 +129,64 @@ def ast_to_dict(node):
 @csrf_exempt
 def save_grammar(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        file_path = data.get('file_path')
-        grammar_structure = data.get('grammar_structure')
-
-        if not file_path or not grammar_structure:
-            return JsonResponse({'status': 'error', 'message': 'Missing file path or grammar structure'}, status=400)
-
-        full_path = os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars', file_path)
-
         try:
+            data = json.loads(request.body)
+            file_path = data.get('file_path')
+            grammar_structure = data.get('grammar_structure')
+            original_file_path = data.get('original_file_path')
+
+            if not file_path or not grammar_structure or not original_file_path:
+                return JsonResponse({'status': 'error', 'message': 'Missing file path, grammar structure, or original file path'}, status=400)
+
+            # Get the directory of the original file
+            original_dir = os.path.dirname(os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars', original_file_path))
+            
+            # Construct the new file path in the same directory as the original
+            new_file_name = os.path.basename(file_path)
+            full_path = os.path.join(original_dir, new_file_name)
+
+            # If saving to a new file, copy the original file first
+            if file_path != original_file_path:
+                shutil.copy2(os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars', original_file_path), full_path)
+
+            # Now update the structure in the file
             with open(full_path, 'r') as file:
                 content = file.read()
 
-            # Find the start and end of the structure object
+            # Find the start of the structure object
             start = content.index('structure = ')
-            end = content.index('\n', start)
-            while content[end-1] == '\\':
-                end = content.index('\n', end+1)
+            
+            # Find the end of the structure object
+            end = start
+            brackets = 0
+            in_structure = False
+            for i, char in enumerate(content[start:], start):
+                if char == '[':
+                    brackets += 1
+                    in_structure = True
+                elif char == ']':
+                    brackets -= 1
+                if in_structure and brackets == 0:
+                    end = i + 1
+                    break
 
-            # Replace the structure object
-            new_content = (
-                content[:start] +
-                f"structure = {json.dumps(grammar_structure, indent=4)}" +
-                content[end:]
-            )
+            # Replace the entire structure object with the new content
+            new_structure = f"structure = {json.dumps(grammar_structure, indent=4)}"
+            new_content = content[:start] + new_structure + content[end:]
 
             with open(full_path, 'w') as file:
                 file.write(new_content)
 
-            return JsonResponse({'status': 'success', 'message': 'Grammar saved successfully'})
+            return JsonResponse({'status': 'success', 'message': 'Grammar saved successfully', 'new_path': os.path.relpath(full_path, os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars'))})
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            import traceback
+            return JsonResponse({'status': 'error', 'message': str(e), 'traceback': traceback.format_exc()}, status=500)
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+def list_grammar_files_ajax(request):
+    grammar_root = os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars')
+    grammar_tree = build_grammar_tree(grammar_root)
+    return JsonResponse({'grammar_tree': json.dumps(grammar_tree)})
+
+# ... (keep the rest of the existing code)

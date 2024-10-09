@@ -142,7 +142,8 @@ $(document).ready(function() {
 
     function formatNodeText(node) {
         let text = ``;
-        if (node.data.ID !== undefined) text += `ID: ${node.data.ID} (${node.type})`;
+        if (node.data.ID !== undefined) text += `ID: ${node.data.ID}`;
+        text += ` (${node.type})`;
         if (node.data.MAX !== undefined) text += ` | MAX: ${node.data.MAX}`;
         if (node.data.MIN !== undefined) text += ` | MIN: ${node.data.MIN}`;
         return text;
@@ -150,6 +151,12 @@ $(document).ready(function() {
 
     function editNode(node) {
         let form = $('<form>').append(
+            $('<label>').text('Type:'),
+            $('<select>').attr({name: 'type'}).append(
+                $('<option>').attr('value', 'field').text('Field'),
+                $('<option>').attr('value', 'record').text('Record')
+            ),
+            $('<br>'),
             $('<label>').text('ID:'),
             $('<input>').attr({type: 'text', name: 'ID', value: node.data.ID}),
             $('<br>'),
@@ -159,6 +166,9 @@ $(document).ready(function() {
             $('<label>').text('MIN:'),
             $('<input>').attr({type: 'text', name: 'MIN', value: node.data.MIN})
         );
+
+        // Set the initial value of the type dropdown
+        form.find('select[name="type"]').val(node.type);
 
         // Add other attributes dynamically
         for (let key in node.data) {
@@ -187,8 +197,11 @@ $(document).ready(function() {
                 "Save": function() {
                     let formData = form.serializeArray();
                     let updatedData = {...node.data};
+                    let newType = '';
                     formData.forEach(item => {
-                        if (item.name === 'LEVEL') {
+                        if (item.name === 'type') {
+                            newType = item.value;
+                        } else if (item.name === 'LEVEL') {
                             try {
                                 updatedData[item.name] = JSON.parse(item.value);
                             } catch (e) {
@@ -201,8 +214,18 @@ $(document).ready(function() {
                     });
                     let tree = $('#grammar-tree-view').jstree(true);
                     node.data = updatedData;
-                    node.text = formatNodeText({data: updatedData, type: node.type});
+                    node.type = newType;
+                    node.text = formatNodeText({data: updatedData, type: newType});
+                    tree.set_type(node, newType);
                     tree.rename_node(node, node.text);
+                    
+                    // Update the icon based on the new type
+                    if (newType === 'record') {
+                        tree.set_icon(node, 'jstree-folder');
+                    } else {
+                        tree.set_icon(node, 'jstree-file');
+                    }
+                    
                     tree.redraw_node(node.id);
                     dialog.dialog('close');
                 },
@@ -319,25 +342,52 @@ $(document).ready(function() {
     }
 
     function saveGrammar(file_path, grammar_structure) {
+        var original_file_path = $('#grammar-tree-view').data('original-file-path');
         $.ajax({
             url: '/grammar/save/',
             method: 'POST',
             data: JSON.stringify({
                 file_path: file_path,
-                grammar_structure: grammar_structure
+                grammar_structure: grammar_structure,
+                original_file_path: original_file_path
             }),
             contentType: 'application/json',
             success: function(data) {
                 if (data.status === 'success') {
                     alert('Grammar saved successfully');
-                    // Refresh the grammar list if needed
-                    // location.reload();
+                    // Update the original file path with the new path
+                    $('#grammar-tree-view').data('original-file-path', data.new_path);
+                    // Optionally, update the displayed file name
+                    $('h3:contains("Imported Grammar:")').text('Imported Grammar: ' + data.new_path);
+                    // Refresh the grammar tree
+                    refreshGrammarTree();
                 } else {
                     alert('Error saving grammar: ' + data.message);
                 }
             },
-            error: function() {
-                alert('Error saving grammar');
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error saving grammar:", jqXHR.responseText);
+                try {
+                    var errorData = JSON.parse(jqXHR.responseText);
+                    alert('Error saving grammar: ' + errorData.message + '\n\nTraceback: ' + errorData.traceback);
+                } catch (e) {
+                    alert('Error saving grammar: ' + textStatus + ', ' + errorThrown);
+                }
+            }
+        });
+    }
+
+    function refreshGrammarTree() {
+        $.ajax({
+            url: '/grammar/list/',
+            method: 'GET',
+            success: function(data) {
+                var newTreeData = JSON.parse(data.grammar_tree);
+                $('#grammar-tree').jstree(true).settings.core.data = newTreeData;
+                $('#grammar-tree').jstree(true).refresh();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error refreshing grammar tree:", textStatus, errorThrown);
             }
         });
     }

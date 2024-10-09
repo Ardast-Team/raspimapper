@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.list_grammar_files, name='list_grammars'),
+    path('list/', views.list_grammar_files_ajax, name='list_grammars_ajax'),
     path('import/<path:file_path>/', views.import_grammar, name='import_grammar'),
     path('save/', views.save_grammar, name='save_grammar'),
     # Keep existing paths
