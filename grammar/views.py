@@ -7,6 +7,7 @@ import os
 import ast
 import shutil
 from django.conf import settings
+from pprint import pformat
 
 def tree_view(request):
     nodes = GrammarNode.objects.all()
@@ -123,6 +124,13 @@ def ast_to_dict(node):
         return [ast_to_dict(elem) for elem in node.elts]
     elif isinstance(node, ast.Name):
         return node.id
+    elif isinstance(node, ast.Constant):
+        if node.value is None:
+            return None  
+        elif isinstance(node.value, int):
+            return int(node.value)        
+        else:
+            return str(node.value)
     else:
         return str(node)
 
@@ -170,9 +178,27 @@ def save_grammar(request):
                     end = i + 1
                     break
 
+            # Convert JSON null to Python None
+            def json_to_python(obj):
+                if isinstance(obj, dict):
+                    return {k: json_to_python(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [json_to_python(item) for item in obj]
+                elif obj is None:
+                    return None
+                else:
+                    return obj
+
+            grammar_structure = json_to_python(grammar_structure)
+
+            # Format the grammar structure with proper indentation
+            formatted_structure = pformat(grammar_structure, indent=4, width=120)
+
+            # Ensure the structure is on a new line and indented
+            structure_str = 'structure = \\\n' + '\n'.join('    ' + line for line in formatted_structure.split('\n'))
+
             # Replace the entire structure object with the new content
-            new_structure = f"structure = {json.dumps(grammar_structure, indent=4)}"
-            new_content = content[:start] + new_structure + content[end:]
+            new_content = content[:start] + structure_str + content[end:]
 
             with open(full_path, 'w') as file:
                 file.write(new_content)

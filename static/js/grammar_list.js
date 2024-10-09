@@ -124,7 +124,7 @@ $(document).ready(function() {
 
     function convertToJstreeFormat(data, parentKey = 'root') {
         let result = [];
-         if (typeof data === 'object' && data !== null) {
+        if (typeof data === 'object' && data !== null) {
             for (let key in data) {
                 let value = data[key];
                 let node = {
@@ -136,16 +136,23 @@ $(document).ready(function() {
                 
                 // Ensure minimum attributes
                 if (!node.data.ID) node.data.ID = key;
-                if (node.data.MAX === undefined) node.data.MAX = '0';
+                if (node.data.MAX === undefined) node.data.MAX = '1';
                 if (node.data.MIN === undefined) node.data.MIN = '0';
 
-                if (key === 'LEVEL') {
+                if (key === 'LEVEL' || value.LEVEL) {
                     node.type = 'record';
-                    node.children = convertToJstreeFormat(value, node.id);
-                } else if (value.LEVEL) {
-                    node.type = 'record';
-                    node.children = convertToJstreeFormat(value.LEVEL, node.id);
-                    delete node.data.LEVEL; // Remove LEVEL from data to avoid duplication
+                    node.children = convertToJstreeFormat(value.LEVEL || value, node.id);
+                    if (value.LEVEL) {
+                        delete node.data.LEVEL;
+                    }
+                }
+
+                // Handle QUERIES and SUBTRANSLATION
+                if (value.QUERIES) {
+                    node.data.QUERIES = value.QUERIES;
+                }
+                if (value.SUBTRANSLATION) {
+                    node.data.SUBTRANSLATION = value.SUBTRANSLATION;
                 }
 
                 node.text = formatNodeText(node);
@@ -161,14 +168,15 @@ $(document).ready(function() {
         text += ` (${node.type})`;
         if (node.data.MAX !== undefined) text += ` | MAX: ${node.data.MAX}`;
         if (node.data.MIN !== undefined) text += ` | MIN: ${node.data.MIN}`;
+        if (node.data.QUERIES) text += ` | QUERIES: ${JSON.stringify(node.data.QUERIES).substring(0, 20)}...`;
+        if (node.data.SUBTRANSLATION) text += ` | SUBTRANSLATION: ${JSON.stringify(node.data.SUBTRANSLATION).substring(0, 20)}...`;
         return text;
     }
 
     function editNode(node) {
-        // Create modal HTML
         let modalHtml = `
         <div class="modal fade" id="editNodeModal" tabindex="-1" aria-labelledby="editNodeModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editNodeModalLabel">Edit Node</h5>
@@ -195,6 +203,14 @@ $(document).ready(function() {
                                 <label for="nodeMin" class="form-label">MIN:</label>
                                 <input type="text" class="form-control" id="nodeMin" name="MIN" value="${node.data.MIN}">
                             </div>
+                            <div class="mb-3">
+                                <label for="nodeQueries" class="form-label">QUERIES:</label>
+                                <textarea class="form-control" id="nodeQueries" name="QUERIES" rows="3">${JSON.stringify(node.data.QUERIES || {}, null, 2)}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nodeSubtranslation" class="form-label">SUBTRANSLATION:</label>
+                                <textarea class="form-control" id="nodeSubtranslation" name="SUBTRANSLATION" rows="3">${JSON.stringify(node.data.SUBTRANSLATION || [], null, 2)}</textarea>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
@@ -214,7 +230,7 @@ $(document).ready(function() {
 
         // Add other attributes dynamically
         for (let key in node.data) {
-            if (!['ID', 'MAX', 'MIN', 'LEVEL'].includes(key)) {
+            if (!['ID', 'MAX', 'MIN', 'QUERIES', 'SUBTRANSLATION', 'LEVEL'].includes(key)) {
                 $('#editNodeForm').append(`
                     <div class="mb-3">
                         <label for="node${key}" class="form-label">${key}:</label>
@@ -228,7 +244,7 @@ $(document).ready(function() {
             $('#editNodeForm').append(`
                 <div class="mb-3">
                     <label for="nodeLevel" class="form-label">LEVEL:</label>
-                    <input type="text" class="form-control" id="nodeLevel" name="LEVEL" value='${JSON.stringify(node.data.LEVEL)}'>
+                    <textarea class="form-control" id="nodeLevel" name="LEVEL" rows="3">${JSON.stringify(node.data.LEVEL, null, 2)}</textarea>
                 </div>
             `);
         }
@@ -245,15 +261,25 @@ $(document).ready(function() {
             formData.forEach(item => {
                 if (item.name === 'type') {
                     newType = item.value;
-                } else if (item.name === 'LEVEL') {
+                } else if (item.name === 'QUERIES' || item.name === 'SUBTRANSLATION') {
                     try {
                         updatedData[item.name] = JSON.parse(item.value);
+                        // Convert string 'null' to actual null
+                        if (updatedData[item.name] === 'null') {
+                            updatedData[item.name] = null;
+                        }
                     } catch (e) {
-                        console.error("Invalid JSON for LEVEL:", e);
+                        console.error(`Invalid JSON for ${item.name}:`, e);
                         updatedData[item.name] = item.value;
                     }
                 } else {
-                    updatedData[item.name] = item.value;
+                    if (item.name === 'MIN' || item.name === 'MAX') {
+                        updatedData[item.name] = parseInt(item.value);
+                    } else if (item.value === 'null' || item.value === '') {
+                        updatedData[item.name] = null;
+                    } else {
+                        updatedData[item.name] = item.value;
+                    }
                 }
             });
 
@@ -378,6 +404,21 @@ $(document).ready(function() {
             var nodeData = {...node.data};
             if (node.children && node.children.length > 0) {
                 nodeData.LEVEL = convertFromJstreeFormat(node.children);
+            }
+            // Ensure QUERIES and SUBTRANSLATION are properly handled
+            if (nodeData.QUERIES && typeof nodeData.QUERIES === 'string') {
+                try {
+                    nodeData.QUERIES = JSON.parse(nodeData.QUERIES);
+                } catch (e) {
+                    console.error("Error parsing QUERIES:", e);
+                }
+            }
+            if (nodeData.SUBTRANSLATION && typeof nodeData.SUBTRANSLATION === 'string') {
+                try {
+                    nodeData.SUBTRANSLATION = JSON.parse(nodeData.SUBTRANSLATION);
+                } catch (e) {
+                    console.error("Error parsing SUBTRANSLATION:", e);
+                }
             }
             result.push(nodeData);
         });
