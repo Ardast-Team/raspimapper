@@ -497,7 +497,7 @@ $(document).ready(function() {
         if (recorddefs && node.data && node.data.ID && recorddefs[node.data.ID]) {
             var recordDef = recorddefs[node.data.ID];
             nodeInfo.append('<h4>Record: ' + node.data.ID + '</h4>');
-            nodeInfo.append('<table class="table table-bordered"><thead><tr><th>Field Name</th><th>Conditionality</th><th>Dimensions</th><th>Data Type</th><th>Actions</th></tr></thead><tbody></tbody></table>');
+            nodeInfo.append('<table class="table table-bordered"><thead><tr><th>Field Name</th><th>Conditionality</th><th>Dimensions</th><th>Data Type</th><th>Actions</th></tr></thead><tbody id="nodeInfoBody"></tbody></table>');
             var tbody = nodeInfo.find('tbody');
 
             recordDef.forEach(function(field, index) {
@@ -515,7 +515,18 @@ $(document).ready(function() {
                 }
             });
 
-            nodeInfo.append('<button class="btn btn-primary mt-3" id="saveNodeInfo">Save Changes</button>');
+            // Make tbody sortable
+            makeSortable(tbody);
+
+            // Add new field button
+            nodeInfo.append('<button class="btn btn-success mt-3" id="addNewField">Add New Field</button>');
+            
+            // Add save changes button
+            nodeInfo.append('<button class="btn btn-primary mt-3 ml-2" id="saveNodeInfo">Save Changes</button>');
+
+            $('#addNewField').on('click', function() {
+                showAddFieldModal(node.data.ID, recordDef);
+            });
 
             $('#saveNodeInfo').on('click', function() {
                 saveNodeInfo(node.data.ID, recordDef);
@@ -525,9 +536,112 @@ $(document).ready(function() {
         }
     }
 
+    function showAddFieldModal(nodeId, recordDef) {
+        var modalHtml = `
+        <div class="modal fade" id="addFieldModal" tabindex="-1" aria-labelledby="addFieldModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addFieldModalLabel">Add New Field</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addFieldForm">
+                            <div class="mb-3">
+                                <label for="fieldType" class="form-label">Field Type</label>
+                                <select class="form-select" id="fieldType">
+                                    <option value="normal">Normal Field</option>
+                                    <option value="composite">Composite Field</option>
+                                    <option value="subfield">Subfield of Composite Field</option>
+                                </select>
+                            </div>
+                            <div class="mb-3" id="compositeFieldSelect" style="display: none;">
+                                <label for="compositeField" class="form-label">Select Composite Field</label>
+                                <select class="form-select" id="compositeField"></select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fieldName" class="form-label">Field Name</label>
+                                <input type="text" class="form-control" id="fieldName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fieldConditionality" class="form-label">Conditionality</label>
+                                <input type="text" class="form-control" id="fieldConditionality" required>
+                            </div>
+                            <div class="mb-3" id="normalFieldInputs">
+                                <label for="fieldDimensions" class="form-label">Dimensions</label>
+                                <input type="text" class="form-control" id="fieldDimensions">
+                                <label for="fieldDataType" class="form-label">Data Type</label>
+                                <input type="text" class="form-control" id="fieldDataType">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveNewField">Save Field</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        $('body').append(modalHtml);
+
+        var modal = new bootstrap.Modal(document.getElementById('addFieldModal'));
+
+        // Populate composite field select
+        var compositeFieldSelect = $('#compositeField');
+        recordDef.forEach(function(field, index) {
+            if (Array.isArray(field) && field.length === 3) {
+                compositeFieldSelect.append($('<option>', {
+                    value: index,
+                    text: field[0]
+                }));
+            }
+        });
+
+        $('#fieldType').on('change', function() {
+            if ($(this).val() === 'subfield') {
+                $('#compositeFieldSelect').show();
+                $('#normalFieldInputs').show();
+            } else if ($(this).val() === 'composite') {
+                $('#compositeFieldSelect').hide();
+                $('#normalFieldInputs').hide();
+            } else {
+                $('#compositeFieldSelect').hide();
+                $('#normalFieldInputs').show();
+            }
+        });
+
+        $('#saveNewField').on('click', function() {
+            var fieldType = $('#fieldType').val();
+            var fieldName = $('#fieldName').val();
+            var fieldConditionality = $('#fieldConditionality').val();
+            var fieldDimensions = $('#fieldDimensions').val();
+            var fieldDataType = $('#fieldDataType').val();
+            var compositeFieldIndex = $('#compositeField').val();
+
+            if (fieldType === 'normal') {
+                var newField = [fieldName, fieldConditionality, fieldDimensions, fieldDataType];
+                recordDef.push(newField);
+            } else if (fieldType === 'composite') {
+                var newCompositeField = [fieldName, fieldConditionality, []];
+                recordDef.push(newCompositeField);
+            } else if (fieldType === 'subfield') {
+                var newSubfield = [fieldName, fieldConditionality, fieldDimensions, fieldDataType];
+                recordDef[compositeFieldIndex][2].push(newSubfield);
+            }
+
+            modal.hide();
+            $('#addFieldModal').remove();
+            displayNodeInfo({data: {ID: nodeId}});
+        });
+
+        modal.show();
+    }
+
     function createEditableRow(field, index, isSubfield) {
         var fieldNameClass = isSubfield ? 'text-primary' : ''; // Add blue color for subfields
-        var row = '<tr data-index="' + index + '" class="' + (isSubfield ? 'subfield' : '') + '">' +
+        var row = '<tr data-index="' + index + '" class="' + (isSubfield ? 'subfield' : '') + '" draggable="true">' +
             '<td><input type="text" class="form-control ' + fieldNameClass + '" value="' + field[0] + '" data-field="0"></td>' +
             '<td><input type="text" class="form-control" value="' + field[1] + '" data-field="1"></td>' +
             '<td><input type="text" class="form-control" value="' + field[2] + '" data-field="2"></td>' +
@@ -538,7 +652,7 @@ $(document).ready(function() {
     }
 
     function createEditableCompositeRow(field, index) {
-        var row = '<tr data-index="' + index + '" class="composite-field">' +
+        var row = '<tr data-index="' + index + '" class="composite-field" draggable="true">' +
             '<td><input type="text" class="form-control" value="' + field[0] + '" data-field="0"></td>' +
             '<td><input type="text" class="form-control" value="' + field[1] + '" data-field="1"></td>' +
             '<td colspan="2"><strong>Composite Field</strong></td>' +
@@ -547,41 +661,77 @@ $(document).ready(function() {
         return row;
     }
 
+    function makeSortable(tbody) {
+        tbody.on('dragstart', 'tr', function(e) {
+            e.originalEvent.dataTransfer.setData('text/plain', $(this).index());
+        });
+
+        tbody.on('dragover', 'tr', function(e) {
+            e.preventDefault();
+            $(this).addClass('drag-over');
+        });
+
+        tbody.on('dragleave', 'tr', function(e) {
+            $(this).removeClass('drag-over');
+        });
+
+        tbody.on('drop', 'tr', function(e) {
+            e.preventDefault();
+            $(this).removeClass('drag-over');
+            var fromIndex = e.originalEvent.dataTransfer.getData('text/plain');
+            var toIndex = $(this).index();
+
+            if (fromIndex !== toIndex) {
+                var rows = tbody.find('tr').toArray();
+                var movedRow = rows.splice(fromIndex, 1)[0];
+                rows.splice(toIndex, 0, movedRow);
+                tbody.append(rows);
+                updateIndices();
+            }
+        });
+    }
+
+    function updateIndices() {
+        $('#nodeInfoBody tr').each(function(index) {
+            var $row = $(this);
+            var oldIndex = $row.data('index');
+            if (typeof oldIndex === 'string' && oldIndex.includes('-')) {
+                // This is a subfield, keep its parent index
+                var parentIndex = oldIndex.split('-')[0];
+                $row.attr('data-index', parentIndex + '-' + index);
+            } else {
+                $row.attr('data-index', index);
+            }
+        });
+    }
+
     function saveNodeInfo(nodeId, recordDef) {
         var updatedRecordDef = [];
-        $('#node-info tbody tr').each(function() {
+        var compositeFields = {};
+
+        $('#nodeInfoBody tr').each(function() {
             var $row = $(this);
             var index = $row.data('index');
-            if (index !== undefined) {
-                var field = [];
-                $row.find('input').each(function() {
-                    field.push($(this).val());
-                });
-                if ($row.hasClass('composite-field')) {
-                    // This is a composite field
-                    field.push([]); // Add an empty array for subfields
-                    updatedRecordDef[index] = field;
-                } else if ($row.hasClass('subfield')) {
-                    // This is a subfield of a composite field
-                    var [parentIndex, subIndex] = index.toString().split('-');
-                    if (!updatedRecordDef[parentIndex]) {
-                        updatedRecordDef[parentIndex] = recordDef[parentIndex].slice(0, 3);
-                    }
-                    if (!updatedRecordDef[parentIndex][2]) {
-                        updatedRecordDef[parentIndex][2] = [];
-                    }
-                    updatedRecordDef[parentIndex][2][subIndex] = field;
-                } else {
-                    // This is a normal field
-                    updatedRecordDef[index] = field;
-                }
+            var field = [];
+            $row.find('input').each(function() {
+                field.push($(this).val());
+            });
+
+            if ($row.hasClass('composite-field')) {
+                field.push([]); // Add an empty array for subfields
+                compositeFields[index] = field;
+                updatedRecordDef.push(field);
+            } else if ($row.hasClass('subfield')) {
+                var [parentIndex, subIndex] = index.toString().split('-');
+                compositeFields[parentIndex][2].push(field);
+            } else {
+                updatedRecordDef.push(field);
             }
         });
 
         // Update the recorddefs
         window.grammarRecorddefs[nodeId] = updatedRecordDef;
 
-        // TODO: Send the updated recorddefs to the server
         console.log("Updated recorddefs:", window.grammarRecorddefs);
         alert("Changes saved locally. Remember to save the grammar file to persist changes.");
     }
