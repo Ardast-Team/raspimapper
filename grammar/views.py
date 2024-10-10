@@ -6,6 +6,7 @@ import json
 import os
 import ast
 import shutil
+import importlib.util
 from django.conf import settings
 from pprint import pformat
 
@@ -89,21 +90,37 @@ def build_grammar_tree(path):
     return tree
 
 def import_grammar(request, file_path):
-    full_path = os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars', file_path)
-    if os.path.exists(full_path):
-        try:
-            with open(full_path, 'r') as file:
-                file_content = file.read()
-                tree = ast.parse(file_content)
-                structure = extract_structure(tree)
-                if structure:
-                    return JsonResponse({'status': 'success', 'grammar_structure': structure})
-                else:
-                    return JsonResponse({'status': 'error', 'message': 'No structure found in the file'}, status=404)
-        except Exception as e:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
-    else:
-        return JsonResponse({'status': 'error', 'message': 'File not found'}, status=404)
+    try:
+        full_path = os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars', file_path)
+        
+        # Load the module
+        spec = importlib.util.spec_from_file_location("grammar_module", full_path)
+        grammar_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(grammar_module)
+
+        # Extract the structure
+        with open(full_path, 'r') as file:
+            tree = ast.parse(file.read())
+        
+        grammar_structure = extract_structure(tree)
+        
+        # Extract recorddefs
+        recorddefs = {}
+        if hasattr(grammar_module, 'recorddefs'):
+            recorddefs = grammar_module.recorddefs
+
+        return JsonResponse({
+            'status': 'success',
+            'grammar_structure': grammar_structure,
+            'recorddefs': recorddefs
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+def extract_recorddefs_from_grammar(grammar_module):
+    if hasattr(grammar_module, 'recorddefs'):
+        return grammar_module.recorddefs
+    return {}
 
 def extract_structure(tree):
     for node in ast.walk(tree):
@@ -142,6 +159,7 @@ def save_grammar(request):
             file_path = data.get('file_path')
             grammar_structure = data.get('grammar_structure')
             original_file_path = data.get('original_file_path')
+            recorddefs = data.get('recorddefs')  # Add this line
 
             if not file_path or not grammar_structure or not original_file_path:
                 return JsonResponse({'status': 'error', 'message': 'Missing file path, grammar structure, or original file path'}, status=400)
@@ -199,6 +217,16 @@ def save_grammar(request):
 
             # Replace the entire structure object with the new content
             new_content = content[:start] + structure_str + content[end:]
+
+            # Save the recorddefs
+            recorddefs_str = 'recorddefs = ' + pformat(recorddefs, indent=4, width=120)
+            
+            # Find the start of the recorddefs object
+            recorddefs_start = content.index('recorddefs = ')
+            recorddefs_end = content.index('\n\n', recorddefs_start)
+            
+            # Replace the entire recorddefs object with the new content
+            new_content = new_content[:recorddefs_start] + recorddefs_str + new_content[recorddefs_end:]
 
             with open(full_path, 'w') as file:
                 file.write(new_content)

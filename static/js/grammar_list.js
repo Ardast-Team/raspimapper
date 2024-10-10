@@ -43,10 +43,18 @@ $(document).ready(function() {
         $.ajax({
             url: '/grammar/import/' + encodeURIComponent(file_path) + '/',
             method: 'GET',
+            dataType: 'json',
             success: function(data) {
                 console.log("Import success:", data);
                 if (data.status === 'success') {
                     console.log("Structure object:", data.grammar_structure);
+                    console.log("Recorddefs object:", data.recorddefs);
+                    
+                    // Store the recorddefs data
+                    //$('#grammar-tree-view').data('recorddefs', data.recorddefs);
+                    // Store the recorddefs data as a global variable
+                    window.grammarRecorddefs = data.recorddefs;
+                    
                     var convertedData = convertToJstreeFormat(data.grammar_structure);
                     console.log("Converted data:", convertedData);
                     // Function to extract the filename and its parent folder
@@ -91,6 +99,8 @@ $(document).ready(function() {
                         }
                     }).on('create_node.jstree', function(e, data) {
                         console.log("Node created event:", data);
+                    }).on('select_node.jstree', function (e, data) {
+                        displayNodeInfo(data.node);
                     }).on('dblclick.jstree', function (e) {
                         var node = $(e.target).closest('li');
                         var tree = $('#grammar-tree-view').jstree(true);
@@ -475,4 +485,95 @@ $(document).ready(function() {
             }
         });
     }
+
+    function displayNodeInfo(node) {
+        var recorddefs = window.grammarRecorddefs;
+        var nodeInfo = $('#node-info');
+        nodeInfo.empty();
+
+        console.log("Selected node:", node);
+        console.log("Recorddefs:", recorddefs);
+
+        if (recorddefs && node.data && node.data.ID && recorddefs[node.data.ID]) {
+            var recordDef = recorddefs[node.data.ID];
+            nodeInfo.append('<h4>Record: ' + node.data.ID + '</h4>');
+            nodeInfo.append('<table class="table table-bordered"><thead><tr><th>Field Name</th><th>Conditionality</th><th>Dimensions</th><th>Data Type</th><th>Actions</th></tr></thead><tbody></tbody></table>');
+            var tbody = nodeInfo.find('tbody');
+
+            recordDef.forEach(function(field, index) {
+                if (Array.isArray(field)) {
+                    if (field.length === 4) {
+                        // Normal field
+                        tbody.append(createEditableRow(field, index, false));
+                    } else if (field.length === 3) {
+                        // Composite field
+                        tbody.append('<tr><td colspan="5"><strong>Composite Field: ' + field[0] + '</strong></td></tr>');
+                        field.slice(2)[0].forEach(function(subfield, subIndex) {
+                            tbody.append(createEditableRow(subfield, index + '-' + subIndex, true));
+                        });
+                    }
+                }
+            });
+
+            nodeInfo.append('<button class="btn btn-primary mt-3" id="saveNodeInfo">Save Changes</button>');
+
+            $('#saveNodeInfo').on('click', function() {
+                saveNodeInfo(node.data.ID, recordDef);
+            });
+        } else {
+            nodeInfo.append('<p>No detailed information available for this node (ID: ' + (node.data ? node.data.ID : 'unknown') + ').</p>');
+        }
+    }
+
+    function createEditableRow(field, index, isSubfield) {
+        var row = '<tr data-index="' + index + '">' +
+            '<td><input type="text" class="form-control" value="' + field[0] + '" data-field="0"></td>' +
+            '<td><input type="text" class="form-control" value="' + field[1] + '" data-field="1"></td>' +
+            '<td><input type="text" class="form-control" value="' + field[2] + '" data-field="2"></td>' +
+            '<td><input type="text" class="form-control" value="' + field[3] + '" data-field="3"></td>' +
+            '<td><button class="btn btn-sm btn-danger deleteField">Delete</button></td>' +
+            '</tr>';
+        return row;
+    }
+
+    function saveNodeInfo(nodeId, recordDef) {
+        var updatedRecordDef = [];
+        $('#node-info tbody tr').each(function() {
+            var $row = $(this);
+            var index = $row.data('index');
+            if (index !== undefined) {
+                var field = [];
+                $row.find('input').each(function() {
+                    field.push($(this).val());
+                });
+                if (index.toString().includes('-')) {
+                    // This is a subfield of a composite field
+                    var [parentIndex, subIndex] = index.split('-');
+                    if (!updatedRecordDef[parentIndex]) {
+                        updatedRecordDef[parentIndex] = [recordDef[parentIndex][0], recordDef[parentIndex][1], []];
+                    }
+                    updatedRecordDef[parentIndex][2][0][subIndex] = field;
+                } else {
+                    updatedRecordDef[index] = field;
+                }
+            }
+        });
+
+        // Update the recorddefs
+        window.grammarRecorddefs[nodeId] = updatedRecordDef;
+
+        // TODO: Send the updated recorddefs to the server
+        console.log("Updated recorddefs:", window.grammarRecorddefs);
+        alert("Changes saved locally. Remember to save the grammar file to persist changes.");
+    }
+
+    // Add event delegation for delete buttons
+    $('#node-info').on('click', '.deleteField', function() {
+        $(this).closest('tr').remove();
+    });
+
+    // Make sure this event handler is properly set up
+    $('#grammar-tree-view').on('select_node.jstree', function (e, data) {
+        displayNodeInfo(data.node);
+    });
 });
