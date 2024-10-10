@@ -507,8 +507,8 @@ $(document).ready(function() {
                         tbody.append(createEditableRow(field, index, false));
                     } else if (field.length === 3) {
                         // Composite field
-                        tbody.append('<tr><td colspan="5"><strong>Composite Field: ' + field[0] + '</strong></td></tr>');
-                        field.slice(2)[0].forEach(function(subfield, subIndex) {
+                        tbody.append(createEditableCompositeRow(field, index));
+                        field[2].forEach(function(subfield, subIndex) {
                             tbody.append(createEditableRow(subfield, index + '-' + subIndex, true));
                         });
                     }
@@ -526,12 +526,23 @@ $(document).ready(function() {
     }
 
     function createEditableRow(field, index, isSubfield) {
-        var row = '<tr data-index="' + index + '">' +
-            '<td><input type="text" class="form-control" value="' + field[0] + '" data-field="0"></td>' +
+        var fieldNameClass = isSubfield ? 'text-primary' : ''; // Add blue color for subfields
+        var row = '<tr data-index="' + index + '" class="' + (isSubfield ? 'subfield' : '') + '">' +
+            '<td><input type="text" class="form-control ' + fieldNameClass + '" value="' + field[0] + '" data-field="0"></td>' +
             '<td><input type="text" class="form-control" value="' + field[1] + '" data-field="1"></td>' +
             '<td><input type="text" class="form-control" value="' + field[2] + '" data-field="2"></td>' +
             '<td><input type="text" class="form-control" value="' + field[3] + '" data-field="3"></td>' +
             '<td><button class="btn btn-sm btn-danger deleteField">Delete</button></td>' +
+            '</tr>';
+        return row;
+    }
+
+    function createEditableCompositeRow(field, index) {
+        var row = '<tr data-index="' + index + '" class="composite-field">' +
+            '<td><input type="text" class="form-control" value="' + field[0] + '" data-field="0"></td>' +
+            '<td><input type="text" class="form-control" value="' + field[1] + '" data-field="1"></td>' +
+            '<td colspan="2"><strong>Composite Field</strong></td>' +
+            '<td><button class="btn btn-sm btn-danger deleteCompositeField">Delete</button></td>' +
             '</tr>';
         return row;
     }
@@ -546,14 +557,22 @@ $(document).ready(function() {
                 $row.find('input').each(function() {
                     field.push($(this).val());
                 });
-                if (index.toString().includes('-')) {
+                if ($row.hasClass('composite-field')) {
+                    // This is a composite field
+                    field.push([]); // Add an empty array for subfields
+                    updatedRecordDef[index] = field;
+                } else if ($row.hasClass('subfield')) {
                     // This is a subfield of a composite field
-                    var [parentIndex, subIndex] = index.split('-');
+                    var [parentIndex, subIndex] = index.toString().split('-');
                     if (!updatedRecordDef[parentIndex]) {
-                        updatedRecordDef[parentIndex] = [recordDef[parentIndex][0], recordDef[parentIndex][1], []];
+                        updatedRecordDef[parentIndex] = recordDef[parentIndex].slice(0, 3);
                     }
-                    updatedRecordDef[parentIndex][2][0][subIndex] = field;
+                    if (!updatedRecordDef[parentIndex][2]) {
+                        updatedRecordDef[parentIndex][2] = [];
+                    }
+                    updatedRecordDef[parentIndex][2][subIndex] = field;
                 } else {
+                    // This is a normal field
                     updatedRecordDef[index] = field;
                 }
             }
@@ -570,6 +589,19 @@ $(document).ready(function() {
     // Add event delegation for delete buttons
     $('#node-info').on('click', '.deleteField', function() {
         $(this).closest('tr').remove();
+    });
+
+    $('#node-info').on('click', '.deleteCompositeField', function() {
+        var $compositeRow = $(this).closest('tr');
+        var index = $compositeRow.data('index');
+        $compositeRow.nextAll('tr').each(function() {
+            if ($(this).data('index').toString().startsWith(index + '-')) {
+                $(this).remove();
+            } else {
+                return false; // Stop the loop when we reach the next non-subfield
+            }
+        });
+        $compositeRow.remove();
     });
 
     // Make sure this event handler is properly set up
