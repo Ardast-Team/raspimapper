@@ -159,7 +159,6 @@ def save_grammar(request):
             file_path = data.get('file_path')
             grammar_structure = data.get('grammar_structure')
             original_file_path = data.get('original_file_path')
-            recorddefs = data.get('recorddefs')  # Add this line
 
             if not file_path or not grammar_structure or not original_file_path:
                 return JsonResponse({'status': 'error', 'message': 'Missing file path, grammar structure, or original file path'}, status=400)
@@ -218,16 +217,6 @@ def save_grammar(request):
             # Replace the entire structure object with the new content
             new_content = content[:start] + structure_str + content[end:]
 
-            # Save the recorddefs
-            recorddefs_str = 'recorddefs = ' + pformat(recorddefs, indent=4, width=120)
-            
-            # Find the start of the recorddefs object
-            recorddefs_start = content.index('recorddefs = ')
-            recorddefs_end = content.index('\n\n', recorddefs_start)
-            
-            # Replace the entire recorddefs object with the new content
-            new_content = new_content[:recorddefs_start] + recorddefs_str + new_content[recorddefs_end:]
-
             with open(full_path, 'w') as file:
                 file.write(new_content)
 
@@ -243,4 +232,43 @@ def list_grammar_files_ajax(request):
     grammar_tree = build_grammar_tree(grammar_root)
     return JsonResponse({'grammar_tree': json.dumps(grammar_tree)})
 
-# ... (keep the rest of the existing code)
+@csrf_exempt
+def save_recorddefs(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            file_path = data.get('file_path')
+            recorddefs = data.get('recorddefs')
+
+            if not file_path or recorddefs is None:
+                return JsonResponse({'status': 'error', 'message': 'Missing file path or recorddefs'}, status=400)
+
+            full_path = os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars', file_path)
+
+            # Read the current file content
+            with open(full_path, 'r') as file:
+                content = file.read()
+
+            # Find the start and end of the recorddefs object
+            start = content.index('recorddefs = ')
+            end = content.index('\n\n', start)  # Assuming there's a blank line after recorddefs
+
+            # Format the new recorddefs
+            formatted_recorddefs = pformat(recorddefs, indent=4, width=120)
+            new_recorddefs = f"recorddefs = \\\n{formatted_recorddefs}\n"
+
+            # Replace the old recorddefs with the new one
+            new_content = content[:start] + new_recorddefs + content[end:]
+
+            # Write the updated content back to the file
+            with open(full_path, 'w') as file:
+                file.write(new_content)
+
+            return JsonResponse({'status': 'success', 'message': 'Recorddefs saved successfully'})
+        except Exception as e:
+            import traceback
+            return JsonResponse({'status': 'error', 'message': str(e), 'traceback': traceback.format_exc()}, status=500)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+# Don't forget to add this view to your urls.py file

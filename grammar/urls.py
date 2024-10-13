@@ -11,4 +11,5 @@ urlpatterns = [
     path('create/', views.create_node, name='create_node'),
     path('import/', views.import_file, name='import_file'),
     path('export/', views.export_grammar, name='export_grammar'),
+    path('save_recorddefs/', views.save_recorddefs, name='save_recorddefs'),
 ]
