@@ -220,6 +220,88 @@ $(document).ready(function() {
         return items;
     }
 
+    $('#save-grammar').click(function() {
+        var treeData = $('#grammar-tree-view').jstree(true).get_json('#', {flat: false});
+        var grammar_structure = convertFromJstreeFormat(treeData);
+        var original_file_path = $('#grammar-tree-view').data('original-file-path');
+
+        var save_option = confirm('Do you want to overwrite the existing grammar?\nClick OK to overwrite, or Cancel to save as a new file.');
+
+        if (save_option) {
+            // Overwrite existing grammar
+            saveGrammar(original_file_path, grammar_structure);
+        } else {
+            // Save as new file
+            var new_file_name = prompt('Enter a new name for the grammar file:', 'new_grammar.py');
+            if (new_file_name) {
+                saveGrammar(new_file_name, grammar_structure);
+            }
+        }
+    });
+    
+    function convertFromJstreeFormat(data) {
+        var result = [];
+        data.forEach(function(node) {
+            var nodeData = {...node.data};
+            if (node.children && node.children.length > 0) {
+                nodeData.LEVEL = convertFromJstreeFormat(node.children);
+            }
+            // Ensure QUERIES and SUBTRANSLATION are properly handled
+            if (nodeData.QUERIES && typeof nodeData.QUERIES === 'string') {
+                try {
+                    nodeData.QUERIES = JSON.parse(nodeData.QUERIES);
+                } catch (e) {
+                    console.error("Error parsing QUERIES:", e);
+                }
+            }
+            if (nodeData.SUBTRANSLATION && typeof nodeData.SUBTRANSLATION === 'string') {
+                try {
+                    nodeData.SUBTRANSLATION = JSON.parse(nodeData.SUBTRANSLATION);
+                } catch (e) {
+                    console.error("Error parsing SUBTRANSLATION:", e);
+                }
+            }
+            result.push(nodeData);
+        });
+        return result;
+    }
+
+    function saveGrammar(file_path, grammar_structure) {
+        var original_file_path = $('#grammar-tree-view').data('original-file-path');
+        $.ajax({
+            url: '/grammar/save/',
+            method: 'POST',
+            data: JSON.stringify({
+                file_path: file_path,
+                grammar_structure: grammar_structure,
+                original_file_path: original_file_path
+            }),
+            contentType: 'application/json',
+            success: function(data) {
+                if (data.status === 'success') {
+                    alert('Grammar saved successfully');
+                    // Update the original file path with the new path
+                    $('#grammar-tree-view').data('original-file-path', data.new_path);
+                    // Optionally, update the displayed file name
+                    $('h3:contains("Imported Grammar:")').text('Imported Grammar: ' + data.new_path);
+                    // Refresh the grammar tree
+                    refreshGrammarTree();
+                } else {
+                    alert('Error saving grammar: ' + data.message);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error saving grammar:", jqXHR.responseText);
+                try {
+                    var errorData = JSON.parse(jqXHR.responseText);
+                    alert('Error saving grammar: ' + errorData.message + '\n\nTraceback: ' + errorData.traceback);
+                } catch (e) {
+                    alert('Error saving grammar: ' + textStatus + ', ' + errorThrown);
+                }
+            }
+        });
+    }
+
     function refreshGrammarTree() {
         $.ajax({
             url: '/grammar/list/',

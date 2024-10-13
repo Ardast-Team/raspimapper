@@ -206,13 +206,8 @@ function editNodeInfoField(node, isNew) {
             return; // Stop execution if validation fails
         }
 
-        if (isField && (!newDimensions || isNaN(newDimensions))) {
+        if ((isField || isSubfield) && (!newDimensions || !isValidCommaSeparatedNumber(newDimensions))) {
             alert('Dimensions must be a valid number.');
-            return; // Stop execution if validation fails
-        }
-
-        if (isField && (!newDataType || newDataType.length > 2)) {
-            alert('Data Type cannot exceed 2 characters.');
             return; // Stop execution if validation fails
         }
 
@@ -490,4 +485,12 @@ function getNodePosition(nodeId) {
         console.error("Node not found:", nodeId);
         return null; // Return null if the node is not found
     }
+}
+
+function isValidCommaSeparatedNumber(value) {
+    // Regular expression to match a valid comma-separated number
+    const regex = /^[0-9]+(,[0-9]+)?$/;
+
+    // Check if the value is a string and matches the regex
+    return typeof value === 'string' && regex.test(value);
 }
