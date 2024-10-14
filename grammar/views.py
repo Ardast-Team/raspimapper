@@ -198,39 +198,58 @@ def save_grammar(request):
                     break
 
             # Convert JSON null to Python None
-            def format_structure_as_python_object(structure):
-                formatted_lines = ["structure = ["]
-                for item in structure:
-                    formatted_lines.append("    {")
+            def format_structure_as_python_object(structure, indent_level=0):
+                """
+                Format a given structure as a Python object string with auto-indentation.
+
+                Parameters:
+                structure (list): The structure to format (list of dictionaries).
+                indent_level (int): The current level of indentation.
+
+                Returns:
+                str: The formatted string representation of the structure.
+                """
+                indent_space = '    '  # Define the indentation space (4 spaces)
+                
+                def format_item(item, level):
+                    formatted_lines = ["{"]
                     for key, value in item.items():
+                        # Create the indentation for the current level
+                        current_indent = indent_space * (level + 1)
                         if isinstance(value, dict):
-                            value_str = f"{key}: {{"
-                            for sub_key, sub_value in value.items():
-                                value_str += f"'{sub_key}': {repr(sub_value)}, "
-                            value_str = value_str.rstrip(", ") + "},"
-                            formatted_lines.append(f"        {value_str}")
+                            if key == 'QUERIES':
+                                value_str = f"{key}: {{\n" + ",\n".join(f"{current_indent}'{k}': {repr(v)}" for k, v in value.items()) + f"\n{current_indent}}}"
+                            else:
+                                value_str = f"'{key}': {{\n" + ",\n".join(f"{current_indent}'{k}': {repr(v)}" for k, v in value.items()) + f"\n{current_indent}}}"
                         elif isinstance(value, list):
-                            value_str = f"{key}: ["
-                            for sub_item in value:
-                                value_str += "        {" + ", ".join(f"{k}: {repr(v)}" for k, v in sub_item.items()) + "},\n"
-                            value_str += "    ],"
-                            formatted_lines.append(f"        {value_str}")
+                            if key in ('SUBTRANSLATION', 'LEVEL'):
+                                value_str = f"{key}: [\n" + ",\n".join(f"{current_indent}{format_item(sub_item, level + 1)}" for sub_item in value) + f"\n{current_indent}]"
+                            else:
+                                value_str = f"'{key}': [\n" + ",\n".join(f"{current_indent}{format_item(sub_item, level + 1)}" for sub_item in value) + f"\n{current_indent}]"
                         else:
-                            formatted_lines.append(f"        {key}: {repr(value)},")
-                    formatted_lines.append("    },")
+                            if key in ('ID', 'MIN', 'MAX'):
+                                value_str = f"{key}: {repr(value)}"
+                            else:
+                                value_str = f"'{key}': {repr(value)}"
+                        formatted_lines.append(f"{current_indent}{value_str},")
+                    formatted_lines.append(f"{indent_space * level}}}")
+                    return "\n".join(formatted_lines)
+
+                formatted_lines = ["["]
+                for item in structure:
+                    formatted_lines.append(format_item(item, indent_level))
                 formatted_lines.append("]")
                 return "\n".join(formatted_lines)
 
-            print(json.dumps(grammar_structure))
+            #print(json.dumps(grammar_structure))
             # Parse JSON into an object with attributes corresponding to dict keys.
-            grammar_structure = json.loads(json.dumps(grammar_structure))
-            #grammar_structure = format_structure_as_python_object(grammar_structure)
-
+            #grammar_structure = json.loads(json.dumps(grammar_structure))
+            grammar_structure = format_structure_as_python_object(grammar_structure)
             # Format the grammar structure with proper indentation
-            formatted_structure = pformat(grammar_structure, indent=4, width=120)
+            #formatted_structure = pformat(grammar_structure, indent=4, width=120)
 
             # Ensure the structure is on a new line and indented
-            structure_str = 'structure = \\\n' + '\n'.join('    ' + line for line in formatted_structure.split('\n'))
+            structure_str = 'structure = \\\n' + '\n'.join('    ' + line for line in grammar_structure.split('\n'))
 
             # Replace the entire structure object with the new content
             new_content = content[:start] + structure_str + content[end:]
