@@ -303,17 +303,21 @@ function parseNodeText(text) {
 
 function saveRecorddefs(recorddefs) {
     var originalFilePath = $('#grammar-tree-view').data('original-file-path');
+    var relativePath = window.grammarRelativePath;
     $.ajax({
         url: '/grammar/save_recorddefs/',
         method: 'POST',
         data: JSON.stringify({
             file_path: originalFilePath,
-            recorddefs: recorddefs
+            recorddefs: recorddefs,
+            relativePath: relativePath
         }),
         contentType: 'application/json',
         success: function(data) {
             if (data.status === 'success') {
-                alert('Recorddefs saved successfully');
+                alert('Recorddefs saved successfully - ' + data.message);
+            } else if (data.status === 'prompt') {
+                showPromptModal(data.message, data.options);
             } else {
                 alert('Error saving recorddefs: ' + data.message);
             }
@@ -323,6 +327,56 @@ function saveRecorddefs(recorddefs) {
             alert('Error saving recorddefs: ' + textStatus);
         }
     });
+}
+
+function saveRecorddefsInCurrentFile(recorddefs) {
+    var originalFilePath = $('#grammar-tree-view').data('original-file-path');
+    var relativePath = window.grammarRelativePath;
+    $.ajax({
+        url: '/grammar/save_recorddefs_in_current_file/',
+        method: 'POST',
+        data: JSON.stringify({
+            file_path: originalFilePath,
+            recorddefs: recorddefs,
+            relativePath: relativePath
+        }),
+        contentType: 'application/json',
+        success: function(data) {
+            if (data.status === 'success') {
+                alert('Recorddefs saved successfully - ' + data.message);
+            } else {
+                alert('Error saving recorddefs: ' + data.message);
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error("Error saving recorddefs:", jqXHR.responseText);
+            alert('Error saving recorddefs: ' + textStatus);
+        }
+    });
+}
+
+function showPromptModal(message, options) {
+    let modalContent = `<p>${message}</p>`;
+    options.forEach(option => {
+        modalContent += `<button class="btn btn-primary m-2" onclick="handleUserChoice('${option.action}')">${option.description}</button>`;
+    });
+    $('#promptModalBody').html(modalContent);
+    $('#promptModal').modal('show');
+}
+
+function handleUserChoice(action) {
+    $('#promptModal').modal('hide');
+    if (action === 'update_path') {
+        // Logic to update the file path
+        var newPath = prompt("Enter the correct file path:");
+        if (newPath) {
+            $('#grammar-tree-view').data('original-file-path', newPath);
+            saveRecorddefs(window.grammarRecorddefs);
+        }
+    } else if (action === 'save_here') {
+        // Logic to save the recorddefs in the current file
+        saveRecorddefs(window.grammarRecorddefs, true);
+    }
 }
 
 // Add this new function to log updated recorddefs

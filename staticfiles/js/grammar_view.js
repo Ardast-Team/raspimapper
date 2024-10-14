@@ -49,13 +49,14 @@ $(document).ready(function() {
                 if (data.status === 'success') {
                     console.log("Structure object:", data.grammar_structure);
                     console.log("Recorddefs object:", data.recorddefs);
-                    
+                    window.grammarStructure = data.grammar_structure;
                     window.grammarRecorddefs = data.recorddefs;
                     
                     var convertedData = convertToJstreeFormat(data.grammar_structure);
                     console.log("Converted data:", convertedData);
 
                     const relativepath = extractFilenameAndParentFolder(file_path);
+                    window.grammarRelativePath = relativepath;
                     console.log(relativepath);
                     
                     $('#grammar-view').html('<h4>Imported Grammar: ' + relativepath + '</h4><div id="grammar-tree-view"></div>');
@@ -222,27 +223,39 @@ $(document).ready(function() {
 
     $('#save-grammar').click(function() {
         var treeData = $('#grammar-tree-view').jstree(true).get_json('#', {flat: false});
-        var grammar_structure = convertFromJstreeFormat(treeData);
+        var grammar_structure = window.grammarStructure;
+        //var grammar_structure = convertFromJstreeFormat(treeData);
+        var recorddefs = window.grammarRecorddefs;
+
         var original_file_path = $('#grammar-tree-view').data('original-file-path');
 
         var save_option = confirm('Do you want to overwrite the existing grammar?\nClick OK to overwrite, or Cancel to save as a new file.');
 
         if (save_option) {
             // Overwrite existing grammar
-            saveGrammar(original_file_path, grammar_structure);
+            saveGrammar(original_file_path, grammar_structure, recorddefs);
         } else {
             // Save as new file
             var new_file_name = prompt('Enter a new name for the grammar file:', 'new_grammar.py');
             if (new_file_name) {
-                saveGrammar(new_file_name, grammar_structure);
+                saveGrammar(new_file_name, grammar_structure, recorddefs);
             }
         }
     });
-    
+
     function convertFromJstreeFormat(data) {
         var result = [];
         data.forEach(function(node) {
-            var nodeData = {...node.data};
+            //var nodeData = {...node.data};
+            // Create a new object to ensure the order of properties
+            var nodeData = {
+                ID: node.data.ID,
+                MIN: node.data.MIN,
+                MAX: node.data.MAX,
+                QUERIES: node.data.QUERIES,
+                SUBTRANSLATION: node.data.SUBTRANSLATION,
+                LEVEL: [] // Initialize LEVEL as an empty array
+            };
             if (node.children && node.children.length > 0) {
                 nodeData.LEVEL = convertFromJstreeFormat(node.children);
             }
@@ -263,10 +276,11 @@ $(document).ready(function() {
             }
             result.push(nodeData);
         });
+        
         return result;
     }
 
-    function saveGrammar(file_path, grammar_structure) {
+    function saveGrammar(file_path, grammar_structure, recorddefs) {
         var original_file_path = $('#grammar-tree-view').data('original-file-path');
         $.ajax({
             url: '/grammar/save/',
@@ -274,7 +288,8 @@ $(document).ready(function() {
             data: JSON.stringify({
                 file_path: file_path,
                 grammar_structure: grammar_structure,
-                original_file_path: original_file_path
+                original_file_path: original_file_path,
+                //recorddefs: recorddefs
             }),
             contentType: 'application/json',
             success: function(data) {
@@ -385,6 +400,7 @@ $(document).ready(function() {
             node.text = formatNodeText(node);
             tree.rename_node(node, node.text);
             tree.redraw_node(node.id);
+            updateGrammarStructure(tree);
             modal.hide();
             $('#editNodeModal').remove();
         });
@@ -392,5 +408,11 @@ $(document).ready(function() {
         $('#editNodeModal').on('hidden.bs.modal', function () {
             $(this).remove();
         });
+    }
+
+    function updateGrammarStructure(tree) {  
+        var grammar_structure = convertFromJstreeFormat(tree.get_json('#', {flat: false}));
+        window.grammarStructure = grammar_structure;
+        console.log('Updated grammarStructure:', window.grammarStructure);
     }
 });

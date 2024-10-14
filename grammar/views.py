@@ -3,12 +3,14 @@ from .models import GrammarNode
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from types import SimpleNamespace
 import os
 import ast
 import shutil
 import importlib.util
 from django.conf import settings
 from pprint import pformat
+import json
 
 def tree_view(request):
     nodes = GrammarNode.objects.all()
@@ -196,17 +198,33 @@ def save_grammar(request):
                     break
 
             # Convert JSON null to Python None
-            def json_to_python(obj):
-                if isinstance(obj, dict):
-                    return {k: json_to_python(v) for k, v in obj.items()}
-                elif isinstance(obj, list):
-                    return [json_to_python(item) for item in obj]
-                elif obj is None:
-                    return None
-                else:
-                    return obj
+            def format_structure_as_python_object(structure):
+                formatted_lines = ["structure = ["]
+                for item in structure:
+                    formatted_lines.append("    {")
+                    for key, value in item.items():
+                        if isinstance(value, dict):
+                            value_str = f"{key}: {{"
+                            for sub_key, sub_value in value.items():
+                                value_str += f"'{sub_key}': {repr(sub_value)}, "
+                            value_str = value_str.rstrip(", ") + "},"
+                            formatted_lines.append(f"        {value_str}")
+                        elif isinstance(value, list):
+                            value_str = f"{key}: ["
+                            for sub_item in value:
+                                value_str += "        {" + ", ".join(f"{k}: {repr(v)}" for k, v in sub_item.items()) + "},\n"
+                            value_str += "    ],"
+                            formatted_lines.append(f"        {value_str}")
+                        else:
+                            formatted_lines.append(f"        {key}: {repr(value)},")
+                    formatted_lines.append("    },")
+                formatted_lines.append("]")
+                return "\n".join(formatted_lines)
 
-            grammar_structure = json_to_python(grammar_structure)
+            print(json.dumps(grammar_structure))
+            # Parse JSON into an object with attributes corresponding to dict keys.
+            grammar_structure = json.loads(json.dumps(grammar_structure))
+            #grammar_structure = format_structure_as_python_object(grammar_structure)
 
             # Format the grammar structure with proper indentation
             formatted_structure = pformat(grammar_structure, indent=4, width=120)
@@ -238,6 +256,7 @@ def save_recorddefs(request):
         try:
             data = json.loads(request.body)
             file_path = data.get('file_path')
+            relativePath = data.get('relativePath')
             recorddefs = data.get('recorddefs')
 
             if not file_path or recorddefs is None:
@@ -249,9 +268,47 @@ def save_recorddefs(request):
             with open(full_path, 'r') as file:
                 content = file.read()
 
+                        # Check if the recorddefs variable exists in the current file
+            if 'recorddefs = ' not in content:
+                # Logic to handle the case where recorddefs is not found
+                # You can return a response indicating that the user needs to make a choice
+                return JsonResponse({
+                    'status': 'prompt',
+                    'message': 'The recorddefs variable is not found in the current file (' + relativePath + '). Do you want to: ',
+                    'options': [
+                        {'action': 'update_path', 'description': 'Update the file path to the original file'},
+                        {'action': 'save_here', 'description': 'Save the recorddefs in the current file'}
+                    ]
+                })
+            
             # Find the start and end of the recorddefs object
             start = content.index('recorddefs = ')
-            end = content.index('\n\n', start)  # Assuming there's a blank line after recorddefs
+            # Find the end of the recorddefs object
+            end = start
+            brackets = 0
+            in_structure = False
+            for i, char in enumerate(content[start:], start):
+                if char == '{':
+                    brackets += 1
+                    in_structure = True
+                elif char == '}':
+                    brackets -= 1
+                if in_structure and brackets == 0:
+                    end = i + 1
+                    break
+
+            # Convert JSON null to Python None
+            def json_to_python(obj):
+                if isinstance(obj, dict):
+                    return {k: json_to_python(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [json_to_python(item) for item in obj]
+                elif obj is None:
+                    return None
+                else:
+                    return obj
+
+            recorddefs = json_to_python(recorddefs)
 
             # Format the new recorddefs
             formatted_recorddefs = pformat(recorddefs, indent=4, width=120)
@@ -272,3 +329,54 @@ def save_recorddefs(request):
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
 # Don't forget to add this view to your urls.py file
+
+@csrf_exempt
+def save_recorddefs_in_current_file(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            file_path = data.get('file_path')
+            relativePath = data.get('relativePath')
+            recorddefs = data.get('recorddefs')
+            print(relativePath)
+            print(recorddefs)
+            if not file_path:
+                return JsonResponse({'status': 'error', 'message': 'Missing file path'}, status=400)
+
+            full_path = os.path.join(settings.BASE_DIR, 'bots', 'usersys', 'grammars', file_path)
+
+            # Read the current file content
+            with open(full_path, 'r') as file:
+                content = file.read()
+            
+            # Convert JSON null to Python None
+            def json_to_python(obj):
+                if isinstance(obj, dict):
+                    return {k: json_to_python(v) for k, v in obj.items()}
+                elif isinstance(obj, list):
+                    return [json_to_python(item) for item in obj]
+                elif obj is None:
+                    return None
+                else:
+                    return obj
+
+            recorddefs = json_to_python(recorddefs)
+            
+            # Format the new recorddefs
+            formatted_recorddefs = pformat(recorddefs, indent=4, width=120)
+            new_recorddefs = f"\nrecorddefs = \\\n{formatted_recorddefs}\n\n"
+
+            # Replace the old recorddefs with the new one
+            new_content = content + new_recorddefs
+
+            # Write the updated content back to the file
+            with open(full_path, 'w') as file:
+                file.write(new_content)
+
+            return JsonResponse({'status': 'success', 'message': 'Recorddefs saved successfully'})
+        except Exception as e:
+            import traceback
+            return JsonResponse({'status': 'error', 'message': str(e), 'traceback': traceback.format_exc()}, status=500)
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
