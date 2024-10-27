@@ -3,10 +3,11 @@ import os
 import shutil
 import json as simplejson
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from . import outmessage
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.engine import outmessage
+from bots.utils.botsconfig import *
+from bots.models import *
 
 
 def mergemessages(startstatus,endstatus,idroute,rootidta=None):
@@ -24,16 +25,30 @@ def mergemessages(startstatus,endstatus,idroute,rootidta=None):
     #frompartner,topartner,testindicator,charset,nrmessages: needed for envelope (edifact, x12)
     #idta: ID of the db-ta
     #filename: file to envelope
-    for row in botslib.query('''SELECT editype,messagetype,envelope,frompartner,topartner,testindicator,charset,nrmessages,idta,filename,rsrv3,rsrv5
-                                FROM ta
-                                WHERE idta>%(rootidta)s
-                                AND status=%(status)s
-                                AND statust=%(statust)s
-                                AND merge=%(merge)s
-                                AND idroute=%(idroute)s
-                                ORDER BY idta
-                                ''',
-                                {'rootidta':rootidta,'status':startstatus,'statust':OK,'merge':False,'idroute':idroute}):
+    # for row in botslib.query('''SELECT editype,messagetype,envelope,frompartner,topartner,testindicator,charset,nrmessages,idta,filename,rsrv3,rsrv5
+    #                             FROM ta
+    #                             WHERE idta>%(rootidta)s
+    #                             AND status=%(status)s
+    #                             AND statust=%(statust)s
+    #                             AND merge=%(merge)s
+    #                             AND idroute=%(idroute)s
+    #                             ORDER BY idta
+    #                             ''',
+    #                             {'rootidta':rootidta,'status':startstatus,'statust':OK,'merge':False,'idroute':idroute}):
+    rows = Transaction.objects.filter(idta__gt=rootidta,status=startstatus,statust=OK,merge=False,idroute=idroute).order_by('idta').values(
+        'editype',
+        'messagetype',
+        'envelope',
+        'frompartner',
+        'topartner',
+        'testindicator',
+        'charset',
+        'nrmessages',
+        'idta',
+        'filename',
+        'rsrv3',
+        'rsrv5')
+    for row in rows:    
         try:
             ta_info = dict(row)
             ta_fromfile = botslib.OldTransaction(ta_info['idta'])
@@ -140,7 +155,8 @@ def envelope(ta_info,ta_list):
                 classtocall = globals()[ta_info['editype']]
             except KeyError:
                 raise botslib.OutMessageError('Not found envelope "%(envelope)s" for editype "%(editype)s".',ta_info)
-    info_from_mapping = simplejson.loads(ta_info.get('rsrv5'))
+    rsrv5 = ta_info.get('rsrv5')
+    info_from_mapping = simplejson.loads(rsrv5)
     envelope_content = info_from_mapping['envelope_content']
     syntax = info_from_mapping['syntax']
     env = classtocall(ta_info,ta_list,userscript,scriptname,envelope_content,syntax)

@@ -3,7 +3,6 @@ from bots.utils.botsconfig import *
 from bots.usersys.grammars.edifact.edifact import syntax
 from bots.usersys.grammars.edifact.recordsD96AUN import recorddefs
 
-
 structure = [
 {ID: 'UNH', MIN: 1, MAX: 1, LEVEL: [
     {ID: 'BGM', MIN: 1, MAX: 1},

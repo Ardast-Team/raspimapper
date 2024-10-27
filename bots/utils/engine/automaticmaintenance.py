@@ -1,9 +1,9 @@
 from __future__ import print_function
 import sys
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.botsconfig import *
 
 #ta-fields used in evaluation
 TAVARS = 'idta,statust,divtext,child,ts,filename,status,idroute,fromchannel,tochannel,frompartner,topartner,frommail,tomail,contenttype,nrmessages,editype,messagetype,errortext,script,rsrv1,filesize,numberofresends'

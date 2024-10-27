@@ -52,7 +52,7 @@ def txtexc():
     else:
         terug = traceback.format_exc(limit=0)
         terug = terug.replace('Traceback (most recent call last):\n','')
-        terug = terug.replace('bots.botslib.','')
+        terug = terug.replace('bots.utils.botslib.','')
         return terug
 
 #**********************************************************/**

@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Bots Log File Viewer</title>
+    <META Http-Equiv="Pragma" Content="no-cache" />
+</head>
+
+<body>
+    {% if error_content %} 
+        {{ error_content }} 
+    {% else %}
+        <table id="grammar" border="1" cellpadding=5>
+            <tr>
+                <td colspan="1"><b>Grammar Folders</b></td>
+                <td colspan="2"><b>Grammar Files</b></td>
+                <td colspan="3"><b>{{ grammar }}</b>&nbsp;&nbsp;&nbsp;&nbsp;<a href="/grammarview/grammarfiler/?grammar={{ grammar }}&amp;action=download">Download</a></td>
+            </tr>
+            <tr>
+                <td valign="top" colspan="1">
+                    {% for dir in grammardirs %}
+                    <a href="/grammarview/grammarfiler/?dir={{ dir }}">{{ dir }}</a><br>
+                    {% endfor %}
+                </td>
+                <td valign="top" colspan="2">
+                    {% for file in grammarfiles %}
+                    <a href="/grammarview/grammarfiler/?grammar={{ file }}&amp;grammarpath={{ grammarpath }}">{{ file }}</a><br>
+                    {% endfor %}
+                </td>
+                <td valign="top" colspan="3">
+                    <pre>{{grammardata}}</pre>
+                </td>
+            </tr>
+        </table>
+    {% endif %}
+</body>
+</html>
+ 

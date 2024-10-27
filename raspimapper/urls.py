@@ -21,8 +21,7 @@ import debug_toolbar
 admin.site.site_header = 'Mapper Admin'
 admin.site.index_title = 'My Admin Panel'
 
-urlpatterns = [
-    
+urlpatterns = [  
     path('', RedirectView.as_view(url='bots/home/')),
     path('admin/', RedirectView.as_view(url='../bots/admin/')),
     path('bots/', include('bots.urls')),

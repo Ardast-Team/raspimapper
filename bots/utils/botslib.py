@@ -103,11 +103,15 @@ class _Transaction(object):
         # print('_Transaction synall:')
         # print(queryset.query) 
         self.__dict__.update(queryset.__dict__)
+
         # for row in query('''SELECT *
         #                       FROM ta
         #                       WHERE idta=%(idta)s''',
         #                       {'idta':self.idta}):
         #     self.__dict__.update(dict(row))
+        for row in rows:
+            dictrow=dict(row)
+            self.__dict__.update(dictrow)
 
     def copyta(self,status,**ta_info):
         ''' copy old transaction, return new transaction.
@@ -277,9 +281,10 @@ def updateinfocore(change,where,wherestring,**wheredict):
     '''
     # wherestring = ' WHERE idta > %(rootidta)s AND ' + wherestring #' WHERE idta > %(rootidta)s AND statust=%(statust)s  AND status=%(status)s  AND fromchannel=%(fromchannel)s  AND idroute=%(idroute)s ' 
     #change-dict: discard empty values. Change keys: this is needed because same keys can be in where-dict
-    change2 = dict((key,value) for key,value in change.items() if value)
+    change2 = [(key,value) for key,value in change.items() if value]
     if not change2:
         return
+
     #changedict = dict((key,'change_'+key) for key,value in change2.items())
     #changestring = ','.join(key+'=%(change_'+key+')s' for key,value in change2.items()) #'editype=%(change_editype)s,messagetype=%(change_messagetype)s,statust=%(change_statust)s' 
     
@@ -477,11 +482,12 @@ def txtexc():
         Errortext should be valid unicode.
     '''
     if botsglobal.ini and botsglobal.ini.getboolean('settings','debug',False):
-        return traceback.format_exc(limit=None)
+        returnmsg = traceback.format_exc(limit=None,chain=True)
+        return returnmsg
     else:
         terug = traceback.format_exc(limit=0)
         terug = terug.replace('Traceback (most recent call last):\n','')
-        terug = terug.replace('bots.botslib.','')
+        terug = terug.replace('bots.utils.botslib.','')
         return terug
 
 class ErrorProcess(NewTransaction):
@@ -680,7 +686,7 @@ def set_asked_confirmrules(routedict,rootidta):
     '''
     if not globalcheckconfirmrules('ask-x12-997') and not globalcheckconfirmrules('ask-edifact-CONTRL'):
         return
-    queryset = Transaction.objects.filter(Q(idta__gt=rootidta) & Q(status='FILEOUT') & Q(statust='OK') & (Q(editype='edifact')|Q(editype='x12'))).values('parent','editype','messagetype','frompartner','topartner')
+    queryset = Transaction.objects.filter(Q(idta__gt=rootidta) & Q(status=FILEOUT) & Q(statust=OK) & (Q(editype='edifact')|Q(editype='x12'))).values('parent','editype','messagetype','frompartner','topartner')
     # for row in query('''SELECT parent,editype,messagetype,frompartner,topartner
     #                             FROM ta
     #                             WHERE idta>%(rootidta)s
@@ -872,6 +878,7 @@ def lookup_translation(frommessagetype,fromeditype,alt,frompartner,topartner):
                               'topartner':topartner,
                              'booll':True}):
     #for row2 in rows:
+
         return row2['tscript'],row2['toeditype'],row2['tomessagetype']
         #translation is found; only the first one is used - this is what the ORDER BY in the query takes care of
     else:       #no translation found in translate table
@@ -1007,10 +1014,13 @@ class BotsError(Exception):
             return self.msg             #errors in self.msg; non supported format codes. Don't think this happen...
     def __str__(self):
         try:
-            return self.msg%(self.xxx)
+            excstr = self.msg%(self.xxx)
+            return excstr
+            #return self.msg
         except:
             print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX13')
-            return self.msg.encode('utf-8','ignore')            #errors in self.msg; non supported format codes. Don't think this happen...
+            excstr = self.msg
+            return excstr          #errors in self.msg; non supported format codes. Don't think this happen...
 
 class CodeConversionError(BotsError):
     pass

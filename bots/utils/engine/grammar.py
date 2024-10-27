@@ -1,8 +1,9 @@
 from __future__ import print_function
 import sys
 #bots-modules
-from .. import botslib
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils.botsconfig import *
+from grammarview.models import GrammarRecord, EdiGrammar
 ERROR_IN_GRAMMAR = 'BOTS_error_1$%3@7#!%+_)_+[{]}'  #used in this module to indicate part of grammar is already read and/or has errors
                                                     #no record should be called like this ;-))
 
@@ -450,6 +451,75 @@ class Grammar(object):
     def class_specific_tests(self):
         ''' default function, subclasses have the actual checks.'''
         pass
+    
+    #TO-DO
+    def insert_grammarrecord_BD(self,structure,edigrammar,level=0,recordancestor=None):
+        ''' Insert grammar, with indentation for levels.
+            For debugging.
+        '''
+        for i in structure:
+            # RECORDS
+            if recordancestor is None:
+                recordparent = GrammarRecord.objects.get_or_create(name = i[MPATH][-1],value = i,
+                                                                   min= i[MIN], 
+                                                                   max=i[MAX], 
+                                                                   count=i[COUNT] if COUNT in i else None, 
+                                                                   subtranslation=i[SUBTRANSLATION] if SUBTRANSLATION in i else None, 
+                                                                   botsidnr=i[BOTSIDNR] if BOTSIDNR in i else None,
+                                                                   fixedrecordlength=i[FIXED_RECORD_LENGTH] if FIXED_RECORD_LENGTH in i else None,
+                                                                   edigrammar = edigrammar)
+            else:
+                recordparent = GrammarRecord.objects.get_or_create(name = i[MPATH][-1],value = i, 
+                                                                   min= i[MIN], 
+                                                                   max=i[MAX], 
+                                                                   count=i[COUNT] if COUNT in i else None, 
+                                                                   subtranslation=i[SUBTRANSLATION] if SUBTRANSLATION in i else None, 
+                                                                   botsidnr=i[BOTSIDNR] if BOTSIDNR in i else None,
+                                                                   fixedrecordlength=i[FIXED_RECORD_LENGTH] if FIXED_RECORD_LENGTH in i else None,
+                                                                   edigrammar = edigrammar, tn_parent=recordancestor[0])
+            # FIELDS
+            for field in i[FIELDS]:
+                #print('    Field: ',field)
+                if field[ISFIELD] == False:
+                    # COMPOSITE FIELD
+                    recordcomposite = GrammarRecord.objects.get_or_create(name = field[ID] ,value = field ,
+                                                                mandatory= field[MANDATORY], 
+                                                                length='COMPOSITE', 
+                                                                format=field[FORMAT], 
+                                                                is_field=field[ISFIELD], 
+                                                                decimals=field[DECIMALS],
+                                                                minlength=field[MINLENGTH],
+                                                                bformat=field[BFORMAT],
+                                                                maxrepeat=field[MAXREPEAT],
+                                                                subfields=field[SUBFIELDS],
+                                                            edigrammar = edigrammar, tn_parent=recordparent[0])
+                    for fieldcomposite in field[LENGTH]:
+                        record = GrammarRecord.objects.get_or_create(name = fieldcomposite[ID] ,value = fieldcomposite ,
+                                                                mandatory= fieldcomposite[MANDATORY], 
+                                                                length=fieldcomposite[LENGTH], 
+                                                                format=fieldcomposite[FORMAT], 
+                                                                is_field=fieldcomposite[ISFIELD], 
+                                                                decimals=fieldcomposite[DECIMALS],
+                                                                minlength=fieldcomposite[MINLENGTH],
+                                                                bformat=fieldcomposite[BFORMAT],
+                                                                maxrepeat=fieldcomposite[MAXREPEAT],
+                                                                subfields=fieldcomposite[SUBFIELDS],
+                                                            edigrammar = edigrammar, tn_parent=recordcomposite[0])
+                # NORMAL FIELD
+                else:
+                    record = GrammarRecord.objects.get_or_create(name = field[ID] ,value = field ,
+                                                                mandatory= field[MANDATORY], 
+                                                                length=field[LENGTH], 
+                                                                format=field[FORMAT], 
+                                                                is_field=field[ISFIELD], 
+                                                                decimals=field[DECIMALS],
+                                                                minlength=field[MINLENGTH],
+                                                                bformat=field[BFORMAT],
+                                                                maxrepeat=field[MAXREPEAT],
+                                                                subfields=field[SUBFIELDS],
+                                                            edigrammar = edigrammar, tn_parent=recordparent[0])
+            if LEVEL in i:
+                self.insert_grammarrecord_BD(i[LEVEL],edigrammar,level+1,recordparent)
 
     def display(self,structure,level=0):
         ''' Draw grammar, with indentation for levels.

@@ -6,12 +6,12 @@ import unicodedata
 import pickle
 import json as simplejson
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from . import inmessage
-from . import outmessage
-from . import grammar
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.engine import inmessage
+from bots.utils.engine import outmessage
+from bots.utils.engine import grammar
+from bots.utils.botsconfig import *
 from bots.models import *
 ''' module contains functions to be called from user scripts. '''
 
@@ -33,6 +33,7 @@ def translate(startstatus,endstatus,routedict,rootidta):
     except botslib.BotsImportError:       #userscript is not there; other errors like syntax errors are not catched
         userscript = scriptname = None
     #select edifiles to translate
+
     rows = Transaction.objects.filter(idta__gt=rootidta,
                                       status=startstatus,
                                       statust=OK,
@@ -49,6 +50,7 @@ def translate(startstatus,endstatus,routedict,rootidta):
                                                                                             'filesize',
                                                                                             'frommail',
                                                                                             'tomail')
+
     # for rawrow in botslib.query('''SELECT idta,frompartner,topartner,filename,messagetype,testindicator,editype,charset,alt,fromchannel,filesize,frommail,tomail
     #                             FROM ta
     #                             WHERE idta>%(rootidta)s

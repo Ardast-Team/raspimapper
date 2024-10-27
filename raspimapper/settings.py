@@ -33,12 +33,15 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.admindocs',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
+    'mptt',
+    'treenode',
+    #'debug_toolbar',
     'playground',
     'bots',
     'grammar',
@@ -52,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware', #Debug Toolbar
+    #'debug_toolbar.middleware.DebugToolbarMiddleware', #Debug Toolbar
 ]
 
 ROOT_URLCONF = 'raspimapper.urls'
@@ -118,7 +121,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_TZ = True
+#USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

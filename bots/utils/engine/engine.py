@@ -8,11 +8,11 @@ import socket
 import time
 import warnings
 #bots-modules
-from .. import botslib
-from .. import botsinit
-from .. import botsglobal
-from . import router
-from . import cleanup
+from bots.utils import botslib
+from bots.utils import botsinit
+from bots.utils import botsglobal
+from bots.utils.engine import router
+from bots.utils.engine import cleanup
 ''' Start bots-engine.'''
 
 

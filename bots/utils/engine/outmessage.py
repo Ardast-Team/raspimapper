@@ -7,12 +7,12 @@ from xml.etree import ElementInclude as ETI
 import json as simplejson
 from collections import OrderedDict
 #bots-modules
-from .. import botslib
-from .. import botsglobal
-from . import message
-from . import grammar
-from .. import node
-from ..botsconfig import *
+from bots.utils import botslib
+from bots.utils import botsglobal
+from bots.utils.engine import message
+from bots.utils.engine import grammar
+from bots.utils import node
+from bots.utils.botsconfig import *
 
 def outmessage_init(**ta_info):
     ''' dispatch function class Outmessage or subclass
@@ -605,7 +605,9 @@ class xml(Outmessage):
             else:
                 standalonestring = ''
             processing_instruction = ET.ProcessingInstruction('xml', 'version="%s" encoding="%s" %s'%(self.ta_info['version'],self.ta_info['charset'], standalonestring))
-            self._outstream.write(ET.tostring(processing_instruction) + indentstring) #do not use encoding here. gives double xml prolog; possibly because ET.ElementTree.write i used again by write()
+            string_instruction = ET.tostring(processing_instruction)
+            string_indent = indentstring.encode('utf-8')
+            self._outstream.write(string_instruction + string_indent ) #do not use encoding here. gives double xml prolog; possibly because ET.ElementTree.write i used again by write()
             #doctype /DTD **************************************
             if self.ta_info['DOCTYPE']:
                 self._outstream.write('<!DOCTYPE ' + self.ta_info['DOCTYPE'].encode('ascii') + '>' + indentstring)
@@ -613,7 +615,9 @@ class xml(Outmessage):
             if self.ta_info['processing_instructions']:
                 for eachpi in self.ta_info['processing_instructions']:
                     processing_instruction = ET.ProcessingInstruction(eachpi[0], eachpi[1])
-                    self._outstream.write(ET.tostring(processing_instruction) + indentstring) #do not use encoding here. gives double xml prolog; possibly because ET.ElementTree.write i used again by write()
+                    string_instruction = ET.tostring(processing_instruction)
+                    string_indent = indentstring.encode('utf-8')
+                    self._outstream.write(ET.tostring(processing_instruction) + string_indent) #do not use encoding here. gives double xml prolog; possibly because ET.ElementTree.write i used again by write()
         #indent the xml elements
         if self.ta_info['indented']:
             botslib.indent_xml(root)

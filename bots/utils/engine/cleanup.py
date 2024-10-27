@@ -6,8 +6,8 @@ import datetime
 import stat
 import shutil
 #bots-modules
-from .. import botslib
-from .. import botsglobal
+from bots.utils import botslib
+from bots.utils import botsglobal
 #~ from botsconfig import *
 
 

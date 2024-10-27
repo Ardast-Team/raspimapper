@@ -67,7 +67,11 @@
 		<li><a href="/bots/sendtestmail/">Send test report</a></li>
 		<li><a href="/bots/logfiler/" target="_blank">View logfiles</a></li>
 		<li><hr/></li>
-		<li><a href="/bots/admin/">Admin Panel</a></li>
+		<li><a href="/bots/admin/">Admin Panel</a>
+			<li><a href="/bots/admin/doc/">Admin Doc</a>
+		</li>		<li><hr/></li>
+		<li><a href="/bots/admin/grammarview/edigrammar/">Grammar View</a></li>
+		<li><a href="/grammarview/grammarfiler/">Grammar Filer</a></li>
 	</ul>
 	{% endif %}
 	{% if perms.bots.change_mutex %} <!-- change mutex permission is required to run bots-engine! -->
