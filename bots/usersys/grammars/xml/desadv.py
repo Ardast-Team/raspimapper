@@ -4,7 +4,7 @@ syntax = {
         'indented': True,
         }
 
-structure=    [
+structure = [
     {ID:'message',MIN:1,MAX:1,
     QUERIES:{
         'frompartner':  {'BOTSID':'message','sender':None},

@@ -3,22 +3,21 @@ from bots.utils.botsconfig import *
 syntax = {
         'indented':True,               #False: xml output is one string (no cr/lf); True: xml output is indented/human readable
         'charset':'utf-8',
-        'merge': True,
-        'envelope': 'myxmlenvelopunit003',
+        #'merge': True,
+        #'envelope': 'myxmlenvelopunit003',
         }
 
+nextmessage = ({'BOTSID':'HEADER'},)
 
 structure = [
-{ID:'HEA',MIN:1,MAX:10000,LEVEL:[
-        {ID:'LIN',MIN:0,MAX:10000},
+{ID:'HEADER',MIN:1,MAX:10000,LEVEL:[
+        {ID:'LINE',MIN:0,MAX:10000},
         ]},
 ]
 
-nextmessage = ({'BOTSID':'HEA'},)
-
     
 recorddefs = {
-    'HEA':[
+    'HEADER':[
             ['BOTSID','C',3,'A'],
             ['SOORT', 'C', 20, 'AN'],          
             ['EANZENDER', 'C', 13, 'AN'],         
@@ -43,7 +42,7 @@ recorddefs = {
             ['TOTAALBTW', 'C', 20.3, 'N'],       
             ['TOTAALFACTUUR', 'C', 20.3, 'N'],       
           ],
-    'LIN':[
+    'LINE':[
             ['BOTSID','C',3,'A'],
             ['REGEL', 'C', 6, 'N'],         
             ['ARTIKEL', 'C', 14, 'AN'],         

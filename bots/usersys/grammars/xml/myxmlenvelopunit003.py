@@ -7,7 +7,7 @@ syntax = {
         'envelope': 'myxmlenvelopunit003',
         }
 
-structure=    [
+structure = [
 {ID:'root003',MIN:1,MAX:10000,
     LEVEL:[
         {ID:'{http://www.w3.org/2001/XInclude}include',MIN:0,MAX:10000},

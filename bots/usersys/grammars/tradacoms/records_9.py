@@ -1,4 +1,4 @@
-recorddefs	=	{
+recorddefs = {
 'ACD':  [
 	['BOTSID','M',3,'X'],
 	['INLO', 'M',
