@@ -1,7 +1,7 @@
 This is a django mapper using the default Django recommendations
 IMPORTANT: This version is Functioning! 10/09/2024
 
-
+```
 python3 -m venv venv
 source venv/bin/activate
 
@@ -14,26 +14,32 @@ pip install django
 cd ..
 django-admin startproject mapper
 cd mapper
+```
 
 # TO START:
+```
 source venv/bin/activate
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
-
+```
 
 
 
 # OLD:
 
 # DJSUPERVISOR
+```
 pip install supervisor
 pip install watchdog
 copy djsupervisor folder
 copy supervisor.conf
 include djsupervisor in settings.py INSTALLED_APPS
+```
 
 # BOTS
+
+```
 pip install django-q
 pip install django-debug-toolbar
 copy bots
@@ -50,8 +56,9 @@ python manage.py createcachetable -> required for CACHE setting
 
 python manage.py makemigrations
 python manage.py migrate
-
+```
 # import PLUGIN
+
 Import
 
 change:
@@ -59,7 +66,7 @@ bots.botsconfig -> bots.utils.botsconfig
 bots.botslib -> bots.utils.botslib 
 bots.botsglobal -> bots.utils.botsglobal
 
--------------------------
+```
 Message(object) Class:
 	add2errorlist(self,errortxt)
 	checkforerrorlist(self)
@@ -256,3 +263,4 @@ Message(object) Class:
 		class raw(Outmessage):
 			def __init__(self,ta_info):
 			def writeall(self):
+```
