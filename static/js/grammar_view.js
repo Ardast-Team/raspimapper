@@ -1,3 +1,28 @@
+// Add this at the beginning of the file, after jQuery is loaded
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Set up CSRF token for all AJAX requests
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    }
+});
+
 $(document).ready(function() {
     console.log("Document ready, initializing jstree");
     console.log("Tree data:", treeData);
@@ -8,9 +33,10 @@ $(document).ready(function() {
             'themes': {
                 'name': 'default',
                 'responsive': true
-            }
+            },
+            'check_callback': true  // Add this to allow modifications
         },
-        'plugins': ['types'],
+        'plugins': ['types', 'contextmenu'],  // Add contextmenu plugin
         'types': {
             'folder': {
                 'icon': 'jstree-folder'
@@ -18,6 +44,9 @@ $(document).ready(function() {
             'file': {
                 'icon': 'jstree-file'
             }
+        },
+        'contextmenu': {  // Add contextmenu configuration
+            'items': customMenu_repository
         }
     }).on('ready.jstree', function() {
         console.log("jstree is ready");
@@ -37,6 +66,41 @@ $(document).ready(function() {
             importGrammar(file_path);
         }
     });
+
+    function customMenu_repository(node) {
+        var items = {
+            'NewGrammar': {
+                'separator_before': false,
+                    'separator_after': false,
+                    'label': 'New Grammar',
+                    'action': function (obj) {
+                        var file_path = node.id;
+                        if (node.type === 'folder') {
+                            createNewGrammar(file_path);
+                        }
+                }
+            },
+            'Import': {
+                'separator_before': true,
+                    'separator_after': false,
+                    'label': 'Import Grammar',
+                    'action': function (obj) {
+                        var file_path = node.id;
+                        if (node.type === 'file') {
+                            importGrammar(file_path);
+                        }
+                    }
+                }
+        };
+
+        if (node.type === 'file') {
+            delete items.NewGrammar;
+        }
+        if (node.type === 'folder') {
+            delete items.Import;
+        }
+        return items;
+    }
 
     function importGrammar(file_path) {
         console.log("Importing grammar:", file_path);
@@ -71,7 +135,7 @@ $(document).ready(function() {
                         },
                         'plugins': ['dnd', 'contextmenu', 'wholerow', 'types'],
                         'contextmenu': {
-                            'items': customMenu
+                            'items': customMenu_grammartree
                         },
                         'types': {
                             'default': {
@@ -128,7 +192,7 @@ $(document).ready(function() {
                 let node = {
                     text: key,
                     id: `${parentKey}_${key}`,
-                    type: 'field',
+                    type: 'record',
                     data: {...value}
                 };
                 
@@ -171,24 +235,126 @@ $(document).ready(function() {
         return text;
     }
 
-    function customMenu(node) {
+    function customMenu_grammartree(node) {
         var items = {
             'Create': {
                 'separator_before': false,
                 'separator_after': true,
                 'label': 'Create',
-                'action': function (obj) {
-                    var newNodeName = prompt('Enter the name of the new node:');
-                    if (newNodeName) {
-                        var newNode = {
-                            text: newNodeName,
-                            type: 'field',
-                            data: {ID: newNodeName, MAX: '1', MIN: '0'}
-                        };
-                        var tree = $('#grammar-tree-view').jstree(true);
-                        var newNodeId = tree.create_node(node, newNode);
-                        if (newNodeId) {
-                            tree.edit(newNodeId);
+                'submenu': {
+                    
+                    'CreateRecord': {
+                        'label': 'Create Record',
+                        'action': function (obj) {
+                            var tree = $('#grammar-tree-view').jstree(true);
+                            var selectedNode = tree.get_node(obj.reference);
+                            
+                            // Create modal for new record
+                            var modalContent = `
+                                <div class="modal fade" id="createRecordModal" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Create New Record</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form id="createRecordForm">
+                                                    <div class="mb-3">
+                                                        <label for="recordName" class="form-label">Record Name:</label>
+                                                        <input type="text" class="form-control" id="recordName" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="recordMin" class="form-label">MIN:</label>
+                                                        <input type="text" class="form-control" id="recordMin" value="0">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="recordMax" class="form-label">MAX:</label>
+                                                        <input type="text" class="form-control" id="recordMax" value="1">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="button" class="btn btn-primary" id="saveRecordBtn">Create</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+
+                            $('body').append(modalContent);
+                            var modal = new bootstrap.Modal(document.getElementById('createRecordModal'));
+                            modal.show();
+
+                            $('#saveRecordBtn').click(function() {
+                                var recordName = $('#recordName').val().trim();
+                                var recordMin = $('#recordMin').val().trim();
+                                var recordMax = $('#recordMax').val().trim();
+
+                                if (recordName) {
+                                    var newNode = {
+                                        text: recordName,
+                                        type: 'record',
+                                        data: {
+                                            ID: recordName,
+                                            MIN: recordMin,
+                                            MAX: recordMax,
+                                            LEVEL: []
+                                        }
+                                    };
+
+                                    var tree = $('#grammar-tree-view').jstree(true);
+                                    var newNodeId = tree.create_node(selectedNode, newNode);
+                                    
+                                    if (newNodeId) {
+                                        newNode.text = formatNodeText(newNode);
+                                        tree.rename_node(newNodeId, newNode.text);
+                                        
+                                        // Update grammar structure
+                                        if (!selectedNode.data.LEVEL) {
+                                            selectedNode.data.LEVEL = [];
+                                        }
+                                        selectedNode.data.LEVEL.push({
+                                            ID: recordName,
+                                            MIN: recordMin,
+                                            MAX: recordMax,
+                                            LEVEL: []
+                                        });
+                                        
+                                        updateGrammarStructure(tree);
+                                    }
+
+                                    modal.hide();
+                                    $('#createRecordModal').remove();
+                                } else {
+                                    alert('Record Name is required');
+                                }
+                            });
+
+                            $('#createRecordModal').on('hidden.bs.modal', function () {
+                                $(this).remove();
+                            });
+                        }
+                    },
+                    'CreateRecorddef': {
+                        'label': 'Create Node Information',
+                        'action': function (obj) {
+                            var tree = $('#grammar-tree-view').jstree(true);
+                            var selectedNode = tree.get_node(obj.reference);
+                            
+                            if (!window.grammarRecorddefs) {
+                                window.grammarRecorddefs = {};
+                            }
+                            
+                            if (!window.grammarRecorddefs[selectedNode.data.ID]) {
+                                window.grammarRecorddefs[selectedNode.data.ID] = [
+                                    ['NewField', 'C', '1', 'AN']
+                                ];
+                                displayNodeInfo(selectedNode);
+                            } else {
+                                alert('Node Information already exists for this node');
+                            }
                         }
                     }
                 }
@@ -214,11 +380,144 @@ $(document).ready(function() {
             }
         };
 
-        if (node.type === 'field') {
-            delete items.Create;
-        }
 
         return items;
+    }
+
+    // Add this new function to handle creating a new Grammar
+    function createNewGrammar(file_path) {
+        console.log("Creating new grammar in:", file_path);
+        var grammarName = prompt('Enter a name for the new Grammar (without extension):');
+        if (grammarName) {
+            // Clean the grammar name and ensure it's valid
+            grammarName = grammarName.trim();
+            
+            // Add .py extension if not present
+            var fullFileName = grammarName.toLowerCase().endsWith('.py') ? grammarName : grammarName + '.py';
+            var baseName = grammarName.replace(/\.py$/i, '');
+            
+            // Create the initial grammar structure
+            var newGrammarStructure = {};
+            newGrammarStructure[baseName] = {
+                ID: baseName,
+                MIN: '1',
+                MAX: '1',
+                LEVEL: []
+            };
+
+            // Set up global variables
+            window.grammarStructure = newGrammarStructure;
+            window.grammarRecorddefs = {};
+            
+            // Construct paths
+            const parentFolder = file_path.split('\\').pop();
+            window.grammarRelativePath = parentFolder + "\\" + fullFileName;
+            window.grammarFilepath = file_path + '\\' + fullFileName;
+            
+            console.log("Grammar Name:", baseName);
+            console.log("Grammar Structure:", newGrammarStructure);
+            console.log("Grammar Relative Path:", window.grammarRelativePath);
+            console.log("Grammar File Path:", window.grammarFilepath);
+            
+            // Initialize the grammar view
+            $('#grammar-view').html('<h4>New Grammar: ' + window.grammarRelativePath + '</h4><div id="grammar-tree-view"></div>');
+            
+            // Convert and display the structure
+            var convertedData = convertToJstreeFormat(newGrammarStructure);
+            initializeGrammarTree(convertedData);
+            
+            // Save the new grammar
+            saveNewGrammar(window.grammarFilepath, baseName, newGrammarStructure);
+        }
+    }
+
+    function saveNewGrammar(file_path, baseName, grammar_structure) {
+        // Generate Python code content
+        var grammarContent = 'structure = ' + JSON.stringify(grammar_structure, null, 4) + '\n\n';
+        grammarContent += 'recorddefs = {}';
+        
+        // Prepare the save data with explicit node_name
+        var saveData = {
+            file_path: file_path,
+            node_name: baseName,  // Ensure this is set
+            grammar_structure: grammar_structure,
+            file_content: grammarContent,
+            create_new: true,
+            root_node: {  // Add explicit root node information
+                name: baseName,
+                structure: grammar_structure[baseName]
+            }
+        };
+
+        console.log('Saving new grammar:', saveData);
+
+        $.ajax({
+            url: '/grammar/grammar/create/',  // Updated URL to match new path
+            method: 'POST',
+            data: JSON.stringify(saveData),
+            contentType: 'application/json',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            success: function(data) {
+                if (data.status === 'success') {
+                    alert('Grammar created successfully');
+                    $('#grammar-tree-view').data('original-file-path', file_path);
+                    refreshGrammarTree();
+                } else {
+                    console.error('Creation error:', data);
+                    alert('Error creating grammar: ' + (data.message || 'Unknown error'));
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error creating grammar:", jqXHR.responseText);
+                try {
+                    var errorData = JSON.parse(jqXHR.responseText);
+                    alert('Error creating grammar: ' + errorData.message + '\n\nTraceback: ' + errorData.traceback);
+                } catch (e) {
+                    alert('Error creating grammar: ' + textStatus + ', ' + errorThrown);
+                }
+            }
+        });
+    }
+
+    function initializeGrammarTree(convertedData) {
+        $('#grammar-tree-view').jstree({
+            'core': {
+                'data': convertedData,
+                'check_callback': true,
+                'themes': {
+                    'name': 'default',
+                    'responsive': true
+                }
+            },
+            'plugins': ['dnd', 'contextmenu', 'wholerow', 'types'],
+            'contextmenu': {
+                'items': customMenu_grammartree
+            },
+            'types': {
+                'default': {
+                    'valid_children': ['default']
+                },
+                'record': {
+                    'icon': 'jstree-folder',
+                    'valid_children': ['record', 'field']
+                },
+                'field': {
+                    'icon': 'jstree-file',
+                    'valid_children': []
+                }
+            }
+        }).on('create_node.jstree', function(e, data) {
+            console.log("Node created event:", data);
+        }).on('select_node.jstree', function (e, data) {
+            displayNodeInfo(data.node);
+        }).on('dblclick.jstree', function (e) {
+            var node = $(e.target).closest('li');
+            var tree = $('#grammar-tree-view').jstree(true);
+            var nodeObj = tree.get_node(node);
+            editNode(nodeObj);
+        });
     }
 
     $('#save-grammar').click(function() {
@@ -233,7 +532,11 @@ $(document).ready(function() {
 
         if (save_option) {
             // Overwrite existing grammar
-            saveGrammar(original_file_path, grammar_structure, recorddefs);
+            try {
+                saveGrammar(original_file_path, grammar_structure, recorddefs);
+            } catch (e) {
+                console.error("Error saving grammar:", e);
+            }
         } else {
             // Save as new file
             var new_file_name = prompt('Enter a new name for the grammar file:', 'new_grammar.py');
@@ -282,27 +585,84 @@ $(document).ready(function() {
 
     function saveGrammar(file_path, grammar_structure, recorddefs) {
         var original_file_path = $('#grammar-tree-view').data('original-file-path');
+        
+        // Ensure file has .py extension
+        if (!file_path.toLowerCase().endsWith('.py')) {
+            file_path += '.py';
+        }
+        
+        // Get the base name from the file path (handle both / and \ separators)
+        var baseName = file_path.split(/[/\\]/).pop().replace('.py', '');
+        
+        // Generate Python code content for the new grammar file
+        var grammarContent = 'structure = ' + JSON.stringify(grammar_structure, null, 4) + '\n\n';
+        grammarContent += 'recorddefs = ' + JSON.stringify(recorddefs || {}, null, 4);
+        
+        // Ensure we have a valid structure with the base name as the root node
+        var structureWithRoot = {};
+        if (!grammar_structure[baseName]) {
+            // If the base name is not the root, create a new root structure
+            structureWithRoot = {
+                [baseName]: {
+                    ID: baseName,
+                    MIN: '1',
+                    MAX: '1',
+                    LEVEL: []
+                }
+            };
+            // If there's existing structure, add it to the LEVEL
+            if (Object.keys(grammar_structure).length > 0) {
+                structureWithRoot[baseName].LEVEL = grammar_structure;
+            }
+        } else {
+            // If the base name is already the root, use the existing structure
+            structureWithRoot = grammar_structure;
+        }
+        
+        console.log('Saving grammar to:', file_path);
+        console.log('Original file path:', original_file_path);
+        console.log('Base name:', baseName);
+        console.log('Structure with root:', structureWithRoot);
+        
+        // Prepare the save data
+        var saveData = {
+            file_path: file_path,
+            grammar_structure: structureWithRoot,
+            original_file_path: original_file_path,
+            is_new: !original_file_path || original_file_path === file_path,
+            recorddefs: recorddefs || {},
+            file_content: grammarContent,
+            create_new: true,
+            node_name: baseName,  // This is the key field that was causing the error
+            root_node: {  // Add explicit root node information
+                name: baseName,
+                structure: structureWithRoot[baseName]
+            }
+        };
+
+        console.log('Save data:', saveData);
+
+        // Use a different endpoint for new grammars
+        var endpoint = saveData.is_new ? '/grammar/grammar/create/' : '/grammar/save/';  // Updated URL
+
         $.ajax({
-            url: '/grammar/save/',
+            url: endpoint,
             method: 'POST',
-            data: JSON.stringify({
-                file_path: file_path,
-                grammar_structure: grammar_structure,
-                original_file_path: original_file_path,
-                //recorddefs: recorddefs
-            }),
+            data: JSON.stringify(saveData),
             contentType: 'application/json',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            },
             success: function(data) {
                 if (data.status === 'success') {
                     alert('Grammar saved successfully');
-                    // Update the original file path with the new path
-                    $('#grammar-tree-view').data('original-file-path', data.new_path);
-                    // Optionally, update the displayed file name
-                    $('h3:contains("Imported Grammar:")').text('Imported Grammar: ' + data.new_path);
-                    // Refresh the grammar tree
+                    $('#grammar-tree-view').data('original-file-path', data.new_path || file_path);
+                    var headerText = data.new_path || window.grammarRelativePath;
+                    $('h4').text('Imported Grammar: ' + headerText);
                     refreshGrammarTree();
                 } else {
-                    alert('Error saving grammar: ' + data.message);
+                    console.error('Save error:', data);
+                    alert('Error saving grammar: ' + (data.message || 'Unknown error'));
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -416,3 +776,4 @@ $(document).ready(function() {
         console.log('Updated grammarStructure:', window.grammarStructure);
     }
 });
+

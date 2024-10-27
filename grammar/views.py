@@ -11,6 +11,7 @@ import importlib.util
 from django.conf import settings
 from pprint import pformat
 import json
+import traceback
 
 def tree_view(request):
     nodes = GrammarNode.objects.all()
@@ -399,3 +400,60 @@ def save_recorddefs_in_current_file(request):
 
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
 
+@csrf_exempt
+def create_grammar(request):
+    if request.method == 'POST':
+        try:
+            # Parse the JSON data from request
+            data = json.loads(request.body)
+            
+            # Extract required fields
+            file_path = data.get('file_path')
+            node_name = data.get('node_name')
+            grammar_structure = data.get('grammar_structure')
+            file_content = data.get('file_content')
+            
+            # Validate required fields
+            if not node_name:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'Node name is required'
+                })
+            
+            if not file_path:
+                return JsonResponse({
+                    'status': 'error',
+                    'message': 'File path is required'
+                })
+            
+            # Ensure the file path is absolute
+            if not os.path.isabs(file_path):
+                file_path = os.path.join(settings.BASE_DIR, file_path)
+            
+            # Create directory if it doesn't exist
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+            
+            # Write the new grammar file
+            with open(file_path, 'w') as f:
+                f.write(file_content)
+            
+            # Return success response
+            return JsonResponse({
+                'status': 'success',
+                'message': 'Grammar created successfully',
+                'new_path': file_path
+            })
+            
+        except Exception as e:
+            # Return error response with traceback
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e),
+                'traceback': traceback.format_exc()
+            })
+    
+    # Return error for non-POST requests
+    return JsonResponse({
+        'status': 'error',
+        'message': 'Only POST requests are allowed'
+    })

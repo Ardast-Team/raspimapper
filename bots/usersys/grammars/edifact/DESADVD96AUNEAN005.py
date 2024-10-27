@@ -105,3 +105,4 @@ structure = [
     {ID: 'CNT', MIN: 0, MAX: 5},
     {ID: 'UNT', MIN: 1, MAX: 1},
 ]}
+]
