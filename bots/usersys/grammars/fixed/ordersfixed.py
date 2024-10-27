@@ -6,7 +6,7 @@ syntax = {
         }
 
 #structure: the sequence of the records, and min/max repeats. Records can be 'nested'
-structure=    [
+structure = [
     {ID:'HEA',MIN:1,MAX:10000,LEVEL:[       #LEVEL is used to indicate that the 'LIN' record is nested under the 'HEA' record
         {ID:'LIN',MIN:0,MAX:10000},         #line record
         ]},

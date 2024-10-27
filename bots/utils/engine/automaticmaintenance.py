@@ -57,6 +57,7 @@ def make_run_report(rootidtaofrun,resultsofrun,command,totalfilesize):
         commandline = ' '.join(sys.argv)
     else:
         commandline = ' '.join(arg for arg in sys.argv[1:] if arg!='-cconfig' and not arg.startswith('--'))[:35]
+    # TODO: gzamataro - Delete the changeq function to the default Django one
     botslib.changeq('''INSERT INTO report (idta,lastopen,lasterror,lastok,lastdone,send,processerrors,
                                             ts,lastreceived,status,type,filesize,acceptance,rsrv1)
                             VALUES  (%(rootidtaofrun)s,%(lastopen)s,%(lasterror)s,%(lastok)s,%(lastdone)s,%(send)s,%(processerrors)s,

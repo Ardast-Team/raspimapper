@@ -1,0 +1,11 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "sqlite",
+            "database": "${workspaceFolder:raspimapper}/db.sqlite"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans 'System Tasks' %}</h1>
+<!-- ... existing content ... -->
+
+<h2>{% trans 'Mapping Script Generator' %}</h2>
+<a href="{% url 'mapping_script_generator' %}" class="button">{% trans 'Launch Mapping Script Generator' %}</a>
+
+<!-- ... rest of the content ... -->
+{% endblock %}

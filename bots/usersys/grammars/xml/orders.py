@@ -9,7 +9,7 @@ structure = [
     QUERIES:{
         'frompartner':  {'BOTSID':'message','sender':None},
         'topartner':    {'BOTSID':'message','receiver':None},
-        'testindicator':{'BOTSID':'message','testindicator':None},
+        'testindicator':{'BOTSID':'message','test':None},
         },
     LEVEL:[
         {ID:'partys',MIN:0,MAX:1,LEVEL:[

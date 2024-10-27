@@ -1,0 +1,138 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block extrahead %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<style>
+    .structure-container { width: 45%; float: left; margin: 10px; }
+    .field-item { cursor: move; padding: 5px; margin: 2px; background-color: #f0f0f0; }
+    #mapping-area { clear: both; padding-top: 20px; }
+    .mapping-item { margin: 5px 0; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>{% trans 'Mapping Script Generator' %}</h1>
+<form id="mapping-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <div class="structure-container">
+        <h3>Input Structure</h3>
+        <div id="input-structure">
+            <!-- This will be populated dynamically -->
+        </div>
+    </div>
+    
+    <div class="structure-container">
+        <h3>Output Structure</h3>
+        <div id="output-structure">
+            <!-- This will be populated dynamically -->
+        </div>
+    </div>
+    
+    <div id="mapping-area">
+        <h3>Field Mappings</h3>
+        <!-- Mappings will be displayed here -->
+    </div>
+    
+    <input type="submit" value="{% trans 'Generate Mapping Script' %}">
+</form>
+
+<div id="script-preview" style="display: none;">
+    <h3>Generated Script Preview</h3>
+    <pre id="script-content"></pre>
+</div>
+
+<script>
+$(document).ready(function() {
+    var grammars = JSON.parse('{{ grammars|escapejs }}');
+    
+    $('#id_input_grammar, #id_output_grammar').change(function() {
+        var grammarName = $(this).val();
+        var targetDiv = $(this).attr('id') === 'id_input_grammar' ? '#input-structure' : '#output-structure';
+        
+        $.ajax({
+            url: '{% url "get_grammar_structure" %}',
+            data: { grammar: grammarName },
+            success: function(response) {
+                if (response.success) {
+                    populateStructure(targetDiv, response.structure);
+                } else {
+                    alert('Error loading grammar structure: ' + response.error);
+                }
+            }
+        });
+    });
+    
+    // Make input fields draggable
+    $(document).on('mouseenter', '.field-item', function() {
+        $(this).draggable({
+            helper: 'clone',
+            revert: 'invalid'
+        });
+    });
+    
+    // Make output fields droppable
+    $(document).on('mouseenter', '#output-structure .field-item', function() {
+        $(this).droppable({
+            accept: '#input-structure .field-item',
+            drop: function(event, ui) {
+                var sourceField = ui.draggable.text();
+                var targetField = $(this).text();
+                addMapping(sourceField, targetField);
+            }
+        });
+    });
+    
+    // Form submission
+    $('#mapping-form').submit(function(e) {
+        e.preventDefault();
+        var mappingData = [];
+        $('.mapping-item').each(function() {
+            mappingData.push({
+                source: $(this).data('source'),
+                target: $(this).data('target'),
+                transformation: $(this).find('input').val()
+            });
+        });
+        $('#id_mapping_data').val(JSON.stringify(mappingData));
+        
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: new FormData(this),
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.success) {
+                    $('#script-content').text(response.script);
+                    $('#script-preview').show();
+                }
+            }
+        });
+    });
+});
+
+function populateStructure(container, structure) {
+    $(container).empty();
+    for (var field in structure) {
+        $(container).append('<div class="field-item">' + field + '</div>');
+    }
+}
+
+function addMapping(source, target) {
+    var mappingHtml = '<div class="mapping-item" data-source="' + source + '" data-target="' + target + '">' +
+        source + ' → ' + target + 
+        ' <input type="text" placeholder="Transformation (optional)">' +
+        ' <button onclick="removeMapping(this)">Remove</button></div>';
+    $('#mapping-area').append(mappingHtml);
+}
+
+function removeMapping(button) {
+    $(button).parent().remove();
+}
+</script>
+{% endblock %}

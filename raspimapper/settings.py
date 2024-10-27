@@ -44,8 +44,7 @@ INSTALLED_APPS = [
     #'debug_toolbar',
     'playground',
     'bots',
-    'ediview',
-    'grammarview',
+    'grammar',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +129,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -150,7 +150,7 @@ INTERNAL_IPS = [
 ###############
 #BOTS SETTINGS
 ###############
-APPEND_SLASH=False
+APPEND_SLASH=True
 
 LOGIN_REDIRECT_URL = '../home/'
 LOGOUT_REDIRECT_URL= '../login/'

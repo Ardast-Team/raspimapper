@@ -87,6 +87,7 @@ urlpatterns = [
     path('', views.index),
     #url(r'^.*', views.index),
     #path('__debug__/', include(debug_toolbar.urls)),
-    ]
+    path('grammar/', include('grammar.urls')),
+]
 
 handler500 = views.server_error

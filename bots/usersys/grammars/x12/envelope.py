@@ -36,7 +36,7 @@ structure = [
     ]
 
 
-recorddefs =    {
+recorddefs = {
     'ISA':[
         ['BOTSID','M',3,'AN'],
         ['ISA01','M',(2,2),'AN'],
